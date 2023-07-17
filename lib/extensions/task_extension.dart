@@ -5,9 +5,12 @@ import 'package:html/parser.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
+import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
+import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/sentry_service.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -792,6 +795,8 @@ extension TaskExt on Task {
     SyncCubit syncCubit = context.read<SyncCubit>();
     EditTaskCubit editTaskCubit = EditTaskCubit(tasksCubit, syncCubit)..attachTask(task);
     await showModalBottomSheet(
+      elevation: 0,
+      backgroundColor: ColorsExt.background(context),
       context: context,
       isScrollControlled: true,
       builder: (context) => BlocProvider(
@@ -885,8 +890,12 @@ extension TaskExt on Task {
     AudioPlayer.global.setGlobalAudioContext(audioContext);
 
     if (!(done ?? false)) {
-      PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
-      if (preferencesRepository.taskCompletedSoundEnabledMobile) {
+      final AuthCubit authCubit = locator<AuthCubit>();
+      bool taskCompletedSoundEnabled = authCubit.getSettingBySectionAndKey(
+              sectionName: UserSettingsUtils.tasksSection, key: UserSettingsUtils.taskCompletedSoundEnabled) ??
+          true;
+
+      if (taskCompletedSoundEnabled) {
         final audioPlayer = AudioPlayer();
         audioPlayer.play(
             volume: 0.3, ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency);

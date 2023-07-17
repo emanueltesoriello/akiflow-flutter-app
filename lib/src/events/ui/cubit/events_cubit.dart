@@ -47,6 +47,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     _syncCubit.syncCompletedStream.listen((_) async {
       await fetchUnprocessedEventModifiers();
+      await refreshEventsAtSync();
     });
   }
 
@@ -89,12 +90,26 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
   Future<void> refreshAllEvents(BuildContext context) async {
     CalendarCubit calendarCubit = context.read<CalendarCubit>();
+    computeRefreshEvents(calendarCubit);
+  }
+
+  Future<void> refreshEventsAtSync() async {
+    CalendarCubit calendarCubit = locator<CalendarCubit>();
+    computeRefreshEvents(calendarCubit);
+  }
+
+  computeRefreshEvents(CalendarCubit calendarCubit) {
     fetchEvents();
     Future.delayed(
       const Duration(milliseconds: 1200),
       () {
-        fetchEventsBetweenDates(calendarCubit.state.visibleDates.first.subtract(const Duration(days: 1)),
-            calendarCubit.state.visibleDates.last.add(const Duration(days: 1)));
+        if (calendarCubit.state.visibleDates.isNotEmpty) {
+          fetchEventsBetweenDates(calendarCubit.state.visibleDates.first.subtract(const Duration(days: 1)),
+              calendarCubit.state.visibleDates.last.add(const Duration(days: 1)));
+        } else {
+          DateTime now = DateTime.now();
+          fetchEventsBetweenDates(now.subtract(const Duration(days: 31)), now.add(const Duration(days: 31)));
+        }
       },
     );
   }
@@ -115,8 +130,15 @@ class EventsCubit extends Cubit<EventsCubitState> {
   String getDefaultConferenceSolution() {
     String conferenceSolution = 'meet';
     AuthCubit authCubit = locator<AuthCubit>();
-    if (authCubit.state.user?.settings?['calendar']['conferenceSolution'] != null) {
-      conferenceSolution = authCubit.state.user?.settings?['calendar']['conferenceSolution'];
+    if (authCubit.state.user?.settings?["calendar"] != null) {
+      List<dynamic> calendarSettings = authCubit.state.user?.settings?["calendar"];
+      for (Map<String, dynamic> element in calendarSettings) {
+        if (element['key'] == 'conferenceSolution') {
+          if (element['value'] != null) {
+            conferenceSolution = element['value'];
+          }
+        }
+      }
     }
     return conferenceSolution;
   }
@@ -124,8 +146,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
   String getDefaultConferenceIcon() {
     String conferenceSolution = 'meet';
     AuthCubit authCubit = locator<AuthCubit>();
-    if (authCubit.state.user?.settings?['calendar']['conferenceSolution'] != null) {
-      conferenceSolution = authCubit.state.user?.settings?['calendar']['conferenceSolution'];
+    if (authCubit.state.user?.settings?["calendar"] != null) {
+      conferenceSolution = getDefaultConferenceSolution();
     }
     if (conferenceSolution == 'zoom') {
       return Assets.images.icons.zoom.zoomSVG;
@@ -149,7 +171,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     if (tappedTime != null) {
       startTime = tappedTime;
-    } else if (visibleDates.isNotEmpty && visibleDates.length < 2) {
+    } else if (visibleDates.isNotEmpty && !visibleDates.contains(DateTime(now.year, now.month, now.day))) {
       startTime = DateTime(visibleDates.first.year, visibleDates.first.month, visibleDates.first.day, now.hour,
           [0, 15, 30, 45, 60][(now.minute / 15).ceil()]);
     } else {
@@ -192,16 +214,24 @@ class EventsCubit extends Cubit<EventsCubitState> {
   }
 
   String generateAkiflowSignature(BuildContext context) {
+    AuthCubit authCubit = context.read<AuthCubit>();
     String akiflowUrl =
         'https://akiflow.com/?utm_source=akiflow-calendar&utm_medium=akiflow-calendar&utm_campaign=akiflow-calendar';
     bool showAkiflowSignature = true;
-    if (context.read<AuthCubit>().state.user?.settings?["general"] != null &&
-        context.read<AuthCubit>().state.user?.settings?["general"]["showAkiflowSignature"] != null) {
-      showAkiflowSignature = context.read<AuthCubit>().state.user?.settings?["general"]["showAkiflowSignature"];
+
+    if (authCubit.state.user?.settings?["general"] != null) {
+      List<dynamic> generalSettings = authCubit.state.user?.settings?["general"];
+      for (Map<String, dynamic> element in generalSettings) {
+        if (element['key'] == 'showAkiflowSignature') {
+          if (element['value'] != null) {
+            showAkiflowSignature = element['value'];
+          }
+        }
+      }
     }
 
-    if (showAkiflowSignature && context.read<AuthCubit>().state.user?.referralUrl != null) {
-      var referral = context.read<AuthCubit>().state.user?.referralUrl;
+    if (showAkiflowSignature && authCubit.state.user?.referralUrl != null) {
+      var referral = authCubit.state.user?.referralUrl;
       akiflowUrl = '$referral&utm_source=akiflow-calendar&utm_medium=akiflow-calendar&utm_campaign=akiflow-calendar';
     }
     if (showAkiflowSignature) {
@@ -220,8 +250,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     if (updateParent) {
       await _eventModifiersRepository.add([responseStatusEventModifier(event, response, updateParent: true)]);
     }
-    await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
-    await scheduleEventsSync();
+    _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
+    scheduleEventsSync();
     refetchEvent(event);
 
     AnalyticsService.track("Edit Event", properties: {
@@ -259,8 +289,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
     if (event.isTimeOrDateValid()) {
       await _eventsRepository.updateById(event.id, data: event);
-      await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
-      await scheduleEventsSync();
+      _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
+      scheduleEventsSync();
       refetchEvent(event);
 
       AnalyticsService.track(
@@ -558,8 +588,8 @@ class EventsCubit extends Cubit<EventsCubitState> {
 
     await _eventsRepository.updateById(parentEvent.id, data: parentEvent);
     deleteExceptionsByRecurringId(parentEvent.recurringId!, startingFrom: tappedDate.add(const Duration(days: 1)));
-    await _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
-    await scheduleEventsSync();
+    _syncCubit.sync(entities: [Entity.events, Entity.eventModifiers]);
+    scheduleEventsSync();
 
     AnalyticsService.track("Edit Event", properties: {
       "mobile": true,
@@ -590,7 +620,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     }
 
     if (sync) {
-      await _syncCubit.sync(entities: [Entity.events]);
+      _syncCubit.sync(entities: [Entity.events]);
     }
   }
   //END update Event section
@@ -732,7 +762,7 @@ class EventsCubit extends Cubit<EventsCubitState> {
     );
     await _eventsRepository.updateById(event.id, data: event);
     refetchEvent(event);
-    await _syncCubit.sync(entities: [Entity.events]);
+    _syncCubit.sync(entities: [Entity.events]);
 
     AnalyticsService.track("Event Rescheduled", properties: {
       "mobile": true,
@@ -816,8 +846,15 @@ class EventsCubit extends Cubit<EventsCubitState> {
     dynamic content;
     if (meetingSolution == 'zoom') {
       if (((conferenceAccountId != null && conferenceAccountId.isEmpty) || conferenceAccountId == null) &&
-          authCubit.state.user?.settings?['calendar']['conferenceAccountId'] != null) {
-        conferenceAccountId = authCubit.state.user?.settings?['calendar']['conferenceAccountId'];
+          authCubit.state.user?.settings?['calendar'] != null) {
+        List<dynamic> calendarSettings = authCubit.state.user?.settings?["calendar"];
+        for (Map<String, dynamic> element in calendarSettings) {
+          if (element['key'] == 'conferenceAccountId') {
+            if (element['value'] != null) {
+              conferenceAccountId = element['value'];
+            }
+          }
+        }
       }
       if (conferenceAccountId != null) {
         content = {"meetingSolution": meetingSolution, "akiflowAccountId": conferenceAccountId};

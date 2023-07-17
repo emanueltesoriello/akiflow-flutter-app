@@ -86,7 +86,7 @@ class EditTaskLinks extends StatelessWidget {
                                   link,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                         color: ColorsExt.grey600(context),
                                       ),
                                 ),

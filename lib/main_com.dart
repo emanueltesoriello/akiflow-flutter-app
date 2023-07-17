@@ -17,7 +17,6 @@ import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/navigation_service.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
-import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/src/base/di/base_providers.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
@@ -103,10 +102,9 @@ class Application extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
-      systemNavigationBarDividerColor: ColorsExt.grey200(context),
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.black,
+      systemNavigationBarIconBrightness: Brightness.light,
     ));
 
     return MultiBlocProvider(

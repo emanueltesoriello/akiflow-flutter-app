@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_js/quickjs/ffi.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
@@ -7,10 +8,13 @@ import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:mobile/src/base/ui/widgets/task/plan_for_action.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
+import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_cupertino_modal.dart';
+import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/labels_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/plan_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/change_priority_modal.dart';
 
 import '../../../../../assets.dart';
 import '../../../../../common/style/colors.dart';
@@ -102,13 +106,20 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
                 icon: Assets.images.icons.common.hourglassSVG,
                 active: task.duration != null && task.duration != 0,
                 foregroundColor: ColorsExt.grey800(context),
-                backgroundColor:
-                    task.duration != null && task.duration != 0 ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
+                backgroundColor: task.duration != null && task.duration != 0
+                    ? ColorsExt.grey100(context)
+                    : ColorsExt.grey50(context),
                 isSquare: task.duration != null && task.duration != 0 ? false : true,
                 isBig: true,
                 text: text,
                 onPressed: () {
-                  context.read<EditTaskCubit>().toggleDuration();
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => DurationCupertinoModal(
+                      state: state,
+                      onConfirm: (int duration) => context.read<EditTaskCubit>().setDuration(duration, fromModal: true),
+                    ),
+                  );
                 },
               );
             },
@@ -145,54 +156,62 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
                 isSquare: true,
                 isBig: true,
                 text: text,
-                onPressed: () {
-                  context.read<EditTaskCubit>().toggleImportance();
+                onPressed: () async {
+                  PriorityEnum currentPriority = PriorityEnum.fromValue(task.priority);
+                  EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+                  cubit.priorityTap();
+
+                  PriorityEnum? newPriority = await showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => PriorityModal(currentPriority),
+                    closeProgressThreshold: 0,
+                    expand: false,
+                  );
+
+                  cubit.setPriority(newPriority);
                 },
               );
             },
           ),
           const SizedBox(width: Dimension.paddingS),
-          Builder(builder: (context) {
-            HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
-            if (homeViewType != HomeViewType.label && isFirstSet) {
-              isFirstSet = false;
-              context.read<EditTaskCubit>().setEmptyLabel();
-            }
-            return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-              builder: (context, state) {
-                Color? background;
+          Builder(
+            builder: (context) {
+              final editTaskCubit = context.read<EditTaskCubit>();
+              final task = editTaskCubit.state.updatedTask;
+              final labels = context.read<LabelsCubit>().state.labels;
+              Color? background;
+              final label = task.listId != null
+                  ? labels.firstWhereOrNull(
+                      (label) => task.listId!.contains(label.id!),
+                    )
+                  : null;
+              if (label?.color != null) {
+                background = ColorsExt.getFromName(label!.color!);
+              }
 
-                List<Label> labels = context.read<LabelsCubit>().state.labels;
-
-                Label? label;
-                HomeViewType homeViewType = context.read<MainCubit>().state.homeViewType;
-                if (homeViewType == HomeViewType.label || !isFirstSet) {
-                  try {
-                    label = labels.firstWhere((label) => state.updatedTask.listId!.contains(label.id!));
-                  } catch (e) {
-                    print(e);
-                  }
-                }
-
-                if (label?.color != null) {
-                  background = ColorsExt.getFromName(label!.color!);
-                }
-
-                return TagBox(
-                  icon: Assets.images.icons.common.numberSVG,
-                  active: state.updatedTask.listId != null,
-                  iconColor: background ?? ColorsExt.grey700(context),
-                  foregroundColor: background ?? ColorsExt.grey700(context),
-                  backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey50(context),
-                  text: label?.title ?? t.addTask.label,
-                  isBig: true,
-                  onPressed: () {
-                    context.read<EditTaskCubit>().toggleLabels();
-                  },
-                );
-              },
-            );
-          }),
+              return TagBox(
+                isBig: true,
+                icon: Assets.images.icons.common.numberSVG,
+                text: label?.title ?? t.editTask.addLabel,
+                foregroundColor: background ?? ColorsExt.grey700(context),
+                backgroundColor: background != null ? background.withOpacity(0.1) : ColorsExt.grey50(context),
+                iconColor: label?.color != null ? ColorsExt.getFromName(label!.color!) : ColorsExt.grey600(context),
+                active: label?.color != null,
+                onPressed: () {
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => LabelsModal(
+                      selectLabel: (Label label) {
+                        editTaskCubit.setLabel(label);
+                      },
+                      showNoLabel: task.listId != null,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ],
       ),
     );

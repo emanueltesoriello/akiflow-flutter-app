@@ -56,12 +56,20 @@ class EventsRepository extends DatabaseRepository {
                 AND (until_datetime IS NULL OR until_datetime >= ?))   
         )    
       """, [
-          startTime, endTime,
-          startDate, endDate, startDate, startDate,
-          startTime, endTime,
-          startTime, endTime,
-          startDate, endDate,
-          endTime, endDate,
+          startTime,
+          endTime,
+          startDate,
+          endDate,
+          startDate,
+          startDate,
+          startTime,
+          endTime,
+          startTime,
+          endTime,
+          startDate,
+          endDate,
+          endTime,
+          endDate,
           startTime,
         ]);
       });

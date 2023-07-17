@@ -16,7 +16,7 @@ class DateDisplay extends StatelessWidget {
         constraints: const BoxConstraints(minWidth: 100),
         child: Text(DateFormat("MMMM").format(date),
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w500,
                   color: ColorsExt.grey800(context),
                 )),

@@ -48,7 +48,7 @@ class IntegrationsList extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
                 child: Text(
                   t.onboarding.reconnect.toUpperCase(),
-                  style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w500,
                         color: ColorsExt.akiflow500(context),
                       ),

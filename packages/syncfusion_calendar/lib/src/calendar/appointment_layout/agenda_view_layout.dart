@@ -164,7 +164,7 @@ class _AgendaViewLayoutState extends State<AgendaViewLayout> {
 
   void _updateAppointmentDetails() {
     double yPosition = 5;
-    const double padding = 5;
+    const double padding = 8;
 
     final double totalAgendaViewWidth = widget.width + widget.timeLabelWidth;
     final bool useMobilePlatformUI = CalendarViewHelper.isMobileLayoutUI(

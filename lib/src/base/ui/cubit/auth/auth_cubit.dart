@@ -7,6 +7,7 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/api/api.dart';
 import 'package:mobile/core/api/auth_api.dart';
 import 'package:mobile/core/api/client_api.dart';
@@ -67,10 +68,20 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
         _sentryService.addBreadcrumb(category: 'user', message: 'Fetching updates');
 
-        Map<String, dynamic>? settings = await _userApi.getSettings();
+        Map<String, dynamic>? remoteSettings = await _userApi.getSettings();
+        Map<String, dynamic>? localSettings = user.settings;
 
-        if (settings != null) {
-          user = user.copyWith(settings: settings);
+        bool userSettingsAreV4 = _preferencesRepository.userSettingsAreV4;
+
+        if (remoteSettings != null) {
+          if (userSettingsAreV4) {
+            Map<String, dynamic>? mergedSettings =
+                UserSettingsUtils.compareRemoteWithLocal(remoteSettings: remoteSettings, localSettings: localSettings);
+            user = user.copyWith(settings: mergedSettings);
+          } else {
+            user = user.copyWith(settings: remoteSettings);
+            _preferencesRepository.setUserSettingsAreV4(true);
+          }
         }
 
         _preferencesRepository.saveUser(user);
@@ -207,18 +218,31 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }
 
   Future<void> updateUserSettings(Map<String, dynamic> settings) async {
-    User user = User.fromMap(state.user!.toMap());
-
-    user = user.copyWith(settings: settings);
-
-    emit(state.copyWith(user: Nullable(const User())));
-    emit(state.copyWith(user: Nullable(user)));
-
-    Map<String, dynamic>? updated = await _userApi.postSettings(settings);
+    String id = _preferencesRepository.deviceUUID;
+    Map<String, dynamic>? updated = await _userApi.postSettings(id, settings);
 
     if (updated != null) {
+      User user = _preferencesRepository.user!;
       user = user.copyWith(settings: updated);
       _preferencesRepository.saveUser(user);
+      emit(state.copyWith(user: Nullable(user)));
     }
+  }
+
+  void updateSection({required String sectionName, required List<dynamic> section}) {
+    Map<String, dynamic>? settings = _preferencesRepository.user?.settings;
+
+    settings?[sectionName] = section;
+
+    User user = _preferencesRepository.user!;
+    user = user.copyWith(settings: settings);
+    _preferencesRepository.saveUser(user);
+
+    emit(state.copyWith(user: Nullable(user)));
+  }
+
+  dynamic getSettingBySectionAndKey({required String sectionName, required String key}) {
+    return UserSettingsUtils.getSettingBySectionAndKey(
+        preferencesRepository: _preferencesRepository, sectionName: sectionName, key: key);
   }
 }

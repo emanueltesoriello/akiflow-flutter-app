@@ -14,7 +14,7 @@ class RecurringEditModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
@@ -54,7 +54,7 @@ class RecurringEditModal extends StatelessWidget {
                   t.editTask.repeatingEditDialog.description,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1
+                      .titleMedium
                       ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey600(context)),
                 ),
               ),
@@ -74,7 +74,7 @@ class RecurringEditModal extends StatelessWidget {
                   child: Center(
                     child: Text(
                       t.editTask.repeatingEditDialog.onlyThis,
-                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w400,
                             color: ColorsExt.grey600(context),
                           ),
@@ -98,7 +98,7 @@ class RecurringEditModal extends StatelessWidget {
                   child: Center(
                     child: Text(
                       t.editTask.repeatingEditDialog.thisAndAllFuture,
-                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w400,
                             color: ColorsExt.grey800(context),
                           ),

@@ -47,13 +47,13 @@ class ContactRow extends StatelessWidget {
                       children: [
                         Text('${contact.name}',
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w500,
                                   color: ColorsExt.grey800(context),
                                 )),
                         Text('${contact.identifier}',
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.caption?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.w500,
                                   color: ColorsExt.grey800(context),
                                 )),

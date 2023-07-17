@@ -77,12 +77,14 @@ class ExpandableFabState extends State<ExpandableFab> with SingleTickerProviderS
 
   Widget _buildTapToCloseFab() {
     return SizedBox(
-      width: 56.0,
-      height: 56.0,
+      width: 52.0,
+      height: 52.0,
       child: Center(
         child: Material(
-          color: ColorsExt.grey200(context),
-          shape: const CircleBorder(),
+          color: ColorsExt.akiflow100(context),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimension.paddingSM),
+          ),
           clipBehavior: Clip.antiAlias,
           shadowColor: Colors.black,
           elevation: 4.0,
@@ -92,7 +94,7 @@ class ExpandableFabState extends State<ExpandableFab> with SingleTickerProviderS
               padding: const EdgeInsets.all(12.0),
               child: Icon(
                 Icons.close,
-                color: Theme.of(context).primaryColor,
+                color: ColorsExt.akiflow500(context),
               ),
             ),
           ),
@@ -104,12 +106,11 @@ class ExpandableFabState extends State<ExpandableFab> with SingleTickerProviderS
   List<Widget> _buildExpandingActionButtons() {
     final children = <Widget>[];
     final count = widget.children.length;
-    final step = 90.0 / (count - 1);
-    for (var i = 0, angleInDegrees = 0.0; i < count; i++, angleInDegrees += step) {
+    for (var i = 0; i < count; i++) {
       children.add(
         _ExpandingActionButton(
-          directionInDegrees: angleInDegrees,
-          maxDistance: widget.distance,
+          directionInDegrees: 90,
+          maxDistance: widget.distance + (i * 50),
           progress: _expandAnimation,
           child: widget.children[i],
         ),
@@ -229,7 +230,7 @@ class FabActionButton extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       color: ColorsExt.akiflow500(context),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Dimension.radiusM),
+        borderRadius: BorderRadius.circular(Dimension.paddingSM),
       ),
       shadowColor: Colors.black,
       elevation: 4,
@@ -239,6 +240,12 @@ class FabActionButton extends StatelessWidget {
           padding: const EdgeInsets.all(Dimension.paddingS),
           child: Row(
             children: [
+              Text(title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(fontWeight: FontWeight.w600, color: ColorsExt.background(context))),
+              const SizedBox(width: Dimension.paddingS),
               SizedBox(
                 height: Dimension.defaultIconSize,
                 width: Dimension.defaultIconSize,
@@ -247,12 +254,6 @@ class FabActionButton extends StatelessWidget {
                   color: ColorsExt.background(context),
                 ),
               ),
-              const SizedBox(width: Dimension.paddingS),
-              Text(title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      ?.copyWith(fontWeight: FontWeight.w500, color: ColorsExt.background(context))),
             ],
           ),
         ),

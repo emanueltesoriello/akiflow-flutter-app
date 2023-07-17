@@ -309,7 +309,7 @@ class BaseWebViewState<S extends BaseWebView> extends State<S> with WidgetsBindi
             height: toolbarVisible && showToolbar ? null : 0,
             child: BottomAppBar(
               elevation: 8,
-              color: Theme.of(context).bottomAppBarColor,
+              color: Theme.of(context).appBarTheme.backgroundColor,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

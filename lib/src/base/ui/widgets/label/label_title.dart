@@ -21,7 +21,7 @@ class LabelTitle extends StatelessWidget {
       children: [
         const SizedBox(width: 8),
         Text(label.title ?? '(No title)',
-            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   overflow: TextOverflow.ellipsis,
                   color: label.id != null ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
                 )),
@@ -38,7 +38,7 @@ class LabelTitle extends StatelessWidget {
               const SizedBox(width: Dimension.paddingXS),
               Text(
                 folder?.title ?? "",
-                style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: ColorsExt.grey600(context),
                     ),
               ),

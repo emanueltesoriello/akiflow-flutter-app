@@ -22,7 +22,7 @@ class TaskBorderedRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Theme.of(context).backgroundColor,
+        color: Theme.of(context).colorScheme.background,
         borderRadius: BorderRadius.circular(Dimension.noticeRadius),
         border: Border.all(
           color: ColorsExt.grey200(context),

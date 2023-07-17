@@ -1,13 +1,16 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/time_picker_utils.dart';
+import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/src/base/models/next_event_notifications_models.dart';
 import 'package:mobile/src/base/models/next_task_notifications_models.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/settings/ui/widgets/receive_event_notification_setting_modal.dart';
 import 'package:mobile/src/settings/ui/widgets/receive_task_notification_setting_modal.dart';
@@ -22,25 +25,57 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  final service = locator<PreferencesRepository>();
+  final AuthCubit _authCubit = locator<AuthCubit>();
   String dailyOverviewTime = '';
-  NextTaskNotificationsModel selectedNextTaskNotificationsModel = NextTaskNotificationsModel.d;
-  NextEventNotificationsModel selectedNextEventNotificationsModel = NextEventNotificationsModel.d;
-  bool nextTaskNotificationSettingEnabled = false;
-  bool nextEventNotificationSettingEnabled = false;
-  bool dailyOverviewNotificationTimeEnabled = false;
+  NextTaskNotificationsModel tasksNotificationsTime = NextTaskNotificationsModel.d;
+  NextEventNotificationsModel eventsNotificationsTime = NextEventNotificationsModel.d;
+  bool tasksNotificationsEnabled = true;
+  bool eventsNotificationsEnabled = true;
+  bool dailyOverviewNotificationsEnabled = true;
   bool taskCompletedSoundEnabled = true;
 
   @override
   void initState() {
     super.initState();
-    selectedNextTaskNotificationsModel = service.nextTaskNotificationSetting;
-    nextTaskNotificationSettingEnabled = service.nextTaskNotificationSettingEnabled;
-    selectedNextEventNotificationsModel = service.nextEventNotificationSetting;
-    nextEventNotificationSettingEnabled = service.nextEventNotificationSettingEnabled;
-    dailyOverviewNotificationTimeEnabled = service.dailyOverviewNotificationTimeEnabled;
-    dailyOverviewTime = fromTimeOfDayToFormattedString(service.dailyOverviewNotificationTime);
-    taskCompletedSoundEnabled = service.taskCompletedSoundEnabledMobile;
+
+    //events
+    eventsNotificationsEnabled = _authCubit.getSettingBySectionAndKey(
+            sectionName: UserSettingsUtils.notificationsSection, key: UserSettingsUtils.eventsNotificationsEnabled) ??
+        true;
+    eventsNotificationsTime = NextEventNotificationsModel.fromMap(jsonDecode(_authCubit.getSettingBySectionAndKey(
+            sectionName: UserSettingsUtils.notificationsSection, key: UserSettingsUtils.eventsNotificationsTime) ??
+        '{"minutesBeforeToStart":5,"title":"5 minutes before the event starts"}'));
+
+    //tasks
+    tasksNotificationsEnabled = _authCubit.getSettingBySectionAndKey(
+            sectionName: UserSettingsUtils.notificationsSection, key: UserSettingsUtils.tasksNotificationsEnabled) ??
+        true;
+    tasksNotificationsTime = NextTaskNotificationsModel.fromMap(jsonDecode(_authCubit.getSettingBySectionAndKey(
+            sectionName: UserSettingsUtils.notificationsSection, key: UserSettingsUtils.tasksNotificationsTime) ??
+        '{"minutesBeforeToStart":5,"title":"5 minutes before the task starts"}'));
+
+    //daily overview
+    dailyOverviewNotificationsEnabled = _authCubit.getSettingBySectionAndKey(
+            sectionName: UserSettingsUtils.notificationsSection,
+            key: UserSettingsUtils.dailyOverviewNotificationsEnabled) ??
+        true;
+
+    dynamic savedDailyOverviewTime = _authCubit.getSettingBySectionAndKey(
+        sectionName: UserSettingsUtils.notificationsSection, key: UserSettingsUtils.dailyOverviewNotificationsTime);
+
+    if (savedDailyOverviewTime != null) {
+      TimeOfDay time = TimeOfDay(
+          hour: int.parse(savedDailyOverviewTime.split(":")[0]),
+          minute: int.parse(savedDailyOverviewTime.split(":")[1]));
+      dailyOverviewTime = fromTimeOfDayToFormattedString(time);
+    } else {
+      dailyOverviewTime = fromTimeOfDayToFormattedString(const TimeOfDay(hour: 8, minute: 0));
+    }
+
+    //task complete sound
+    taskCompletedSoundEnabled = _authCubit.getSettingBySectionAndKey(
+            sectionName: UserSettingsUtils.tasksSection, key: UserSettingsUtils.taskCompletedSoundEnabled) ??
+        true;
   }
 
   mainItem(String switchTitle, String mainButtonListTitle, String selectedBottomListItem, Function onTap,
@@ -72,7 +107,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   Text(
                     switchTitle,
                     textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: ColorsExt.grey800(context),
                         ),
                   ),
@@ -106,7 +141,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1
+                      .titleMedium
                       ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400),
                 ),
                 subtitle: Text(
@@ -114,7 +149,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText2
+                      .bodyMedium
                       ?.copyWith(color: ColorsExt.grey600(context), fontWeight: FontWeight.w400),
                 ),
                 trailing: const Icon(
@@ -133,11 +168,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
     await showCupertinoModalBottomSheet(
       context: context,
       builder: (context) => ReceiveTaskNotificationSettingModal(
-        selectedNextTaskNotificationsModel: selectedNextTaskNotificationsModel,
+        selectedNextTaskNotificationsModel: tasksNotificationsTime,
         onSelectedNextTaskNotificationsModel: (NextTaskNotificationsModel newVal) {
           setState(() {
-            selectedNextTaskNotificationsModel = newVal;
+            tasksNotificationsTime = newVal;
           });
+          _saveNewSetting(
+              sectionName: UserSettingsUtils.notificationsSection,
+              key: UserSettingsUtils.tasksNotificationsTime,
+              value: jsonEncode(NextTaskNotificationsModel.toMap(tasksNotificationsTime)));
         },
       ),
     );
@@ -147,11 +186,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
     await showCupertinoModalBottomSheet(
       context: context,
       builder: (context) => ReceiveEventNotificationSettingModal(
-        selectedNextEventNotificationsModel: selectedNextEventNotificationsModel,
+        selectedNextEventNotificationsModel: eventsNotificationsTime,
         onSelectedNextEventNotificationsModel: (NextEventNotificationsModel newVal) {
           setState(() {
-            selectedNextEventNotificationsModel = newVal;
+            eventsNotificationsTime = newVal;
           });
+          _saveNewSetting(
+              sectionName: UserSettingsUtils.notificationsSection,
+              key: UserSettingsUtils.eventsNotificationsTime,
+              value: jsonEncode(NextEventNotificationsModel.toMap(eventsNotificationsTime)));
         },
       ),
     );
@@ -164,16 +207,32 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   onReceiveNotificationDailyOverviewClick() {
-    PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
+    TimeOfDay dailyOverviewNotificationTime;
+    dynamic savedDailyOverviewTime = _authCubit.getSettingBySectionAndKey(
+        sectionName: UserSettingsUtils.notificationsSection, key: UserSettingsUtils.dailyOverviewNotificationsTime);
+
+    if (savedDailyOverviewTime != null) {
+      TimeOfDay time = TimeOfDay(
+          hour: int.parse(savedDailyOverviewTime.split(":")[0]),
+          minute: int.parse(savedDailyOverviewTime.split(":")[1]));
+      dailyOverviewNotificationTime = time;
+    } else {
+      dailyOverviewNotificationTime = const TimeOfDay(hour: 8, minute: 0);
+    }
+
     TimePickerUtils.pick(
       context,
-      initialTime: preferencesRepository.dailyOverviewNotificationTime,
+      initialTime: dailyOverviewNotificationTime,
       onTimeSelected: (selected) {
         if (selected != null) {
-          preferencesRepository.setDailyOverviewNotificationTime(selected);
           setState(() {
             dailyOverviewTime = fromTimeOfDayToFormattedString(selected);
           });
+          _saveNewSetting(
+              sectionName: UserSettingsUtils.notificationsSection,
+              key: UserSettingsUtils.dailyOverviewNotificationsTime,
+              value: '${selected.hour.toString()}:${selected.minute.toString()}');
+
           NotificationsService.setDailyReminder(locator<PreferencesRepository>());
         }
       },
@@ -197,7 +256,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "EVENTS IN CALENDAR".toUpperCase(),
-                  style: Theme.of(context).textTheme.caption?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
@@ -206,11 +265,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 mainItem(
                     "Next events",
                     "Receive notification",
-                    selectedNextEventNotificationsModel.title.replaceAll(RegExp(r'task'), 'event'),
+                    eventsNotificationsTime.title.replaceAll(RegExp(r'task'), 'event'),
                     () => onReceiveNotificationNextEventClick(), onChanged: (newVal) async {
-                  service.setNextEventNotificationSettingEnabled(newVal);
                   setState(() {
-                    nextEventNotificationSettingEnabled = newVal;
+                    eventsNotificationsEnabled = newVal;
                   });
                   if (newVal == false) {
                     await NotificationsService.cancelScheduledNotifications(locator<PreferencesRepository>());
@@ -218,32 +276,39 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   } else if (newVal) {
                     locator<SyncCubit>().sync();
                   }
-                }, isEnabled: nextEventNotificationSettingEnabled),
+                  _saveNewSetting(
+                      sectionName: UserSettingsUtils.notificationsSection,
+                      key: UserSettingsUtils.eventsNotificationsEnabled,
+                      value: eventsNotificationsEnabled);
+                }, isEnabled: eventsNotificationsEnabled),
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "TASKS IN CALENDAR".toUpperCase(),
-                  style: Theme.of(context).textTheme.caption?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
                 ),
                 const SizedBox(height: Dimension.paddingXS),
-                mainItem("Next tasks", "Receive notification", selectedNextTaskNotificationsModel.title,
+                mainItem("Next tasks", "Receive notification", tasksNotificationsTime.title,
                     () => onReceiveNotificationNextTaskClick(), onChanged: (newVal) async {
-                  service.setNextTaskNotificationSettingEnabled(newVal);
                   setState(() {
-                    nextTaskNotificationSettingEnabled = newVal;
+                    tasksNotificationsEnabled = newVal;
                   });
                   if (newVal == false) {
                     await NotificationsService.cancelScheduledNotifications(locator<PreferencesRepository>());
                   } else if (newVal) {
                     NotificationsService.scheduleNotificationsService(locator<PreferencesRepository>());
                   }
-                }, isEnabled: nextTaskNotificationSettingEnabled),
+                  _saveNewSetting(
+                      sectionName: UserSettingsUtils.notificationsSection,
+                      key: UserSettingsUtils.tasksNotificationsEnabled,
+                      value: tasksNotificationsEnabled);
+                }, isEnabled: tasksNotificationsEnabled),
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "DAILY OVERVIEW".toUpperCase(),
-                  style: Theme.of(context).textTheme.caption?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
@@ -254,19 +319,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 }),
                 mainItem("Daily overview notification", "Receive notification", dailyOverviewTime,
                     () => onReceiveNotificationDailyOverviewClick(), onChanged: (newVal) async {
-                  service.seDailyOverviewNotificationTime(newVal);
                   setState(() {
-                    dailyOverviewNotificationTimeEnabled = newVal;
+                    dailyOverviewNotificationsEnabled = newVal;
                   });
                   if (!newVal) {
                     NotificationsService.cancelNotificationById(NotificationsService.dailyReminderTaskId);
                   }
                   NotificationsService.setDailyReminder(locator<PreferencesRepository>());
-                }, isEnabled: dailyOverviewNotificationTimeEnabled),
+                  _saveNewSetting(
+                      sectionName: UserSettingsUtils.notificationsSection,
+                      key: UserSettingsUtils.dailyOverviewNotificationsEnabled,
+                      value: dailyOverviewNotificationsEnabled);
+                }, isEnabled: dailyOverviewNotificationsEnabled),
                 const SizedBox(height: Dimension.padding),
                 Text(
                   "sounds".toUpperCase(),
-                  style: Theme.of(context).textTheme.caption?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: ColorsExt.grey600(context),
                         fontWeight: FontWeight.w500,
                       ),
@@ -293,7 +361,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         Text(
                           "Task completed",
                           textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: ColorsExt.grey800(context),
                               ),
                         ),
@@ -310,7 +378,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                             setState(() {
                               taskCompletedSoundEnabled = value;
                             });
-                            service.setTaskCompletedSoundEnabledMobile(value);
+                            _saveNewSetting(
+                                sectionName: UserSettingsUtils.tasksSection,
+                                key: UserSettingsUtils.taskCompletedSoundEnabled,
+                                value: taskCompletedSoundEnabled);
                           },
                         ),
                       ],
@@ -323,5 +394,24 @@ class _NotificationsPageState extends State<NotificationsPage> {
         ],
       ),
     );
+  }
+
+  void _saveNewSetting({required String sectionName, required String key, required dynamic value}) {
+    final PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
+    Map<String, dynamic> setting = {
+      'key': key,
+      'value': value,
+      'updatedAt': DateTime.now().toUtc().millisecondsSinceEpoch,
+    };
+    List<dynamic> sectionSettings = UserSettingsUtils.updateSectionSetting(
+        sectionName: sectionName,
+        localSectionSettings: preferencesRepository.user?.settings?[sectionName],
+        newSetting: setting);
+
+    _authCubit.updateSection(sectionName: sectionName, section: sectionSettings);
+
+    _authCubit.updateUserSettings({
+      sectionName: [setting]
+    });
   }
 }

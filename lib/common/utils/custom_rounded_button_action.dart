@@ -51,7 +51,7 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
         child: Center(
             child: Text(
           textButtonNegative ?? localizations.cancelButtonLabel,
-          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.w400,
                 color: ColorsExt.grey800(context),
               ),
@@ -75,7 +75,7 @@ class CustomFlutterRoundedButtonAction extends StatelessWidget {
         child: Center(
           child: Text(
             textButtonPositive ?? localizations.okButtonLabel,
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w400,
                   color: ColorsExt.akiflow500(context),
                 ),

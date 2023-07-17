@@ -17,6 +17,7 @@ import 'package:mobile/src/base/ui/widgets/calendar/calendar_selected_day.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_today.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/recurrence_modal.dart';
+import 'package:mobile/src/tasks/ui/widgets/time_cupertino_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
@@ -72,6 +73,13 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
     }
     timeFormat = _preferencesRepository.timeFormat;
     super.initState();
+  }
+
+  TimeOfDay secondsToTimeOfDay(int seconds) {
+    final minutes = (seconds / 60).floor();
+    final hours = (minutes / 60).floor();
+
+    return TimeOfDay(hour: hours % 24, minute: minutes % 60);
   }
 
   @override
@@ -219,17 +227,18 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                     onPressed: () {
                                       TimeOfDay initialTime =
                                           _selectedDatetime.value ?? TimeOfDay(hour: widget.defaultTimeHour, minute: 0);
-                                      TimePickerUtils.pick(
-                                        context,
-                                        initialTime: initialTime,
-                                        onTimeSelected: (selected) {
-                                          _selectedDatetime.value = selected;
+                                      showCupertinoModalBottomSheet(
+                                          context: context,
+                                          builder: (context) => TimeCupertinoModal(
+                                                time: initialTime,
+                                                onConfirm: (selected) {
+                                                  _selectedDatetime.value = secondsToTimeOfDay(selected);
 
-                                          if (widget.onSelectTime != null) {
-                                            widget.onSelectTime!(_selectedDatetime.value);
-                                          }
-                                        },
-                                      );
+                                                  if (widget.onSelectTime != null) {
+                                                    widget.onSelectTime!(_selectedDatetime.value);
+                                                  }
+                                                },
+                                              ));
                                     },
                                     style: const ButtonStyle(
                                       alignment: Alignment.centerLeft,
@@ -243,7 +252,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                               selectedDate.day,
                                               selectedTime.hour,
                                               selectedTime.minute)),
-                                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                             fontWeight: FontWeight.w500,
                                             color: ColorsExt.grey800(context),
                                           ),
@@ -288,7 +297,7 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                                     const SizedBox(width: Dimension.paddingS),
                                     Text(
                                       t.editTask.repeat,
-                                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                             fontWeight: FontWeight.w500,
                                             color:
                                                 context.watch<EditTaskCubit>().state.updatedTask.recurrence != null &&
@@ -346,7 +355,6 @@ class _CreateTaskCalendarState extends State<CreateTaskCalendar> {
                     ),
                   ),
                 ),
-                const Separator(),
               ],
             ),
           ),

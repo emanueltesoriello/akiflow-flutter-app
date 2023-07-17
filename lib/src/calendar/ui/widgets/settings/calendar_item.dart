@@ -50,7 +50,7 @@ class _CalendarItemState extends State<CalendarItem> {
                       Text(widget.title,
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle1
+                              .titleMedium
                               ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w400)),
                     ],
                   ),
@@ -72,14 +72,16 @@ class _CalendarItemState extends State<CalendarItem> {
                 shrinkWrap: true,
                 itemCount: widget.calendars.length,
                 itemBuilder: (context, index) {
-                  bool notificationsEnabled = widget.calendars[index].settings != null &&
-                      ((widget.calendars[index].settings["notificationsEnabledMobile"] ??
-                              widget.calendars[index].settings["notificationsEnabled"] ??
+                  bool notificationsEnabled = false;
+                  notificationsEnabled = widget.calendars[index].settings != null &&
+                      ((widget.calendars[index].settings?["notificationsEnabledMobile"] ??
+                              widget.calendars[index].settings?["notificationsEnabled"] ??
                               false) ==
                           true);
-                  bool visible = widget.calendars[index].settings != null &&
-                      ((widget.calendars[index].settings["visibleMobile"] ??
-                              widget.calendars[index].settings["visible"] ??
+                  bool visible = false;
+                  visible = widget.calendars[index].settings != null &&
+                      ((widget.calendars[index].settings?["visibleMobile"] ??
+                              widget.calendars[index].settings?["visible"] ??
                               false) ==
                           true);
                   return Padding(
@@ -103,7 +105,7 @@ class _CalendarItemState extends State<CalendarItem> {
                                 child: Text("${widget.calendars[index].title}",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                         color: visible ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
                                         fontWeight: FontWeight.w400)),
                               ),

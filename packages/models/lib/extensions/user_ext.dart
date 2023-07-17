@@ -11,7 +11,21 @@ extension UserExt on User {
 
   int get defaultDuration {
     try {
-      return settings!["tasks"]["defaultTasksDuration"];
+      int duration = 1800;
+      List<dynamic> taskSettings = settings?["tasks"];
+      for (Map<String, dynamic> element in taskSettings) {
+        if (element['key'] == 'defaultTasksDuration') {
+          var defaultTasksDuration = element['value'];
+          if (defaultTasksDuration != null) {
+            if (defaultTasksDuration is String) {
+              duration = int.parse(defaultTasksDuration);
+            } else if (defaultTasksDuration is int) {
+              duration = defaultTasksDuration;
+            }
+          }
+        }
+      }
+      return duration;
     } catch (e) {
       return 2 * 60 * 60;
     }

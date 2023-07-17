@@ -198,6 +198,14 @@ extension ColorsExt on Colors {
   static Color getCalendarBackgroundColorLight(Color color) {
     return HSLColor.fromColor(color).withLightness(0.89).toColor().withOpacity(0.5);
   }
+
+  static Color getCalendarBackgroundColorDark(Color color) {
+    return HSLColor.fromColor(color).withLightness(0.78).toColor().withOpacity(0.5);
+  }
+
+  static Color getCalendarEventTitleColor(Color color) {
+    return HSLColor.fromColor(color).withLightness(0.15).toColor();
+  }
 }
 
 extension ColorsLight on Colors {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
@@ -22,8 +23,9 @@ import '../../../../common/style/colors.dart';
 import '../../../../extensions/task_extension.dart';
 
 class FloatingButton extends StatelessWidget {
-  const FloatingButton({Key? key, required this.bottomBarHeight}) : super(key: key);
+  FloatingButton({Key? key, required this.bottomBarHeight}) : super(key: key);
   final double bottomBarHeight;
+  final GlobalKey<ExpandableFabState> fabKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TasksCubit, TasksCubitState>(
@@ -32,24 +34,31 @@ class FloatingButton extends StatelessWidget {
         if (homeViewType == HomeViewType.availability) {
           return Container();
         } else if (homeViewType == HomeViewType.calendar) {
-          GlobalKey<ExpandableFabState> fabKey = GlobalKey();
           return ExpandableFab(
             key: fabKey,
-            distance: 70.0,
+            distance: 58.0,
             children: [
               FabActionButton(
+                icon: Assets.images.icons.common.daySVG,
+                title: t.fab.event,
+                onTap: () async {
+                  _onTapEvent(context);
+                  fabKey.currentState!.toggle();
+                },
+              ),
+              FabActionButton(
                 icon: Assets.images.icons.common.checkDoneOutlineSVG,
-                title: 'Task',
+                title: t.fab.taskToday,
                 onTap: () async {
                   _onTapTask(context: context, homeViewType: homeViewType);
                   fabKey.currentState!.toggle();
                 },
               ),
               FabActionButton(
-                icon: Assets.images.icons.common.daySVG,
-                title: 'Event',
+                icon: Assets.images.icons.common.traySVG,
+                title: t.fab.taskInbox,
                 onTap: () async {
-                  _onTapEvent(context);
+                  _onTapTask(context: context, homeViewType: HomeViewType.inbox);
                   fabKey.currentState!.toggle();
                 },
               ),
@@ -102,10 +111,20 @@ class FloatingButton extends StatelessWidget {
       }
 
       AuthCubit authCubit = context.read<AuthCubit>();
-      if (authCubit.state.user != null &&
-          authCubit.state.user?.settings != null &&
-          authCubit.state.user?.settings?['tasks'] != null) {
-        duration = authCubit.state.user?.settings?['tasks']?['defaultTasksDuration'] ?? 1800;
+      if (authCubit.state.user?.settings?["tasks"] != null) {
+        List<dynamic> taskSettings = authCubit.state.user?.settings?["tasks"];
+        for (Map<String, dynamic> element in taskSettings) {
+          if (element['key'] == 'defaultTasksDuration') {
+            var defaultTasksDuration = element['value'];
+            if (defaultTasksDuration != null) {
+              if (defaultTasksDuration is String) {
+                duration = int.parse(defaultTasksDuration);
+              } else if (defaultTasksDuration is int) {
+                duration = defaultTasksDuration;
+              }
+            }
+          }
+        }
       }
     }
 
@@ -134,10 +153,21 @@ class FloatingButton extends StatelessWidget {
   _onTapEvent(BuildContext context) {
     int duration = 1800;
     AuthCubit authCubit = context.read<AuthCubit>();
-    if (authCubit.state.user != null &&
-        authCubit.state.user?.settings != null &&
-        authCubit.state.user?.settings?['calendar'] != null) {
-      duration = authCubit.state.user?.settings?['calendar']?['eventDuration'] ?? 1800;
+
+    if (authCubit.state.user?.settings?["calendar"] != null) {
+      List<dynamic> calendarSettings = authCubit.state.user?.settings?["calendar"];
+      for (Map<String, dynamic> element in calendarSettings) {
+        if (element['key'] == 'eventDuration') {
+          var eventDuration = element['value'];
+          if (eventDuration != null) {
+            if (eventDuration is String) {
+              duration = int.parse(eventDuration);
+            } else if (eventDuration is int) {
+              duration = eventDuration;
+            }
+          }
+        }
+      }
     }
     context.read<EventsCubit>().createEvent(context, duration);
   }

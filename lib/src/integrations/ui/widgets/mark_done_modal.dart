@@ -211,7 +211,7 @@ class _MarkDoneModalState extends State<MarkDoneModal> {
                       children: [
                         Text(
                           t.settings.integrations.onMarkAsDone.rememberMyChoice,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: ColorsExt.grey800(context),
                               ),
                         ),
@@ -241,7 +241,7 @@ class _MarkDoneModalState extends State<MarkDoneModal> {
                       splashColor: ColorsExt.akiflow200(context),
                       borderColor: ColorsExt.akiflow500(context),
                       child: Text(t.confirm,
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: ColorsExt.akiflow500(context),
                               )),
@@ -274,7 +274,7 @@ Widget _item(
           Expanded(
             child: Text(
               text,
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: ColorsExt.grey800(context),
                   ),
             ),

@@ -47,7 +47,7 @@ class _ReceiveTaskNotificationSettingModalState extends State<ReceiveTaskNotific
             Expanded(
               child: Text(
                 text,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: ColorsExt.grey800(context),
                     ),
               ),
@@ -61,7 +61,7 @@ class _ReceiveTaskNotificationSettingModalState extends State<ReceiveTaskNotific
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Theme.of(context).backgroundColor,
+        color: Theme.of(context).colorScheme.background,
         child: AnimatedSize(
           curve: Curves.elasticOut,
           duration: const Duration(milliseconds: 400),
@@ -95,9 +95,6 @@ class _ReceiveTaskNotificationSettingModalState extends State<ReceiveTaskNotific
                           NextTaskNotificationsModel.values.length,
                           (index) => _predefinedDateItem(context, text: NextTaskNotificationsModel.values[index].title,
                               onPressed: () {
-                            PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
-                            preferencesRepository
-                                .setNextTaskNotificationSetting(NextTaskNotificationsModel.values[index]);
                             widget.onSelectedNextTaskNotificationsModel(NextTaskNotificationsModel.values[index]);
                             setState(() {
                               _selectedNextTaskNotificationsModel = NextTaskNotificationsModel.values[index];

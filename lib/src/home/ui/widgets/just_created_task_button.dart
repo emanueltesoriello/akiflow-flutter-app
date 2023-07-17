@@ -43,7 +43,7 @@ class _JustCreatedTaskViewState extends State<JustCreatedTaskView> {
                   child: Text(t.task.taskCreatedSuccessfully,
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .bodyLarge
                           ?.copyWith(color: ColorsExt.grey800(context), fontWeight: FontWeight.w500)),
                 ),
                 TextButton(

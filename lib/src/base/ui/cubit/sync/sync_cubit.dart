@@ -38,6 +38,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
       print("sync error $e");
       emit(state.copyWith(error: true, loading: false, networkError: true));
     }
+    return;
   }
 
   syncIntegration([List<IntegrationEntity>? entities]) async {

@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 345 
+ * Strings: 349 
  *
- * Built on 2023-06-15 at 15:49 UTC
+ * Built on 2023-07-13 at 09:22 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -331,6 +331,7 @@ class _StringsEn {
 	String get more => 'More';
 	String get view => 'View';
 	late final _StringsIntegrationsEn integrations = _StringsIntegrationsEn._(_root);
+	late final _StringsFabEn fab = _StringsFabEn._(_root);
 }
 
 // Path: onboarding
@@ -514,9 +515,9 @@ class _StringsCalendarEn {
 	String get calendarView => 'Calendar View';
 	late final _StringsCalendarViewEn view = _StringsCalendarViewEn._(_root);
 	String get groupOverlappingTasks => 'Group overlapping tasks';
-	String get hideWeekends => 'Hide Weekends';
-	String get hideDeclinedEvents => 'Hide Declined events';
-	String get hideTasksFromCalendar => 'Hide Tasks from calendar';
+	String get hideWeekends => 'Weekends';
+	String get hideDeclinedEvents => 'Declined events';
+	String get hideTasksFromCalendar => 'Tasks';
 	String get calendars => 'Calendars';
 	String get refresh => 'Refresh';
 }
@@ -696,6 +697,18 @@ class _StringsIntegrationsEn {
 	// Translations
 	String get todoist => 'Todoist';
 	String get slack => 'Slack';
+}
+
+// Path: fab
+class _StringsFabEn {
+	_StringsFabEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get event => 'Event';
+	String get taskToday => 'Task - Today';
+	String get taskInbox => 'Task - Inbox';
 }
 
 // Path: onboarding.termsAndPrivacy
@@ -1269,9 +1282,9 @@ extension on _StringsEn {
 			'calendar.view.week': 'Week',
 			'calendar.view.month': 'Month',
 			'calendar.groupOverlappingTasks': 'Group overlapping tasks',
-			'calendar.hideWeekends': 'Hide Weekends',
-			'calendar.hideDeclinedEvents': 'Hide Declined events',
-			'calendar.hideTasksFromCalendar': 'Hide Tasks from calendar',
+			'calendar.hideWeekends': 'Weekends',
+			'calendar.hideDeclinedEvents': 'Declined events',
+			'calendar.hideTasksFromCalendar': 'Tasks',
 			'calendar.calendars': 'Calendars',
 			'calendar.refresh': 'Refresh',
 			'linkedContent.subject': 'Subject',
@@ -1441,6 +1454,9 @@ extension on _StringsEn {
 			'view': 'View',
 			'integrations.todoist': 'Todoist',
 			'integrations.slack': 'Slack',
+			'fab.event': 'Event',
+			'fab.taskToday': 'Task - Today',
+			'fab.taskInbox': 'Task - Inbox',
 		};
 	}
 }
