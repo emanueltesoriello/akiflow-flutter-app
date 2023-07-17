@@ -1,4 +1,4 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
@@ -872,7 +872,7 @@ extension TaskExt on Task {
     }
   }
 
-  playTaskDoneSound() {
+  playTaskDoneSound() async {
     /*  Audio
     AudioContext audioContext = const AudioContext(
       iOS: AudioContextIOS(
@@ -898,13 +898,12 @@ extension TaskExt on Task {
 
       if (taskCompletedSoundEnabled) {
         final audioPlayer = AudioPlayer();
-        audioPlayer.play(
-          Assets.sounds.taskCompletedMP3,
-          volume: 0.3,
-          respectSilence: true,
-          isLocal:
-              true, /*, ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency*/
-        );
+        await audioPlayer.setAudioSource(AudioSource.asset(Assets.sounds.taskCompletedMP3));
+        // await audioPlayer.setAsset(Assets.sounds.taskCompletedMP3);
+        await audioPlayer.setVolume(0.3);
+        await audioPlayer.play(
+            /*, ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency*/
+            );
       }
     }
   }

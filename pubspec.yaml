@@ -63,7 +63,7 @@ dependencies:
   extended_text_field: ^12.0.1
   flutter_native_timezone: ^2.0.0
   flutter_js: any
-  audioplayers: any
+  just_audio: ^0.9.34
   pusher_channels_flutter: ^2.1.2
   app_links: ^3.4.2
   #flutter_siri_suggestions: ^2.1.0 
