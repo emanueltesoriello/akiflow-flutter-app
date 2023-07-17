@@ -8,6 +8,7 @@ import 'package:mobile/src/calendar/ui/pages/calendar_view.dart';
 import 'package:mobile/src/home/ui/pages/views/inbox_view.dart';
 import 'package:mobile/src/home/ui/pages/views/today_view.dart';
 import 'package:mobile/src/label/ui/pages/label_view.dart';
+import 'package:mobile/src/settings/ui/pages/all_tasks_page.dart';
 
 class HomePageNavigator extends StatefulWidget {
   const HomePageNavigator({
@@ -88,6 +89,14 @@ class _HomePageNavigatorState extends State<HomePageNavigator> {
         opacity: visible ? 1 : 0,
         duration: const Duration(milliseconds: 100),
         child: const LabelView(),
+      );
+    }
+    if (homeViewType == HomeViewType.allTasks) {
+      return AnimatedOpacity(
+        key: const Key('AllTasksPage'),
+        opacity: visible ? 1 : 0,
+        duration: const Duration(milliseconds: 100),
+        child: const AllTasksPage(),
       );
     }
     return Container();

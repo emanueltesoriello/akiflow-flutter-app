@@ -94,7 +94,7 @@ class SettingsModal extends StatelessWidget {
         width: 22,
         child: SvgPicture.asset(
           "assets/images/icons/_common/${DateFormat("dd").format(DateTime.now())}_square.svg",
-          color: ColorsExt.grey900(context),
+          color: ColorsExt.grey800(context),
         ),
       ),
       selected: homeViewType == HomeViewType.today,
@@ -142,23 +142,21 @@ class SettingsModal extends StatelessWidget {
   _buildAllTasks(HomeViewType homeViewType, BuildContext context) {
     return ButtonSelectable(
       title: t.allTasks,
-      titleColor: ColorsExt.grey600(context),
+      titleColor: ColorsExt.grey800(context),
       leading: SizedBox(
         height: Dimension.defaultIconSize,
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.rectangleGrid1X2SVG,
           height: 19,
-          color: ColorsExt.grey600(context),
+          color: ColorsExt.grey800(context),
         ),
       ),
-      selected: homeViewType == HomeViewType.someday,
-      trailing: Text(
-        t.comingSoon,
-        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey600(context)),
-      ),
+      selected: homeViewType == HomeViewType.allTasks,
+      trailing: Container(),
       onPressed: () {
-        // TODO all tasks list
+        context.read<MainCubit>().changeHomeView(HomeViewType.allTasks);
+        Navigator.pop(context);
       },
     );
   }
