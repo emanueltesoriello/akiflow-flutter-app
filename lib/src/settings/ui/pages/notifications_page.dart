@@ -59,10 +59,18 @@ class _NotificationsPageState extends State<NotificationsPage> {
             sectionName: UserSettingsUtils.notificationsSection,
             key: UserSettingsUtils.dailyOverviewNotificationsEnabled) ??
         true;
-    dailyOverviewTime = fromTimeOfDayToFormattedString(_authCubit.getSettingBySectionAndKey(
-            sectionName: UserSettingsUtils.notificationsSection,
-            key: UserSettingsUtils.dailyOverviewNotificationsTime) ??
-        const TimeOfDay(hour: 8, minute: 0));
+
+    dynamic savedDailyOverviewTime = _authCubit.getSettingBySectionAndKey(
+        sectionName: UserSettingsUtils.notificationsSection, key: UserSettingsUtils.dailyOverviewNotificationsTime);
+
+    if (savedDailyOverviewTime != null) {
+      TimeOfDay time = TimeOfDay(
+          hour: int.parse(savedDailyOverviewTime.split(":")[0]),
+          minute: int.parse(savedDailyOverviewTime.split(":")[1]));
+      dailyOverviewTime = fromTimeOfDayToFormattedString(time);
+    } else {
+      dailyOverviewTime = fromTimeOfDayToFormattedString(const TimeOfDay(hour: 8, minute: 0));
+    }
 
     //task complete sound
     taskCompletedSoundEnabled = _authCubit.getSettingBySectionAndKey(
@@ -199,12 +207,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   onReceiveNotificationDailyOverviewClick() {
+    TimeOfDay dailyOverviewNotificationTime;
+    dynamic savedDailyOverviewTime = _authCubit.getSettingBySectionAndKey(
+        sectionName: UserSettingsUtils.notificationsSection, key: UserSettingsUtils.dailyOverviewNotificationsTime);
+
+    if (savedDailyOverviewTime != null) {
+      TimeOfDay time = TimeOfDay(
+          hour: int.parse(savedDailyOverviewTime.split(":")[0]),
+          minute: int.parse(savedDailyOverviewTime.split(":")[1]));
+      dailyOverviewNotificationTime = time;
+    } else {
+      dailyOverviewNotificationTime = const TimeOfDay(hour: 8, minute: 0);
+    }
+
     TimePickerUtils.pick(
       context,
-      initialTime: _authCubit.getSettingBySectionAndKey(
-              sectionName: UserSettingsUtils.notificationsSection,
-              key: UserSettingsUtils.dailyOverviewNotificationsTime) ??
-          const TimeOfDay(hour: 8, minute: 0),
+      initialTime: dailyOverviewNotificationTime,
       onTimeSelected: (selected) {
         if (selected != null) {
           setState(() {
