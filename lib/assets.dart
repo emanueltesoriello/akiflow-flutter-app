@@ -34,7 +34,7 @@ class _AssetsHtml {
 class _AssetsSounds {
   _AssetsSounds._();
 
-  final taskCompletedMP3 = 'sounds/taskCompleted.mp3';
+  final taskCompletedMP3 = 'assets/sounds/taskCompleted.mp3';
 }
 
 class _AssetsImages {

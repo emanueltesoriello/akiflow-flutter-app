@@ -33,6 +33,7 @@ import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:mobile/core/preferences.dart';
 
 enum TaskStatusType {
   inbox, // default - not anything else
@@ -858,7 +859,9 @@ extension TaskExt on Task {
     try {
       if (doc is SlackDoc && doc.localUrl != null) {
         opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-      }
+      } /*else {
+        opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }*/
     } catch (e) {
       print(e);
     }
@@ -871,23 +874,6 @@ extension TaskExt on Task {
   }
 
   playTaskDoneSound() async {
-    /*  Audio
-    AudioContext audioContext = const AudioContext(
-      iOS: AudioContextIOS(
-        category: AVAudioSessionCategory.ambient,
-        options: [
-          AVAudioSessionOptions.defaultToSpeaker,
-          AVAudioSessionOptions.mixWithOthers,
-        ],
-      ),
-      android: AudioContextAndroid(
-          contentType: AndroidContentType.sonification,
-          usageType: AndroidUsageType.assistanceSonification,
-          isSpeakerphoneOn: true,
-          audioFocus: null),
-    );
-    AudioPlayer.global.setGlobalAudioContext(audioContext);*/
-
     if (!(done ?? false)) {
       final AuthCubit authCubit = locator<AuthCubit>();
       bool taskCompletedSoundEnabled = authCubit.getSettingBySectionAndKey(
@@ -895,13 +881,11 @@ extension TaskExt on Task {
           true;
 
       if (taskCompletedSoundEnabled) {
-        final audioPlayer = AudioPlayer();
+        final audioPlayer = AudioPlayer(handleAudioSessionActivation: false);
         await audioPlayer.setAudioSource(AudioSource.asset(Assets.sounds.taskCompletedMP3));
-        // await audioPlayer.setAsset(Assets.sounds.taskCompletedMP3);
+
         await audioPlayer.setVolume(0.3);
-        await audioPlayer.play(
-            /*, ctx: audioContext, AssetSource(Assets.sounds.taskCompletedMP3), mode: PlayerMode.lowLatency*/
-            );
+        await audioPlayer.play();
       }
     }
   }
