@@ -161,7 +161,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
             ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!).then((_) => print('fetched label tasks'))
             : Future.value(),
         fetchTasksBetweenDates(startDateCalendarTasks, endDateCalendarTasks)
-            .then((value) => print('fetched calendar tasks'))
+            .then((value) => print('fetched calendar tasks')),
+        if (state.allTasks.isNotEmpty)
+          reFetchAllTasks(limit: state.allTasks.length).then((value) => print('fetched all tasks')),
       ]);
     } catch (e) {
       print(e);
@@ -262,6 +264,31 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
+  Future<void> fetchAllTasks({required int limit, required int offset}) async {
+    try {
+      List<Task> tasks = await _tasksRepository.getAllTasks(limit, offset);
+      List<Task> allStateTasks = List.from(state.allTasks)..addAll(tasks);
+      emit(state.copyWith(allTasks: allStateTasks));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
+  }
+
+  ///used to re-fetch all shown tasks, with offset 0
+  Future<void> reFetchAllTasks({required int limit}) async {
+    try {
+      int stateTasksLength = state.allTasks.isEmpty ? 30 : state.allTasks.length;
+      List<Task> tasks = await _tasksRepository.getAllTasks(stateTasksLength, 0);
+      emit(state.copyWith(allTasks: tasks));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
+  }
+
+  Future<void> clearAllTasksList() async {
+    emit(state.copyWith(allTasks: []));
+  }
+
   resetTasks() {
     emit(state.copyWith(calendarTasks: []));
   }
@@ -290,6 +317,12 @@ class TasksCubit extends Cubit<TasksCubitState> {
           return t;
         }).toList(),
         labelTasks: state.labelTasks.map((t) {
+          if (t.id == task.id) {
+            return task.copyWith(selected: !(task.selected ?? false));
+          }
+          return t;
+        }).toList(),
+        allTasks: state.allTasks.map((t) {
           if (t.id == task.id) {
             return task.copyWith(selected: !(task.selected ?? false));
           }
@@ -587,6 +620,7 @@ class TasksCubit extends Cubit<TasksCubitState> {
         inboxTasks: state.inboxTasks.map((e) => e.copyWith(selected: false)).toList(),
         selectedDayTasks: state.selectedDayTasks.map((e) => e.copyWith(selected: false)).toList(),
         labelTasks: state.labelTasks.map((e) => e.copyWith(selected: false)).toList(),
+        allTasks: state.allTasks.map((e) => e.copyWith(selected: false)).toList(),
       ),
     );
   }

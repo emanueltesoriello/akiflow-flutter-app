@@ -9,6 +9,7 @@ import 'package:mobile/src/home/ui/pages/views/inbox_view.dart';
 import 'package:mobile/src/home/ui/pages/views/today_view.dart';
 import 'package:mobile/src/label/ui/pages/label_view.dart';
 import 'package:mobile/src/settings/ui/pages/all_tasks_page.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
 class HomePageNavigator extends StatefulWidget {
   const HomePageNavigator({
@@ -50,6 +51,10 @@ class _HomePageNavigatorState extends State<HomePageNavigator> {
   @override
   Widget build(BuildContext context) {
     HomeViewType homeViewType = context.watch<MainCubit>().state.homeViewType;
+
+    if (homeViewType != HomeViewType.allTasks) {
+      context.read<TasksCubit>().clearAllTasksList();
+    }
 
     if (homeViewType == HomeViewType.inbox) {
       return container ??
