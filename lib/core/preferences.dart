@@ -89,6 +89,14 @@ abstract class PreferencesRepository {
 
   DateTime? get lastDayTodayZero;
   Future<void> setDayTodayZero(DateTime? value);
+
+  Future<void> setAvailabilitiesNoticeHidden(bool value);
+
+  DateTime? get lastAccountsV3SyncAt;
+
+  Future<void> setLastAccountsV3SyncAt(DateTime? value);
+
+  bool get availabilitiesNoticeHidden;
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {

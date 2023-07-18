@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_js/quickjs/ffi.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:mobile/src/base/ui/widgets/task/plan_for_action.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';

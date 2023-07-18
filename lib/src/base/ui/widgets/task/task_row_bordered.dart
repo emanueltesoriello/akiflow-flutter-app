@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/common/style/theme.dart';
 import 'package:models/task/task.dart';
 
 class TaskBorderedRow extends StatelessWidget {

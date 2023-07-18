@@ -64,8 +64,6 @@ class TaskRow extends StatefulWidget {
 }
 
 class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
-  CheckboxAnimatedController? _checkboxController;
-
   late AnimationController _dailyGoalAnimationController = AnimationController(vsync: this);
 
   late AnimationController _fadeOutAnimationController = AnimationController(vsync: this);
@@ -308,9 +306,7 @@ class _TaskRowState extends State<TaskRow> with TickerProviderStateMixin {
                                         child: Center(child: SelectableRadioButton(widget.task)));
                                   } else {
                                     return CheckboxAnimated(
-                                      onControllerReady: (controller) {
-                                        _checkboxController = controller;
-                                      },
+                                      onControllerReady: (controller) {},
                                       task: widget.task,
                                       onCompleted: () async {
                                         if (widget.task.isDailyGoal) {

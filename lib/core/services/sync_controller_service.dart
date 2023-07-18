@@ -38,7 +38,6 @@ import 'package:models/nullable.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:mobile/extensions/event_extension.dart';
-import 'package:mobile/common/utils/converters_isolate.dart';
 import 'package:flutter/foundation.dart';
 
 enum Entity { accounts, calendars, contacts, tasks, labels, events, eventModifiers }

@@ -71,6 +71,7 @@ class DatabaseService {
       if (!skipDirectoryCreation) {
         await Directory(dirname(path)).create(recursive: true).catchError((e) {
           print(e);
+          throw (e);
         });
       }
       database = await sql.openDatabase(

@@ -14,7 +14,6 @@ import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
-import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/models/mark_as_done_type.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:models/account/account.dart';
@@ -35,10 +34,9 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
   final SentryService _sentryService = locator<SentryService>();
   final GoogleApi _googleApi = locator<GoogleApi>();
 
-  final AuthCubit _authCubit;
   late final SyncCubit _syncCubit;
 
-  IntegrationsCubit(this._authCubit, this._syncCubit) : super(const IntegrationsCubitState()) {
+  IntegrationsCubit(this._syncCubit) : super(const IntegrationsCubitState()) {
     _syncCubit.syncCompletedStream.listen((_) async {
       List<Account> accounts = await _accountsRepository.getAccounts();
       emit(state.copyWith(accounts: accounts));

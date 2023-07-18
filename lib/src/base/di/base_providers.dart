@@ -46,7 +46,7 @@ List<BlocProvider> baseProviders = [
   ),
   BlocProvider<IntegrationsCubit>(
     lazy: false,
-    create: (BuildContext context) => IntegrationsCubit(locator<AuthCubit>(), locator<SyncCubit>()),
+    create: (BuildContext context) => IntegrationsCubit(locator<SyncCubit>()),
   ),
   BlocProvider<TodayCubit>(
     lazy: false,

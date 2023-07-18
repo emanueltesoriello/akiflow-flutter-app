@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,7 +16,6 @@ import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/label/ui/widgets/create_edit_label_modal.dart';
 import 'package:mobile/src/label/ui/widgets/create_folder_modal.dart';
 import 'package:mobile/src/base/ui/widgets/base/button_selectable.dart';
-import 'package:mobile/src/settings/ui/widgets/siri_suggestions.dart';
 import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/labels_list.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';

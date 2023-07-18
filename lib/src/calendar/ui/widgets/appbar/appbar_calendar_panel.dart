@@ -24,7 +24,6 @@ class AppbarCalendarPanel extends StatefulWidget {
 }
 
 class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
-  PageController? _pageController;
   int firstDayOfWeek = DateTime.monday;
 
   @override
@@ -64,9 +63,7 @@ class _AppbarCalendarPanelState extends State<AppbarCalendarPanel> {
             return Column(
               children: [
                 TableCalendar(
-                  onCalendarCreated: (pageController) {
-                    _pageController = pageController;
-                  },
+                  onCalendarCreated: (pageController) {},
                   startingDayOfWeek: CalendarUtils.computeFirstDayOfWeekForAppbar(firstDayOfWeek, context),
                   rowHeight: Dimension.todayCalendarMinHeight,
                   availableGestures: AvailableGestures.horizontalSwipe,

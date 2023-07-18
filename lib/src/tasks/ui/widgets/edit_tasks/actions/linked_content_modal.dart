@@ -5,7 +5,6 @@ import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/extensions/task_extension.dart';
-import 'package:mobile/src/base/ui/widgets/base/button_list.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/integrations/asana.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/integrations/clickup.dart';

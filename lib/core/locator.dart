@@ -13,7 +13,6 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/availabilities_repository.dart';
 import 'package:mobile/core/repository/contacts_repository.dart';
 import 'package:mobile/core/repository/event_modifiers_repository.dart';
-import 'package:mobile/core/services/intercom_service.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/calendars_repository.dart';
 import 'package:mobile/core/repository/events_repository.dart';
@@ -102,7 +101,6 @@ void setupLocator(
   EventsCubit eventsCubit = EventsCubit(syncCubit);
   //BaseCubit exampleCubit = BaseCubit();
 
-  tasksCubit.attachAuthCubit(authCubit);
   tasksCubit.attachTodayCubit(todayCubit);
   todayCubit.attachTasksCubit(tasksCubit);
 

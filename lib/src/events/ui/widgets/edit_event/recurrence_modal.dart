@@ -38,7 +38,6 @@ class EventRecurrenceModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime lastDayOfMonth = DateTime(eventStartTime.year, eventStartTime.month + 1, 0);
     return Material(
       color: Theme.of(context).colorScheme.background,
       child: Container(

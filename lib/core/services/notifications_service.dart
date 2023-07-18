@@ -19,7 +19,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/event/event.dart';
 import 'package:models/notifications/scheduled_notification.dart';
 import 'package:models/task/task.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart';
 import './../../../../../extensions/firebase_messaging.dart';
 import 'package:mobile/core/preferences.dart';

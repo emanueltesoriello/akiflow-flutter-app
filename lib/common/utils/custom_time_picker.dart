@@ -738,19 +738,16 @@ class _TimePickerHeader extends StatelessWidget {
     final TimeOfDayFormat timeOfDayFormat =
         MaterialLocalizations.of(context).timeOfDayFormat(alwaysUse24HourFormat: media.alwaysUse24HourFormat);
 
-    EdgeInsets padding;
     double? height;
     double? width;
 
     switch (orientation) {
       case Orientation.landscape:
         width = _kTimePickerHeaderLandscapeWidth;
-        padding = const EdgeInsets.symmetric(horizontal: 16.0);
         break;
       case Orientation.portrait:
       default:
         height = _kTimePickerHeaderPortraitHeight;
-        padding = const EdgeInsets.symmetric(horizontal: 24.0);
         break;
     }
 

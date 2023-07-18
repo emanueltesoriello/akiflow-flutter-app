@@ -11,12 +11,10 @@ import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/repository/accounts_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
-import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/common/utils/tz_utils.dart';
-import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/cubit/sync/sync_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/task/task_list.dart';
@@ -55,7 +53,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
 
   final SyncCubit _syncCubit;
 
-  AuthCubit? _authCubit;
   LabelsCubit? _labelsCubit;
   TodayCubit? _todayCubit;
 
@@ -97,10 +94,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
       lastDayInboxZero: lastDayInboxZero,
       lastDayTodayZero: lastDayTodayZero,
     ));
-  }
-
-  attachAuthCubit(AuthCubit authCubit) {
-    _authCubit = authCubit;
   }
 
   attachTodayCubit(TodayCubit todayCubit) {

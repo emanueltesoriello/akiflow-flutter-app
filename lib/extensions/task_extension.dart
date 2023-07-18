@@ -33,7 +33,6 @@ import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mobile/core/preferences.dart';
 
 enum TaskStatusType {
   inbox, // default - not anything else
@@ -823,6 +822,7 @@ extension TaskExt on Task {
     if (TaskExt.hasRecurringDataChanges(original: original, updated: updated) ||
         (hasEditedListIdOrSectionId && updated.recurringId != null)) {
       try {
+        // ignore: use_build_context_synchronously
         await showCupertinoModalBottomSheet(
             context: context,
             builder: (context) => RecurringEditModal(
@@ -858,9 +858,7 @@ extension TaskExt on Task {
     try {
       if (doc is SlackDoc && doc.localUrl != null) {
         opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } /*else {
-        opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-      }*/
+      }
     } catch (e) {
       print(e);
     }
