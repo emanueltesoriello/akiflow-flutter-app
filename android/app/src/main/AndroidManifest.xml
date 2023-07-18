@@ -69,7 +69,7 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".ActivityForReceivingActions" exported="true">
+        <activity android:name=".ActivityForReceivingActions" android:exported="true"  exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
