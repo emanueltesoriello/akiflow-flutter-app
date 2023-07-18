@@ -69,6 +69,7 @@ dependencies:
   numberpicker: ^2.1.2
   dotted_border: ^2.0.0+3
   quill_html_editor: ^2.2.2
+  audio_session: ^0.1.16
 
   
   

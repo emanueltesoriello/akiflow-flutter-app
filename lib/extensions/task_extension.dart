@@ -34,6 +34,7 @@ import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:audio_session/audio_session.dart';
 
 enum TaskStatusType {
   inbox, // default - not anything else
@@ -881,11 +882,34 @@ extension TaskExt on Task {
           true;
 
       if (taskCompletedSoundEnabled) {
-        final audioPlayer = AudioPlayer(handleAudioSessionActivation: false);
+        final audioPlayer = AudioPlayer(
+          handleInterruptions: false,
+          androidApplyAudioAttributes: false,
+          handleAudioSessionActivation: false,
+        );
         await audioPlayer.setAudioSource(AudioSource.asset(Assets.sounds.taskCompletedMP3));
-
-        await audioPlayer.setVolume(0.3);
-        await audioPlayer.play();
+        AudioSession.instance.then((session) async => {
+              //  await session
+              //     .configure(const AudioSessionConfiguration(avAudioSessionMode: AVAudioSessionMode.voiceChat)),
+              //  session.interruptionEventStream
+              //      .listen(((event) => {print('interruptionEventStream' + event.toString())})),
+              await session.configure(const AudioSessionConfiguration(
+                avAudioSessionCategory: AVAudioSessionCategory.playback,
+                avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.duckOthers,
+                avAudioSessionMode: AVAudioSessionMode.defaultMode,
+                avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+                avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+                androidAudioAttributes: AndroidAudioAttributes(
+                  contentType: AndroidAudioContentType.music,
+                  flags: AndroidAudioFlags.none,
+                  usage: AndroidAudioUsage.media,
+                ),
+                androidAudioFocusGainType: AndroidAudioFocusGainType.gainTransientMayDuck,
+                androidWillPauseWhenDucked: true,
+              )),
+              await audioPlayer.setVolume(0.3),
+              await audioPlayer.play(),
+            });
       }
     }
   }
