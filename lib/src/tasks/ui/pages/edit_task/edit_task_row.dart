@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
@@ -17,17 +17,18 @@ import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/labels_modal.dart
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:quill_html_editor/quill_html_editor.dart';
 
 class EditTaskRow extends StatefulWidget {
   final TextEditingController titleController;
-  final ValueNotifier<QuillController> quillController;
+  final QuillEditorController controller;
   final FocusNode descriptionFocusNode;
   final FocusNode titleFocusNode;
 
   const EditTaskRow({
     Key? key,
     required this.titleController,
-    required this.quillController,
+    required this.controller,
     required this.descriptionFocusNode,
     required this.titleFocusNode,
   }) : super(key: key);
@@ -37,9 +38,23 @@ class EditTaskRow extends StatefulWidget {
 }
 
 class _EditTaskRowState extends State<EditTaskRow> {
+  final customToolBarList = [
+    ToolBarStyle.bold,
+    ToolBarStyle.italic,
+    ToolBarStyle.align,
+    ToolBarStyle.color,
+    ToolBarStyle.background,
+    ToolBarStyle.listBullet,
+    ToolBarStyle.listOrdered,
+    ToolBarStyle.clean,
+    ToolBarStyle.addTable,
+    ToolBarStyle.editTable,
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+    return _description(context);
+    /*return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
@@ -67,11 +82,47 @@ class _EditTaskRowState extends State<EditTaskRow> {
           ),
         );
       },
-    );
+    );*/
   }
 
   Widget _description(BuildContext context) {
-    return ValueListenableBuilder<QuillController>(
+    return QuillHtmlEditor(
+      backgroundColor: Colors.transparent,
+      hintTextStyle: TextStyle(fontSize: 18, color: Colors.black12, fontWeight: FontWeight.normal),
+      // text: "<h1>Hello</h1>This is a quill html editor example 😊",
+      // hintText: 'Hint text goes here',
+      controller: widget.controller,
+      isEnabled: true,
+      ensureVisible: false,
+      minHeight: 200,
+      textStyle:
+          const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.normal, fontFamily: 'Roboto'),
+      //  hintTextStyle: _hintTextStyle,
+      hintTextAlign: TextAlign.start,
+      padding: const EdgeInsets.only(left: 10, top: 10),
+      hintTextPadding: const EdgeInsets.only(left: 20),
+      //  backgroundColor: _backgroundColor,
+      loadingBuilder: (context) {
+        return const Center(
+            child: CircularProgressIndicator(
+          strokeWidth: 0.4,
+        ));
+      },
+      onFocusChanged: (focus) {
+        debugPrint('has focus $focus');
+        /* setState(() {
+                  _hasFocus = focus;
+                });*/
+      },
+      onTextChanged: (text) => debugPrint('widget text change $text'),
+      onEditorCreated: () {
+        debugPrint('Editor has been loaded');
+        //setHtmlText('Testing text on load');
+      },
+      onEditorResized: (height) => debugPrint('Editor resized $height'),
+      onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
+    );
+    /* return ValueListenableBuilder<QuillController>(
       valueListenable: widget.quillController,
       builder: (context, value, child) => Theme(
         data: Theme.of(context).copyWith(
@@ -205,7 +256,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
           ),
         ),
       ),
-    );
+    );*/
   }
 
   Widget _thirdLine(BuildContext context) {
