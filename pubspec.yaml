@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 2.37.03+398
+version: 2.37.04+402
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -28,7 +28,7 @@ dependencies:
     path: ./packages/i18n
   #intercom_flutter: ^7.6.2
   intl: ^0.17.0 
-  modal_bottom_sheet:
+  modal_bottom_sheet: 
      git:
        url: https://github.com/followthemoney1/modal_bottom_sheet.git
        ref: main
@@ -37,7 +37,7 @@ dependencies:
     path: ./packages/models 
   package_info_plus: ^1.4.2
   rrule: ^0.2.8
-  sentry_flutter: ^6.13.1
+  sentry_flutter: ^6.13.1 
   shared_preferences: ^2.0.17
   sqflite: ^2.2.6
   table_calendar: ^3.0.5

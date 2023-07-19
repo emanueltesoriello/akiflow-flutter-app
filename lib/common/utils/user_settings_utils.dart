@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,25 +36,29 @@ class UserSettingsUtils {
     Map<String, dynamic>? mergedSettings = remoteSettings;
 
     for (String section in sections) {
-      List<dynamic> remoteSectionSettings = remoteSettings?[section];
-      List<dynamic> localSectionSettings = localSettings?[section];
+      List<dynamic>? remoteSectionSettings = remoteSettings?[section];
+      List<dynamic>? localSectionSettings = localSettings?[section];
 
-      List<dynamic> mergedSectionSettings = doComparisonForSection(
-          remoteSectionSettings: remoteSectionSettings, localSectionSettings: localSectionSettings);
+      if (remoteSectionSettings != null && localSectionSettings != null) {
+        List<dynamic> mergedSectionSettings = doComparisonForSection(
+            section: section, remoteSectionSettings: remoteSectionSettings, localSectionSettings: localSectionSettings);
 
-      mergedSettings?[section] = mergedSectionSettings;
+        mergedSettings?[section] = mergedSectionSettings;
+      }
     }
     return mergedSettings;
   }
 
   static List<dynamic> doComparisonForSection({
+    required String section,
     required List<dynamic> remoteSectionSettings,
     required List<dynamic> localSectionSettings,
   }) {
     List<dynamic> mergedSectionSettings = [];
+    AuthCubit authCubit = locator<AuthCubit>();
 
     for (Map<String, dynamic> localSetting in localSectionSettings) {
-      Map<String, dynamic> remoteSetting = localSectionSettings.firstWhere(
+      Map<String, dynamic> remoteSetting = remoteSectionSettings.firstWhere(
         (setting) => setting['key'] == localSetting['key'],
         orElse: () {
           mergedSectionSettings.add(localSetting);
@@ -60,6 +66,10 @@ class UserSettingsUtils {
       );
       if (remoteSetting['updatedAt'] == null && localSetting['updatedAt'] != null) {
         mergedSectionSettings.add(localSetting);
+
+        authCubit.pushLocalSettingToRemote({
+          section: [localSetting]
+        });
       } else if (localSetting['updatedAt'] == null && remoteSetting['updatedAt'] != null) {
         mergedSectionSettings.add(remoteSetting);
       } else if (remoteSetting['updatedAt'] != null && localSetting['updatedAt'] != null) {
@@ -67,6 +77,10 @@ class UserSettingsUtils {
           mergedSectionSettings.add(remoteSetting);
         } else if (localSetting['updatedAt'] > remoteSetting['updatedAt']) {
           mergedSectionSettings.add(localSetting);
+
+          authCubit.pushLocalSettingToRemote({
+            section: [localSetting]
+          });
         } else {
           mergedSectionSettings.add(remoteSetting);
         }
@@ -151,6 +165,7 @@ class UserSettingsUtils {
       }
     } catch (e) {
       print('ERROR migrateUserSettingsToV4: $e');
+      prefs.clear();
     }
   }
 }
