@@ -71,22 +71,15 @@ class AuthCubit extends Cubit<AuthCubitState> {
         Map<String, dynamic>? remoteSettings = await _userApi.getSettings();
         Map<String, dynamic>? localSettings = user.settings;
 
-        bool userSettingsAreV4 = _preferencesRepository.userSettingsAreV4;
-
         if (remoteSettings != null) {
-          if (userSettingsAreV4) {
-            Map<String, dynamic>? mergedSettings =
-                UserSettingsUtils.compareRemoteWithLocal(remoteSettings: remoteSettings, localSettings: localSettings);
-            user = user.copyWith(settings: mergedSettings);
-          } else {
-            user = user.copyWith(settings: remoteSettings);
-            _preferencesRepository.setUserSettingsAreV4(true);
-          }
+          Map<String, dynamic>? mergedSettings =
+              UserSettingsUtils.compareRemoteWithLocal(remoteSettings: remoteSettings, localSettings: localSettings);
+          user = user.copyWith(settings: mergedSettings);
         }
 
-        _preferencesRepository.saveUser(user);
+        await _preferencesRepository.saveUser(user);
 
-        emit(AuthCubitState(user: user));
+        emit(state.copyWith(user: Nullable(user)));
 
         _sentryService.addBreadcrumb(category: 'user', message: 'Updated');
         //_intercomService.authenticate(
@@ -218,8 +211,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }
 
   Future<void> updateUserSettings(Map<String, dynamic> settings) async {
-    String id = _preferencesRepository.deviceUUID;
-    Map<String, dynamic>? updated = await _userApi.postSettings(id, settings);
+    Map<String, dynamic>? updated = await pushLocalSettingToRemote(settings);
 
     if (updated != null) {
       User user = _preferencesRepository.user!;
@@ -227,6 +219,12 @@ class AuthCubit extends Cubit<AuthCubitState> {
       _preferencesRepository.saveUser(user);
       emit(state.copyWith(user: Nullable(user)));
     }
+  }
+
+  Future<Map<String, dynamic>?> pushLocalSettingToRemote(Map<String, dynamic> settings) async {
+    String id = _preferencesRepository.deviceUUID;
+    Map<String, dynamic>? updated = await _userApi.postSettings(id, settings);
+    return updated;
   }
 
   void updateSection({required String sectionName, required List<dynamic> section}) {

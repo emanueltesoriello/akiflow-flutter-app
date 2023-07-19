@@ -12,9 +12,6 @@ abstract class PreferencesRepository {
 
   User? get user;
 
-  bool get userSettingsAreV4;
-  Future<void> setUserSettingsAreV4(bool value);
-
   bool get inboxNoticeHidden;
   Future<void> setInboxNoticeHidden(bool value);
 
@@ -115,16 +112,6 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     return User.fromMap(jsonDecode(userString));
-  }
-
-  @override
-  bool get userSettingsAreV4 {
-    return _prefs.getBool("userSettingsAreV4") ?? false;
-  }
-
-  @override
-  Future<void> setUserSettingsAreV4(bool value) async {
-    await _prefs.setBool("userSettingsAreV4", value);
   }
 
   @override

@@ -129,7 +129,6 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
   }
 
   void _saveNewSetting({required String sectionName, required String key, required dynamic value}) {
-    final PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
     final AuthCubit authCubit = locator<AuthCubit>();
     Map<String, dynamic> setting = {
       'key': key,
@@ -138,7 +137,7 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
     };
     List<dynamic> sectionSettings = UserSettingsUtils.updateSectionSetting(
         sectionName: sectionName,
-        localSectionSettings: preferencesRepository.user?.settings?[sectionName],
+        localSectionSettings: _preferencesRepository.user?.settings?[sectionName],
         newSetting: setting);
 
     authCubit.updateSection(sectionName: sectionName, section: sectionSettings);
