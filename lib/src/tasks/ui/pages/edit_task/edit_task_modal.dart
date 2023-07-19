@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_links.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_row.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_top_actions.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:flutter_quill/src/models/documents/document.dart';
 
 class EditTaskModal extends StatefulWidget {
   const EditTaskModal({Key? key}) : super(key: key);
@@ -29,10 +31,10 @@ class EditTaskModal extends StatefulWidget {
 
 class _EditTaskModalState extends State<EditTaskModal> {
   final TextEditingController _titleController = TextEditingController();
-  //ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
-  //  quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)),
-  //);
-  late QuillEditorController controller;
+  ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
+    quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)),
+  );
+  late QuillEditorController quillEditorController;
 
   WebViewController? wController;
   StreamSubscription? streamSubscription;
@@ -65,11 +67,16 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
     initFocusNodeListener();
     await initDescription(isFirstInit: isFirstInit);
-    // streamSubscription = quillController.value.changes.listen((change) async {
-    //   List<dynamic> delta = quillController.value.document.toDelta().toJson();
-    //   String html = await InteractiveWebView.deltaToHtml(delta);
-    //   cubit.updateDescription(html);
-    // });
+    streamSubscription = quillController.value.changes.listen((change) async {
+      change.change;
+      var b = 0;
+      //List<dynamic> delta = quillController.value.document.toDelta().toJson();
+      //  quillEditorController.setDelta(change.change);
+
+      //await quillEditorController.insertText(html, index: 0);
+      // String html = await InteractiveWebView.deltaToHtml(delta);
+      //  cubit.updateDescription(await quillEditorController.getText());
+    });
   }
 
   void initFocusNodeListener() {
@@ -94,27 +101,26 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
   Future<void> initDescription({bool isFirstInit = false}) async {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
-    controller = QuillEditorController();
-    await controller.setText("<h1>Hello</h1>This is a quill html editor example 😊");
-    String? htmlText = await controller.getText();
-    controller.onTextChanged((text) {
-      debugPrint('listening to $text');
-    });
-    controller.onEditorLoaded(() {
-      debugPrint('Editor Loaded :)');
-    });
+    quillEditorController = QuillEditorController();
 
-    /*EditTaskCubit cubit = context.read<EditTaskCubit>();
-    String html;
-    if (isFirstInit) {
-      html = cubit.state.updatedTask.description ?? '';
-    } else {
-      html = cubit.state.originalTask.description ?? '';
-    }
-    quill.Document document = await InteractiveWebView.htmlToDelta(html);
-    quillController.value =
-        quill.QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
-    quillController.value.moveCursorToEnd();*/
+    quillEditorController.onEditorLoaded(() async {
+      debugPrint('Editor Loaded :)');
+      String html;
+      if (isFirstInit) {
+        html = cubit.state.updatedTask.description ?? '';
+      } else {
+        html = cubit.state.originalTask.description ?? '';
+      }
+      await quillEditorController.insertText(html, index: 0);
+      var delta = await quillEditorController.getDelta();
+      quill.Document document = Document.fromJson(delta["ops"]);
+
+      setState(() {
+        quillController.value =
+            quill.QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
+        quillController.value.moveCursorToEnd();
+      });
+    });
   }
 
   Future<bool> onBack(EditTaskCubitState state) async {
@@ -267,7 +273,8 @@ class _EditTaskModalState extends State<EditTaskModal> {
               if (state.hasFocusOnTitleOrDescription) const SizedBox(height: Dimension.padding),
               EditTaskRow(
                 key: const GlobalObjectKey('EditTaskRow'),
-                controller: controller,
+                quillEditorController: quillEditorController,
+                controller: quillController,
                 titleController: _titleController,
                 descriptionFocusNode: _descriptionFocusNode,
                 titleFocusNode: _titleFocusNode,

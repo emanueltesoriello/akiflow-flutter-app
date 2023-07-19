@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
 import 'package:mobile/assets.dart';
@@ -21,17 +22,20 @@ import 'package:quill_html_editor/quill_html_editor.dart';
 
 class EditTaskRow extends StatefulWidget {
   final TextEditingController titleController;
-  final QuillEditorController controller;
+  final ValueNotifier<QuillController> controller;
+  final QuillEditorController quillEditorController;
+
   final FocusNode descriptionFocusNode;
   final FocusNode titleFocusNode;
 
-  const EditTaskRow({
-    Key? key,
-    required this.titleController,
-    required this.controller,
-    required this.descriptionFocusNode,
-    required this.titleFocusNode,
-  }) : super(key: key);
+  const EditTaskRow(
+      {Key? key,
+      required this.titleController,
+      required this.controller,
+      required this.descriptionFocusNode,
+      required this.titleFocusNode,
+      required this.quillEditorController})
+      : super(key: key);
 
   @override
   State<EditTaskRow> createState() => _EditTaskRowState();
@@ -53,8 +57,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
 
   @override
   Widget build(BuildContext context) {
-    return _description(context);
-    /*return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+    return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: Dimension.padding),
@@ -82,26 +85,133 @@ class _EditTaskRowState extends State<EditTaskRow> {
           ),
         );
       },
-    );*/
+    );
   }
 
   Widget _description(BuildContext context) {
-    return QuillHtmlEditor(
-      backgroundColor: Colors.transparent,
-      hintTextStyle: TextStyle(fontSize: 18, color: Colors.black12, fontWeight: FontWeight.normal),
+    return Stack(
+      children: [
+        Opacity(
+          opacity: 0,
+          child: Container(
+            width: 0,
+            height: 0,
+            child: QuillHtmlEditor(
+              backgroundColor: Colors.white,
+              // hintTextStyle: TextStyle(fontSize: 18, color: Colors.black12, fontWeight: FontWeight.normal),
+              // text: "<h1>Hello</h1>This is a quill html editor example 😊",
+              // hintText: 'Hint text goes here',
+              hintText: null,
+              controller: widget.quillEditorController,
+              isEnabled: true,
+              ensureVisible: false,
+              minHeight: 0,
+              textStyle: const TextStyle(
+                  fontSize: 18, color: Colors.black, fontWeight: FontWeight.normal, fontFamily: 'Roboto'),
+              //  hintTextStyle: _hintTextStyle,
+              hintTextAlign: TextAlign.start,
+              padding: const EdgeInsets.only(left: 10, top: 10),
+              hintTextPadding: const EdgeInsets.only(left: 20),
+              // backgroundColor: _backgroundColor,
+              loadingBuilder: (context) {
+                return const Center(
+                    child: CircularProgressIndicator(
+                  strokeWidth: 0.4,
+                ));
+              },
+              onFocusChanged: (focus) {
+                debugPrint('has focus $focus');
+                /* setState(() {
+                      _hasFocus = focus; 
+                    });*/
+              },
+
+              onEditorCreated: () {
+                debugPrint('Editor has been loaded');
+                //setHtmlText('Testing text on load');
+              },
+              //onEditorResized: (height) => debugPrint('Editor resized $height'),
+              //onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
+            ),
+          ),
+        ),
+        ValueListenableBuilder<QuillController>(
+          valueListenable: widget.controller,
+          builder: (context, value, child) => Theme(
+            data: Theme.of(context).copyWith(
+              textSelectionTheme: TextSelectionThemeData(
+                selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
+              ),
+            ),
+            child: GestureDetector(
+              onTap: () async {
+                if (!widget.descriptionFocusNode.hasFocus && !widget.titleFocusNode.hasFocus) {
+                  widget.descriptionFocusNode.unfocus();
+                  context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
+                  await Future.delayed(const Duration(milliseconds: 500));
+                  FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
+                } else {
+                  FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
+                }
+              },
+              child: Padding(
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Column(
+                  children: [
+                    // QuillToolbar.basic(controller: value),
+                    QuillEditor(
+                      controller: value,
+                      readOnly: false,
+                      enableSelectionToolbar: true,
+                      scrollController: ScrollController(),
+                      scrollable: true,
+                      focusNode: widget.descriptionFocusNode,
+                      autoFocus: false,
+                      expands: false,
+                      padding: EdgeInsets.zero,
+                      keyboardAppearance: Brightness.light,
+                      placeholder: t.task.description,
+                      linkActionPickerDelegate: (BuildContext context, String link, node) async {
+                        launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+                        return LinkMenuAction.none;
+                      },
+                      customStyles: DefaultStyles(
+                        placeHolder: DefaultTextBlockStyle(
+                          const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 18,
+                          ),
+                          const VerticalSpacing(0, 0),
+                          const VerticalSpacing(0, 0),
+                          null,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+    /*return QuillHtmlEditor(
+      backgroundColor: Colors.white,
+      // hintTextStyle: TextStyle(fontSize: 18, color: Colors.black12, fontWeight: FontWeight.normal),
       // text: "<h1>Hello</h1>This is a quill html editor example 😊",
       // hintText: 'Hint text goes here',
+      hintText: null,
       controller: widget.controller,
       isEnabled: true,
       ensureVisible: false,
-      minHeight: 200,
+      minHeight: 50,
       textStyle:
           const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.normal, fontFamily: 'Roboto'),
       //  hintTextStyle: _hintTextStyle,
       hintTextAlign: TextAlign.start,
       padding: const EdgeInsets.only(left: 10, top: 10),
       hintTextPadding: const EdgeInsets.only(left: 20),
-      //  backgroundColor: _backgroundColor,
+      // backgroundColor: _backgroundColor,
       loadingBuilder: (context) {
         return const Center(
             child: CircularProgressIndicator(
@@ -111,17 +221,17 @@ class _EditTaskRowState extends State<EditTaskRow> {
       onFocusChanged: (focus) {
         debugPrint('has focus $focus');
         /* setState(() {
-                  _hasFocus = focus;
+                  _hasFocus = focus; 
                 });*/
       },
-      onTextChanged: (text) => debugPrint('widget text change $text'),
+
       onEditorCreated: () {
         debugPrint('Editor has been loaded');
         //setHtmlText('Testing text on load');
       },
-      onEditorResized: (height) => debugPrint('Editor resized $height'),
-      onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
-    );
+      //onEditorResized: (height) => debugPrint('Editor resized $height'),
+      //onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
+    );*/
     /* return ValueListenableBuilder<QuillController>(
       valueListenable: widget.quillController,
       builder: (context, value, child) => Theme(
