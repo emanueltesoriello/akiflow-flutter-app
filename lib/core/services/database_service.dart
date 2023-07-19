@@ -54,7 +54,7 @@ class DatabaseService {
 
     if (userSettingsVersion < lastUserSettingsVersion) {
       try {
-        UserSettingsUtils.migrateUserSettingsToV4(prefs);
+        await UserSettingsUtils.migrateUserSettingsToV4(prefs);
       } catch (_) {}
     }
   }

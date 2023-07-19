@@ -196,11 +196,15 @@ class MainCubit extends Cubit<MainCubitState> {
           _sentryService.authenticate(user.id.toString(), user.email);
 
           int? timeFormat = TimeFormatUtils.systemDefault;
-          timeFormat = UserSettingsUtils.getSettingBySectionAndKey(
-                  preferencesRepository: _preferencesRepository,
-                  sectionName: UserSettingsUtils.calendarSection,
-                  key: UserSettingsUtils.timeFormat) ??
-              TimeFormatUtils.systemDefault;
+          try {
+            timeFormat = UserSettingsUtils.getSettingBySectionAndKey(
+                    preferencesRepository: _preferencesRepository,
+                    sectionName: UserSettingsUtils.calendarSection,
+                    key: UserSettingsUtils.timeFormat) ??
+                TimeFormatUtils.systemDefault;
+          } catch (e) {
+            print('ERROR: onFocusGained read timeFormat: $e');
+          }
           _preferencesRepository.setTimeFormat(timeFormat ?? TimeFormatUtils.systemDefault);
 
           try {
