@@ -68,8 +68,9 @@ class _EditTaskModalState extends State<EditTaskModal> {
     initFocusNodeListener();
     await initDescription(isFirstInit: isFirstInit);
     streamSubscription = quillController.value.changes.listen((change) async {
-      change.change;
+      var a = change.change.toJson();
       var b = 0;
+      //quillEditorController.setDelta(delta)
       //List<dynamic> delta = quillController.value.document.toDelta().toJson();
       //  quillEditorController.setDelta(change.change);
 
@@ -115,11 +116,14 @@ class _EditTaskModalState extends State<EditTaskModal> {
       var delta = await quillEditorController.getDelta();
       quill.Document document = Document.fromJson(delta["ops"]);
 
-      setState(() {
-        quillController.value =
-            quill.QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
-        quillController.value.moveCursorToEnd();
+      quillController.value =
+          quill.QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
+      quillController.value.changes.listen((change) async {
+        quillEditorController.setDelta({"ops": quillController.value.document.toDelta().toJson()});
+        var htmlText = await quillEditorController.getText();
+        cubit.updateDescription(htmlText);
       });
+      quillController.value.moveCursorToEnd();
     });
   }
 
