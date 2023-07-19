@@ -241,6 +241,8 @@ class TasksRepository extends DatabaseRepository {
         AND done = 0
         AND deleted_at IS NULL
         AND trashed_at IS NULL
+        ORDER BY
+            updated_at DESC
 """);
       });
     } catch (e) {

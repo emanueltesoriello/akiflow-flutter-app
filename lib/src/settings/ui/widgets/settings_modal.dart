@@ -119,22 +119,20 @@ class SettingsModal extends StatelessWidget {
   _buildSomeday(HomeViewType homeViewType, BuildContext context) {
     return ButtonSelectable(
       title: t.task.someday,
-      titleColor: ColorsExt.grey600(context),
+      titleColor: ColorsExt.grey800(context),
       leading: SizedBox(
         height: Dimension.defaultIconSize,
         width: Dimension.defaultIconSize,
         child: SvgPicture.asset(
           Assets.images.icons.common.archiveboxSVG,
-          color: ColorsExt.grey600(context),
+          color: ColorsExt.grey800(context),
         ),
       ),
       selected: homeViewType == HomeViewType.someday,
-      trailing: Text(t.comingSoon,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: ColorsExt.grey600(context),
-              )),
+      trailing: Container(),
       onPressed: () {
-        // TODO someday list
+        context.read<MainCubit>().changeHomeView(HomeViewType.someday);
+        Navigator.pop(context);
       },
     );
   }

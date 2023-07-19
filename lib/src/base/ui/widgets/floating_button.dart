@@ -92,6 +92,8 @@ class FloatingButton extends StatelessWidget {
         homeViewType == HomeViewType.label ||
         homeViewType == HomeViewType.allTasks) {
       taskStatusType = TaskStatusType.inbox;
+    } else if (homeViewType == HomeViewType.someday) {
+      taskStatusType = TaskStatusType.someday;
     } else {
       taskStatusType = TaskStatusType.planned;
     }

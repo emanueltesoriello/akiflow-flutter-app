@@ -18,6 +18,7 @@ class AllTasksBodyState extends State<AllTasksBody> {
   @override
   initState() {
     scrollController = ScrollController();
+    context.read<TasksCubit>().fetchSomedayTasks();
     super.initState();
   }
 
