@@ -152,19 +152,15 @@ class SyncControllerService {
   }
 
   @pragma('vm:entry-point')
-  sync() async {
-    await FlutterIsolate.spawn(backgroundProcesses, backgroundSyncFromNotification);
-  }
-
   isolateSync([List<Entity>? entities]) async {
     print("started sync");
 
-    if (_isSyncing) {
-      print("sync already in progress");
-      return;
-    }
+    // if (_isSyncing) {
+    //   print("sync already in progress");
+    //   return;
+    // }
 
-    _isSyncing = true;
+    //_isSyncing = true;
 
     User? user = _preferencesRepository.user;
 
@@ -185,7 +181,6 @@ class SyncControllerService {
         }
       }
       _isSyncing = false;
-      syncCompletedController.add(0);
 
       try {
         postClient();
@@ -201,19 +196,33 @@ class SyncControllerService {
       // check after docs sync to prevent docs duplicates
       try {
         await _syncIntegration();
-        // bool hasNewDocs = await _syncIntegration();
-
-        // if (hasNewDocs) {
-        //   await _syncEntity(Entity.tasks);
-        // }
       } catch (e, s) {
         _sentryService.captureException(e, stackTrace: s);
       }
     }
 
-    _isSyncing = false;
+    // _isSyncing = false;
 
     return;
+  }
+
+  @pragma('vm:entry-point')
+  sync([List<Entity>? entities]) async {
+    if (_isSyncing) {
+      print("sync already in progress");
+      return;
+    }
+
+    _isSyncing = true;
+
+    try {
+      await FlutterIsolate.spawn(backgroundProcesses, isolateSyncProcess);
+    } catch (e) {
+      print(e);
+      _isSyncing = false;
+    }
+    _isSyncing = false;
+    syncCompletedController.add(0);
   }
 
   Future<void> syncIntegrationWithCheckUser() async {

@@ -15,6 +15,7 @@ import 'package:mobile/core/preferences.dart';
 const scheduleNotificationsTaskKey = "com.akiflow.mobile.scheduleNotifications";
 const periodicTaskskKey = "com.akiflow.mobile.periodicTask";
 const backgroundSyncFromNotification = "com.akiflow.mobile.backgroundSyncFromNotification";
+const isolateSyncProcess = "com.akiflow.mobile.isolateSyncProcess";
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -64,6 +65,7 @@ Future initProcesses() async {
   // *********************************************
 }
 
+@pragma('vm:entry-point')
 Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) async {
   try {
     // *********************************************
@@ -80,6 +82,7 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
         print('Background sync check for $entity');
         DateTime? lastSync = await syncControllerService.getLastSyncFromPreferences[entity]!();
         if (task == backgroundSyncFromNotification ||
+            task == isolateSyncProcess ||
             (lastSync != null && now.difference(lastSync).inMinutes.abs() > 15)) {
           print('Start background sync for $entity');
           entitiesToSync.add(entity);
@@ -89,23 +92,25 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
         syncControllerService.isolateSync(entitiesToSync);
       }
     } else {
-      locator<SyncControllerService>().sync();
+      locator<SyncControllerService>().isolateSync();
     }
     // Show a local notification to confirm the background Sync
     if (kDebugMode) {
       NotificationsService.showNotifications("From background!", "Synched successfully");
     }
 
-    // listen on this port in order to catch trigger from the background services.
-    // Useful for UI updates based on background sync
-    final sendPort = IsolateNameServer.lookupPortByName("backgroundSync");
+    if (task != isolateSyncProcess) {
+      // listen on this port in order to catch trigger from the background services.
+      // Useful for UI updates based on background sync
+      final sendPort = IsolateNameServer.lookupPortByName("backgroundSync");
 
-    if (sendPort != null) {
-      // N.B. The port might be null if the main isolate is not running.
-      sendPort.send(['backgroundSync']); //change this in order to send datas to all the listeners.
+      if (sendPort != null) {
+        // N.B. The port might be null if the main isolate is not running.
+        sendPort.send(['backgroundSync']); //change this in order to send datas to all the listeners.
+      }
     }
 
-    if (task == backgroundSyncFromNotification) {
+    if (task == backgroundSyncFromNotification || task == isolateSyncProcess) {
       int counter = (locator<PreferencesRepository>().recurringNotificationsSyncCounter) + 1;
       await locator<PreferencesRepository>().setRecurringNotificationsSyncCounter(counter);
     } else {
