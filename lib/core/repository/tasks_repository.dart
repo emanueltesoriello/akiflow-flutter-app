@@ -44,14 +44,12 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getAllDocs<Task>() async {
     List<Map<String, Object?>> items = [];
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery('''
+      items = await _databaseService.database!.rawQuery('''
         SELECT *
         FROM tasks
         WHERE doc IS NOT NULL
         ORDER BY sorting DESC
       ''');
-      });
     } catch (e) {
       print('Error retrieving documents: $e');
       return [];
@@ -74,11 +72,8 @@ class TasksRepository extends DatabaseRepository {
       if (date.toLocal().day == DateTime.now().day &&
           date.toLocal().month == DateTime.now().month &&
           date.toLocal().year == DateTime.now().year) {
-        items = await _databaseService.database!.transaction((txn) async {
-          print('case Today');
-          //TODO search what indexes we can use on this query
-          return await txn.rawQuery(
-            """
+        items = await _databaseService.database!.rawQuery(
+          """
         SELECT * FROM tasks
         WHERE deleted_at IS NULL 
         AND trashed_at IS NULL
@@ -92,23 +87,19 @@ class TasksRepository extends DatabaseRepository {
               sorting 
           END
 """,
-            [
-              startDate,
-              startTime.toUtc().toIso8601String(),
-              endTime.toUtc().toIso8601String(),
-              startDate,
-              endTime.toUtc().toIso8601String(),
-              DateTime.now().toUtc().toIso8601String(),
-              DateTime.now().toUtc().toIso8601String(),
-            ],
-          );
-        });
+          [
+            startDate,
+            startTime.toUtc().toIso8601String(),
+            endTime.toUtc().toIso8601String(),
+            startDate,
+            endTime.toUtc().toIso8601String(),
+            DateTime.now().toUtc().toIso8601String(),
+            DateTime.now().toUtc().toIso8601String(),
+          ],
+        );
       } else {
-        items = await _databaseService.database!.transaction((txn) async {
-          print('case not today');
-
-          return await txn.rawQuery(
-            """
+        items = await _databaseService.database!.rawQuery(
+          """
         SELECT * FROM tasks
         WHERE deleted_at IS NULL
         AND trashed_at IS NULL
@@ -122,16 +113,15 @@ class TasksRepository extends DatabaseRepository {
               sorting 
           END
 """,
-            [
-              startDate,
-              endDate,
-              startTime.toUtc().toIso8601String(),
-              endTime.toUtc().toIso8601String(),
-              DateTime.now().toUtc().toIso8601String(),
-              DateTime.now().toUtc().toIso8601String(),
-            ],
-          );
-        });
+          [
+            startDate,
+            endDate,
+            startTime.toUtc().toIso8601String(),
+            endTime.toUtc().toIso8601String(),
+            DateTime.now().toUtc().toIso8601String(),
+            DateTime.now().toUtc().toIso8601String(),
+          ],
+        );
       }
     } catch (e) {
       print('Error retrieving today\'s tasks: $e');
@@ -149,9 +139,8 @@ class TasksRepository extends DatabaseRepository {
     List<Map<String, Object?>> items;
 
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery(
-          """
+      items = await _databaseService.database!.rawQuery(
+        """
         SELECT * FROM tasks
         WHERE deleted_at IS NULL
         AND trashed_at IS NULL
@@ -166,14 +155,13 @@ class TasksRepository extends DatabaseRepository {
               sorting
           END
 """,
-          [
-            date.toIso8601String(),
-            endTime.toUtc().toIso8601String(),
-            DateTime.now().toUtc().toIso8601String(),
-            DateTime.now().toUtc().toIso8601String(),
-          ],
-        );
-      });
+        [
+          date.toIso8601String(),
+          endTime.toUtc().toIso8601String(),
+          DateTime.now().toUtc().toIso8601String(),
+          DateTime.now().toUtc().toIso8601String(),
+        ],
+      );
     } catch (e) {
       print('Error retrieving tasks for scheduled notifications: $e');
       return [];
@@ -186,8 +174,7 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getSomeday() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
+      items = await _databaseService.database!.rawQuery("""
       SELECT *
       FROM tasks
       WHERE status = ${TaskStatusType.someday.id}
@@ -195,7 +182,6 @@ class TasksRepository extends DatabaseRepository {
         AND deleted_at IS NULL
         AND trashed_at IS NULL
 """);
-      });
     } catch (e) {
       print('Error retrieving someday tasks: $e');
       return [];
@@ -208,17 +194,75 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getByRecurringId(String recurringId) async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
+      items = await _databaseService.database!.rawQuery("""
       SELECT *
       FROM tasks
       WHERE recurring_id = ?
         AND deleted_at IS NULL
         AND trashed_at IS NULL
 """, [recurringId]);
-      });
     } catch (e) {
       print('Error retrieving tasks by recurring id: $e');
+      return [];
+    }
+
+    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
+
+  Future<List<Task>> getByRecurringIds<T>(List<dynamic> ids) async {
+    String ins = ids.map((el) => '?').join(',');
+    List<Map<String, Object?>> items;
+    try {
+      items = await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE recurring_id in ($ins) ", ids);
+    } catch (e) {
+      print('Error retrieving objects by recurring ids: $e');
+      return [];
+    }
+
+    return await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+  }
+
+  Future<List<Task>> getTasksBetweenDates(String startDate, String endDate) async {
+    List<Map<String, Object?>> items;
+    try {
+      items = await _databaseService.database!.transaction((txn) async {
+        return await txn.rawQuery("""
+          SELECT *
+          FROM tasks
+          WHERE status = '${TaskStatusType.planned.id}'
+            AND deleted_at IS NULL
+            AND trashed_at IS NULL
+            AND datetime IS NOT NULL
+            AND duration IS NOT NULL
+            AND (datetime >= ? AND datetime <= ?)
+""", [startDate, endDate]);
+      });
+    } catch (e) {
+      print('Error retrieving tasks between dates: $e');
+      return [];
+    }
+
+    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
+
+  Future<List<Task>> getCalendarTasks() async {
+    List<Map<String, Object?>> items;
+    try {
+      items = await _databaseService.database!.transaction((txn) async {
+        return await txn.rawQuery("""
+          SELECT *
+          FROM tasks
+          WHERE status = '${TaskStatusType.planned.id}'
+            AND deleted_at IS NULL
+            AND trashed_at IS NULL
+            AND datetime IS NOT NULL
+            AND duration IS NOT NULL
+""");
+      });
+    } catch (e) {
+      print('Error retrieving calendar tasks: $e');
       return [];
     }
 
@@ -252,93 +296,5 @@ class TasksRepository extends DatabaseRepository {
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
-  }
-
-  Future<List<Task>> getCalendarTasks() async {
-    List<Map<String, Object?>> items;
-    try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
-          SELECT *
-          FROM tasks
-          WHERE status = '${TaskStatusType.planned.id}'
-            AND deleted_at IS NULL
-            AND trashed_at IS NULL
-            AND datetime IS NOT NULL
-            AND duration IS NOT NULL
-""");
-      });
-    } catch (e) {
-      print('Error retrieving calendar tasks: $e');
-      return [];
-    }
-
-    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
-    return objects;
-  }
-
-  Future<List<Task>> getTasksBetweenDates(String startDate, String endDate) async {
-    List<Map<String, Object?>> items;
-    try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
-          SELECT *
-          FROM tasks
-          WHERE status = '${TaskStatusType.planned.id}'
-            AND deleted_at IS NULL
-            AND trashed_at IS NULL
-            AND datetime IS NOT NULL
-            AND duration IS NOT NULL
-            AND (datetime >= ? AND datetime <= ?)
-""", [startDate, endDate]);
-      });
-    } catch (e) {
-      print('Error retrieving tasks between dates: $e');
-      return [];
-    }
-
-    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
-    return objects;
-  }
-
-  Future<List<T>> getByRecurringIds<T>(List<dynamic> ids) async {
-    List<T> items = [];
-
-    if (ids.length > DatabaseRepository.sqlMaxVariableNumber) {
-      List<List<dynamic>> chunks = [];
-
-      for (var i = 0; i < ids.length; i += DatabaseRepository.sqlMaxVariableNumber) {
-        List<dynamic> sublistWithMaxVariables = ids.sublist(
-            i,
-            i + DatabaseRepository.sqlMaxVariableNumber > ids.length
-                ? ids.length
-                : i + DatabaseRepository.sqlMaxVariableNumber);
-        chunks.add(sublistWithMaxVariables);
-      }
-
-      for (var chunk in chunks) {
-        List<T> existingModelsChunk = await _getByRecurringIds(chunk);
-        items.addAll(existingModelsChunk);
-      }
-    } else {
-      items = await _getByRecurringIds(ids);
-    }
-
-    return items;
-  }
-
-  Future<List<T>> _getByRecurringIds<T>(List<dynamic> ids) async {
-    String ins = ids.map((el) => '?').join(',');
-    List<Map<String, Object?>> items;
-    try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("SELECT * FROM $tableName WHERE recurring_id in ($ins) ", ids);
-      });
-    } catch (e) {
-      print('Error retrieving objects by recurring ids: $e');
-      return [];
-    }
-
-    return await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
   }
 }
