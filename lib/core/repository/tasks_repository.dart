@@ -18,27 +18,11 @@ class TasksRepository extends DatabaseRepository {
     required Function(Map<String, dynamic>) fromSql,
   }) : super(tableName: table, fromSql: fromSql);
 
-  /*Future<List<Task>> getInbox<Task>() async {
-    List<Map<String, Object?>> items = await _databaseService.database!.rawQuery("""
-          SELECT *
-          FROM tasks
-          WHERE status = ?
-            AND done = 0
-            AND deleted_at IS NULL
-            AND trashed_at IS NULL
-          ORDER BY
-            sorting DESC
-""", [TaskStatusType.inbox.id]);
-
-    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
-    return objects;
-  }*/
-
   Future<List<Task>> getInbox<Task>() async {
-    List<Map<String, Object?>> items = [];
+    List<Map<String, Object?>> items;
     try {
-      await _databaseService.database!.transaction((txn) async {
-        items = await txn.rawQuery("""
+      items = await _databaseService.database!.transaction((txn) async {
+        return await txn.rawQuery("""
           SELECT *
           FROM tasks
           WHERE status = ?
@@ -50,19 +34,20 @@ class TasksRepository extends DatabaseRepository {
 """, [TaskStatusType.inbox.id]);
       });
     } catch (e) {
-      print('Error retrieving inbox tasks: $e');
+      print('Error retrieving today\'s tasks: $e');
       return [];
     }
 
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+
     return objects;
   }
 
   Future<List<Task>> getAllDocs<Task>() async {
     List<Map<String, Object?>> items = [];
     try {
-      await _databaseService.database!.transaction((txn) async {
-        items = await txn.rawQuery('''
+      items = await _databaseService.database!.transaction((txn) async {
+        return await txn.rawQuery('''
         SELECT *
         FROM tasks
         WHERE doc IS NOT NULL
@@ -77,36 +62,6 @@ class TasksRepository extends DatabaseRepository {
     List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
     return objects;
   }
-
-  /*
-
-            """
-        SELECT * FROM tasks
-        WHERE deleted_at IS NULL 
-        AND trashed_at IS NULL
-        AND status = '${TaskStatusType.planned.id}'
-        AND (((date > ? AND date < ?) OR (datetime > ? AND datetime < ?)) OR ((date <= ? OR datetime < ?) AND done = 0)) 
-        ORDER BY
-          CASE
-            WHEN datetime IS NOT NULL AND datetime >= ? AND (datetime + (duration * 1000) + ${60 * 60000}) >= ?
-              THEN datetime
-            ELSE
-              sorting
-          END
-""",
-            [
-              startTime.toUtc().toIso8601String(),
-              endTime.toUtc().toIso8601String(),
-              startTime.toUtc().toIso8601String(),
-              endTime.toUtc().toIso8601String(),
-              startTime.toUtc().toIso8601String(),
-              endTime.toUtc().toIso8601String(),
-              DateTime.now().toUtc().toIso8601String(),
-              DateTime.now().toUtc().toIso8601String(),
-            ],
-          );
-
-  */
 
   Future<List<Task>> getTodayTasks<Task>({required DateTime date}) async {
     var format = DateFormat("yyyy-MM-dd");

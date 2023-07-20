@@ -34,7 +34,7 @@ dependencies:
        ref: main
        path: modal_bottom_sheet
   models:
-    path: ./packages/models 
+    path: ./packages/models  
   package_info_plus: ^4.0.2
   rrule: ^0.2.8
   sentry_flutter: ^7.8.0

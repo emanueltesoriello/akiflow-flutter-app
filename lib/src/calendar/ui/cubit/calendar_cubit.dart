@@ -180,7 +180,8 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
 
   Future<void> setSystemStartOfWeekDay() async {
     int systemDefault = DateTime.sunday;
-    systemDefault = await CalendarUtils.retrieveSystemFirstDayOfWeek();
+    systemDefault =
+        1; //await CalendarUtils.retrieveSystemFirstDayOfWeek(); -> todo fix this method in order to work into isolates
     emit(state.copyWith(systemStartOfWeekDay: systemDefault));
   }
 
