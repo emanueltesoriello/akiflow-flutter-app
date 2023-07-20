@@ -73,7 +73,7 @@ class _EventEditModalState extends State<EventEditModal> {
   late bool timeChanged;
   late bool dateChanged;
   late String choosenCalendar;
-  late Calendar choosedCalendar;
+  late Calendar newCalendar;
 
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
@@ -86,7 +86,7 @@ class _EventEditModalState extends State<EventEditModal> {
     locationController = TextEditingController()..text = widget.event.content?['location'] ?? '';
     descriptionController = TextEditingController()..text = widget.event.description ?? '';
     choosenCalendar = widget.event.organizerId ?? '';
-    choosedCalendar = const Calendar();
+    newCalendar = const Calendar();
 
     atendeesToAdd = List.empty(growable: true);
     atendeesToRemove = List.empty(growable: true);
@@ -852,6 +852,7 @@ class _EventEditModalState extends State<EventEditModal> {
               onChange: (Calendar calendar) {
                 setState(() {
                   choosenCalendar = calendar.originId!;
+                  newCalendar = calendar;
                 });
                 updatedEvent = updatedEvent.copyWith(
                   creatorId: calendar.originId,
@@ -877,7 +878,7 @@ class _EventEditModalState extends State<EventEditModal> {
                 calendarColor: EventExt.calendarColor[updatedEvent.calendarColor] ?? updatedEvent.calendarColor!,
                 size: Dimension.defaultIconSize),
             const SizedBox(width: Dimension.padding),
-            Text(choosenCalendar,
+            Text(newCalendar.title ?? choosenCalendar,
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium

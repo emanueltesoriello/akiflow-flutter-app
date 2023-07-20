@@ -20,6 +20,16 @@ class ChooseCalendarModal extends StatelessWidget {
     return BlocBuilder<CalendarCubit, CalendarCubitState>(
       builder: (context, state) {
         List<Calendar> primaryCalendars = state.calendars.where((calendar) => calendar.primary == true).toList();
+        Map<String, List<Calendar>> groupedCalendars = {};
+
+        for (var primaryCalendar in primaryCalendars) {
+          groupedCalendars.addAll({
+            '${primaryCalendar.title}': state.calendars
+                .where((calendar) =>
+                    calendar.akiflowAccountId == primaryCalendar.akiflowAccountId && calendar.readOnly == false)
+                .toList()
+          });
+        }
 
         return Material(
           color: ColorsExt.background(context),
@@ -41,12 +51,6 @@ class ChooseCalendarModal extends StatelessWidget {
                   padding: const EdgeInsets.all(Dimension.padding),
                   child: Row(
                     children: [
-                      SvgPicture.asset(
-                        Assets.images.icons.google.calendarSVG,
-                        width: Dimension.defaultIconSize,
-                        height: Dimension.defaultIconSize,
-                      ),
-                      const SizedBox(width: Dimension.paddingS),
                       Text(
                         t.event.editEvent.chooseCalendar,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -57,19 +61,52 @@ class ChooseCalendarModal extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: Dimension.padding),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: primaryCalendars.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: groupedCalendars.length,
                   itemBuilder: (context, index) {
-                    return _item(
-                      context,
-                      active: initialCalendar == primaryCalendars[index].originId,
-                      text: primaryCalendars[index].originId ?? '',
-                      calendar: primaryCalendars[index],
-                      click: () {
-                        onChange(primaryCalendars[index]);
-                        Navigator.pop(context);
-                      },
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            const SizedBox(width: Dimension.paddingS),
+                            SvgPicture.asset(
+                              Assets.images.icons.google.calendarSVG,
+                              width: Dimension.defaultIconSize,
+                              height: Dimension.defaultIconSize,
+                            ),
+                            const SizedBox(width: Dimension.paddingS),
+                            Text(
+                              groupedCalendars.keys.elementAt(index),
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: ColorsExt.grey700(context),
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: Dimension.paddingS),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: groupedCalendars.values.elementAt(index).length,
+                          itemBuilder: (context, index2) {
+                            return _item(
+                              context,
+                              active: initialCalendar == groupedCalendars.values.elementAt(index)[index2].originId,
+                              text: groupedCalendars.values.elementAt(index)[index2].title ?? '',
+                              calendar: groupedCalendars.values.elementAt(index)[index2],
+                              click: () {
+                                onChange(groupedCalendars.values.elementAt(index)[index2]);
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        ),
+                        const SizedBox(height: Dimension.padding),
+                      ],
                     );
                   },
                 ),
@@ -93,9 +130,10 @@ class ChooseCalendarModal extends StatelessWidget {
       onTap: click,
       child: Container(
         color: active ? ColorsExt.grey100(context) : Colors.transparent,
-        padding: const EdgeInsets.all(Dimension.padding),
+        padding: const EdgeInsets.all(Dimension.paddingSM),
         child: Row(
           children: [
+            const SizedBox(width: Dimension.paddingS),
             CalendarColorCircle(calendarColor: calendar.color!, active: active),
             const SizedBox(width: Dimension.paddingS),
             Text(
