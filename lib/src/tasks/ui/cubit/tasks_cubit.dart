@@ -147,7 +147,6 @@ class TasksCubit extends Cubit<TasksCubitState> {
       if (_todayCubit != null) {}
       await Future.wait([
         fetchInbox().then((_) => print('fetched inbox')),
-        fetchInbox().then((_) => print('fetched inbox')),
         fetchTodayTasks().then((_) => print('fetched today tasks')),
         if (_todayCubit != null)
           fetchSelectedDayTasks(_todayCubit!.state.selectedDate).then((_) => print('fetched selected day tasks')),

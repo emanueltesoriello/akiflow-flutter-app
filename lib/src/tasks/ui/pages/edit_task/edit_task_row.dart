@@ -158,7 +158,61 @@ class _EditTaskRowState extends State<EditTaskRow> {
                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Column(
                   children: [
-                    // QuillToolbar.basic(controller: value),
+                    QuillToolbar(
+                      toolbarSectionSpacing: 0,
+                      children: [
+                        ToggleStyleButton(
+                          attribute: Attribute.bold,
+                          icon: Icons.format_bold,
+                          iconSize: 18,
+                          controller: value,
+                        ),
+                        ToggleStyleButton(
+                          attribute: Attribute.italic,
+                          icon: Icons.format_italic,
+                          iconSize: 18,
+                          controller: value,
+                        ),
+                        ToggleStyleButton(
+                          attribute: Attribute.underline,
+                          icon: Icons.format_underline,
+                          iconSize: 18,
+                          controller: value,
+                        ),
+                        ClearFormatButton(
+                          icon: Icons.format_clear,
+                          iconSize: 18,
+                          controller: value,
+                        ),
+                        const SizedBox(width: Dimension.paddingXS),
+                        SelectHeaderStyleButton(
+                          controller: value,
+                          iconSize: 18,
+                          attributes: const [
+                            Attribute.h1,
+                            Attribute.h2,
+                          ],
+                        ),
+                        ToggleStyleButton(
+                          attribute: Attribute.ul,
+                          controller: value,
+                          icon: Icons.format_list_bulleted,
+                          iconSize: 18,
+                        ),
+                        ToggleStyleButton(
+                          attribute: Attribute.ol,
+                          controller: value,
+                          icon: Icons.format_list_numbered,
+                          iconSize: 18,
+                        ),
+                        const SizedBox(width: Dimension.paddingXS),
+                        ClearFormatButton(
+                          icon: Icons.format_clear,
+                          iconSize: 18,
+                          controller: value,
+                        ),
+                      ],
+                    ),
                     QuillEditor(
                       controller: value,
                       readOnly: false,

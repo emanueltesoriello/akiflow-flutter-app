@@ -67,17 +67,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
     initFocusNodeListener();
     await initDescription(isFirstInit: isFirstInit);
-    streamSubscription = quillController.value.changes.listen((change) async {
-      var a = change.change.toJson();
-      var b = 0;
-      //quillEditorController.setDelta(delta)
-      //List<dynamic> delta = quillController.value.document.toDelta().toJson();
-      //  quillEditorController.setDelta(change.change);
-
-      //await quillEditorController.insertText(html, index: 0);
-      // String html = await InteractiveWebView.deltaToHtml(delta);
-      //  cubit.updateDescription(await quillEditorController.getText());
-    });
   }
 
   void initFocusNodeListener() {

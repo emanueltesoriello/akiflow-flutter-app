@@ -21,18 +21,16 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getInbox<Task>() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
-          SELECT *
-          FROM tasks
-          WHERE status = ?
-            AND done = 0
-            AND deleted_at IS NULL
-            AND trashed_at IS NULL
-          ORDER BY
-            sorting DESC
+      items = await _databaseService.database!.rawQuery("""
+      SELECT *
+      FROM tasks
+      WHERE status = ?
+        AND done = 0
+        AND deleted_at IS NULL
+        AND trashed_at IS NULL
+      ORDER BY
+        sorting DESC
 """, [TaskStatusType.inbox.id]);
-      });
     } catch (e) {
       print('Error retrieving today\'s tasks: $e');
       return [];
