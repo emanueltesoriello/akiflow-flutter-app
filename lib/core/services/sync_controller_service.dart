@@ -25,6 +25,7 @@ import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
 import 'package:mobile/core/services/analytics_service.dart';
+import 'package:mobile/core/services/background_service.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
 import 'package:mobile/core/services/sync_integration_service.dart';
@@ -39,6 +40,7 @@ import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
 
 enum Entity { accounts, calendars, contacts, tasks, labels, events, eventModifiers }
 
@@ -149,7 +151,12 @@ class SyncControllerService {
     );
   }
 
-  sync([List<Entity>? entities]) async {
+  @pragma('vm:entry-point')
+  sync() async {
+    await FlutterIsolate.spawn(backgroundProcesses, backgroundSyncFromNotification);
+  }
+
+  isolateSync([List<Entity>? entities]) async {
     print("started sync");
 
     if (_isSyncing) {

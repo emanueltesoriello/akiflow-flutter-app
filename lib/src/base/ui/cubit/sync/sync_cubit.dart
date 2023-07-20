@@ -29,7 +29,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
       User? user = _preferencesRepository.user;
 
       if (user != null) {
-        await _syncControllerService.sync(entities);
+        await _syncControllerService.isolateSync(entities);
         print("sync completed");
       }
 

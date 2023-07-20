@@ -86,7 +86,7 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
         }
       }
       if (entitiesToSync.isNotEmpty) {
-        syncControllerService.sync(entitiesToSync);
+        syncControllerService.isolateSync(entitiesToSync);
       }
     } else {
       locator<SyncControllerService>().sync();
