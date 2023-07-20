@@ -206,11 +206,6 @@ class _EditTaskRowState extends State<EditTaskRow> {
                           iconSize: 18,
                         ),
                         const SizedBox(width: Dimension.paddingXS),
-                        ClearFormatButton(
-                          icon: Icons.format_clear,
-                          iconSize: 18,
-                          controller: value,
-                        ),
                       ],
                     ),
                     QuillEditor(
