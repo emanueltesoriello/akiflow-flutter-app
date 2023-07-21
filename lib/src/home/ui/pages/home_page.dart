@@ -87,7 +87,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             context.read<EditTaskCubit>().onModalClose();
             await Future.delayed(const Duration(milliseconds: 700));
 
-            SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+            if (Platform.isAndroid) {
+              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+            }
           });
         }
       }
@@ -107,7 +109,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ).then((value) async {
               context.read<EditTaskCubit>().onModalClose();
               await Future.delayed(const Duration(milliseconds: 700));
-              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+              if (Platform.isAndroid) {
+                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+              }
             });
           }
         }
