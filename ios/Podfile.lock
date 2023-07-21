@@ -90,6 +90,8 @@ PODS:
   - flutter_appauth (0.0.1):
     - AppAuth (= 1.6.2)
     - Flutter
+  - flutter_isolate (0.0.1):
+    - Flutter
   - flutter_js (0.1.0):
     - Flutter
   - flutter_keyboard_visibility (0.0.1):
@@ -205,6 +207,7 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_appauth (from `.symlinks/plugins/flutter_appauth/ios`)
+  - flutter_isolate (from `.symlinks/plugins/flutter_isolate/ios`)
   - flutter_js (from `.symlinks/plugins/flutter_js/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
@@ -274,6 +277,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_appauth:
     :path: ".symlinks/plugins/flutter_appauth/ios"
+  flutter_isolate:
+    :path: ".symlinks/plugins/flutter_isolate/ios"
   flutter_js:
     :path: ".symlinks/plugins/flutter_js/ios"
   flutter_keyboard_visibility:
@@ -337,6 +342,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: bb2c4f6422a753038fe137d90ae7c1af57251316
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_appauth: cf9b928962105b2a64a9802585d1c8adaf3e0f46
+  flutter_isolate: 0edf5081826d071adf21759d1eb10ff5c24503b5
   flutter_js: 95929d4e146e8ceb1c8e1889d8c2065c5d840076
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
