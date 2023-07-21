@@ -22,6 +22,7 @@ part 'calendar_state.dart';
 
 class CalendarCubit extends Cubit<CalendarCubitState> {
   final CalendarsRepository _calendarsRepository = locator<CalendarsRepository>();
+  final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final SyncCubit _syncCubit;
   final AuthCubit _authCubit;
 
@@ -301,7 +302,6 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
   }
 
   void saveNewSetting({required String sectionName, required String key, required dynamic value}) {
-    final PreferencesRepository preferencesRepository = locator<PreferencesRepository>();
     Map<String, dynamic> setting = {
       'key': key,
       'value': value,
@@ -309,7 +309,7 @@ class CalendarCubit extends Cubit<CalendarCubitState> {
     };
     List<dynamic> sectionSettings = UserSettingsUtils.updateSectionSetting(
         sectionName: sectionName,
-        localSectionSettings: preferencesRepository.user?.settings?[sectionName],
+        localSectionSettings: _preferencesRepository.user?.settings?[sectionName],
         newSetting: setting);
 
     _authCubit.updateSection(sectionName: sectionName, section: sectionSettings);
