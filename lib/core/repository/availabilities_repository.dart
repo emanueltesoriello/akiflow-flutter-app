@@ -18,13 +18,11 @@ class AvailabilitiesRepository extends DatabaseRepository {
   Future<List<AvailabilityConfig>> getAvailabilities<Task>() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
-        SELECT *
-        FROM availabilities
-        WHERE deleted_at IS NULL
-      """);
-      });
+      items = await _databaseService.database!.rawQuery("""
+      SELECT *
+      FROM availabilities
+      WHERE deleted_at IS NULL
+    """);
     } catch (e) {
       print('Error retrieving availabilities: $e');
       return [];

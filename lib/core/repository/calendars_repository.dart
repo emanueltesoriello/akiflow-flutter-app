@@ -16,13 +16,11 @@ class CalendarsRepository extends DatabaseRepository {
   Future<List<Calendar>> getCalendars() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
-          SELECT *
-          FROM calendars
-          WHERE deleted_at IS NULL
-""");
-      });
+      items = await _databaseService.database!.rawQuery("""
+      SELECT *
+      FROM calendars
+      WHERE deleted_at IS NULL
+    """);
     } catch (e) {
       print('Error retrieving calendars: $e');
       return [];

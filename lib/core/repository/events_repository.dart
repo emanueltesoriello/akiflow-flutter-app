@@ -16,13 +16,11 @@ class EventsRepository extends DatabaseRepository {
   Future<List<Event>> getEvents<Event>() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
+      items = await _databaseService.database!.rawQuery("""
         SELECT *
         FROM events
         WHERE task_id IS NULL
       """);
-      });
     } catch (e) {
       print('Error retrieving events: $e');
       return [];
@@ -39,8 +37,7 @@ class EventsRepository extends DatabaseRepository {
     String endDate = DateFormat("y-MM-dd").format(end);
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
+      items = await _databaseService.database!.rawQuery("""
         SELECT *
         FROM events
         WHERE task_id IS NULL         
@@ -56,23 +53,22 @@ class EventsRepository extends DatabaseRepository {
                 AND (until_datetime IS NULL OR until_datetime >= ?))   
         )    
       """, [
-          startTime,
-          endTime,
-          startDate,
-          endDate,
-          startDate,
-          startDate,
-          startTime,
-          endTime,
-          startTime,
-          endTime,
-          startDate,
-          endDate,
-          endTime,
-          endDate,
-          startTime,
-        ]);
-      });
+        startTime,
+        endTime,
+        startDate,
+        endDate,
+        startDate,
+        startDate,
+        startTime,
+        endTime,
+        startTime,
+        endTime,
+        startDate,
+        endDate,
+        endTime,
+        endDate,
+        startTime,
+      ]);
     } catch (e) {
       print('Error retrieving events between dates: $e');
       return [];
@@ -85,8 +81,7 @@ class EventsRepository extends DatabaseRepository {
   Future<List<Event>> getExceptionsByRecurringId<Event>(String recurringId) async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
+      items = await _databaseService.database!.rawQuery("""
         SELECT *
         FROM events
         WHERE recurring_id = ?
@@ -94,7 +89,6 @@ class EventsRepository extends DatabaseRepository {
         AND organizer_id IS NOT NULL
         AND id != recurring_id 
       """, [recurringId]);
-      });
     } catch (e) {
       print('Error retrieving events: $e');
       return [];

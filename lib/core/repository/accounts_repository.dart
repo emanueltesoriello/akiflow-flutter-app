@@ -18,13 +18,11 @@ class AccountsRepository extends DatabaseRepository {
   Future<Account?> getByAccountId(String? accountId) async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.query(
-          tableName,
-          where: 'account_id = ?',
-          whereArgs: [accountId],
-        );
-      });
+      items = await _databaseService.database!.query(
+        tableName,
+        where: 'account_id = ?',
+        whereArgs: [accountId],
+      );
     } catch (e) {
       print('Error retrieving account by accountId: $e');
       return null;
@@ -40,13 +38,11 @@ class AccountsRepository extends DatabaseRepository {
   Future<List<Account>> getAccounts<Account>() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
+      items = await _databaseService.database!.rawQuery("""
         SELECT *
         FROM accounts
         WHERE deleted_at IS NULL
       """);
-      });
     } catch (e) {
       print('Error retrieving accounts: $e');
       return [];

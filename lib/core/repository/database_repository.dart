@@ -111,17 +111,16 @@ class DatabaseRepository implements IBaseDatabaseRepository {
       String ins = ids.map((el) => '?').join(',');
       List<Map<String, Object?>> items = [];
 
-      await _databaseService.database!.transaction((txn) async {
-        items = await txn.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
+      items = await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
 
-        if (elements.length != items.length) {
-          print("checking if connectorId & originAccountId matches");
+      if (elements.length != items.length) {
+        print("checking if connectorId & originAccountId matches");
 
-          List<dynamic> originAccountIds = elements.map((remoteItem) => remoteItem.originAccountId).toList();
-          //List<dynamic> connectorIds = elements.map((remoteItem) => remoteItem.connectorId).toList();
-          items = await txn.rawQuery("SELECT * FROM $tableName WHERE origin_account_id in ($ins) ", originAccountIds);
-        }
-      });
+        List<dynamic> originAccountIds = elements.map((remoteItem) => remoteItem.originAccountId).toList();
+        //List<dynamic> connectorIds = elements.map((remoteItem) => remoteItem.connectorId).toList();
+        items = await _databaseService.database!
+            .rawQuery("SELECT * FROM $tableName WHERE origin_account_id in ($ins) ", originAccountIds);
+      }
 
       List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
 
@@ -207,20 +206,19 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     ];
     String joinedConditionsListId = conditionsListId.join(' OR ');
     List<Map<String, Object?>> items = [];
+
     try {
-      await _databaseService.database!.transaction((txn) async {
-        if (tableName == "tasks") {
-          items = await txn.query(tableName,
-              where:
-                  '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt OR $joinedConditionsListId');
-        } else {
-          items = await txn.query(
-            tableName,
+      if (tableName == "tasks") {
+        items = await _databaseService.database!.query(tableName,
             where:
-                '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt',
-          );
-        }
-      });
+                '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt OR $joinedConditionsListId');
+      } else {
+        items = await _databaseService.database!.query(
+          tableName,
+          where:
+              '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt',
+        );
+      }
     } catch (e) {
       print('Error retrieving unsynced records: $e');
       return [];
@@ -251,8 +249,16 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     String query =
         """SELECT id, akiflow_account_id, calendar_id, $originalStartDateTimeColumn, recurring_id, updated_at, remote_updated_at, deleted_at 
     FROM $tableName WHERE akiflow_account_id = ? AND calendar_id = ? AND recurring_id = ? AND $originalStartDateTimeColumn = ?""";
-    List<Map<String, Object?>> items = await _databaseService.database!
-        .rawQuery(query, [akiflowAccountId, calendarId, recurringId, originalStartDateTimeColumn]);
+
+    List<Map<String, Object?>> items;
+    try {
+      items = await _databaseService.database!
+          .rawQuery(query, [akiflowAccountId, calendarId, recurringId, originalStartDateTimeColumn]);
+    } catch (e) {
+      print('Error retrieving recurring by original start: $e');
+      return null;
+    }
+
     if (items.isEmpty) {
       return null;
     } else {

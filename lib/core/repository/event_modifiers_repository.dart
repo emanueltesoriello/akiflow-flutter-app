@@ -15,8 +15,7 @@ class EventModifiersRepository extends DatabaseRepository {
   Future<List<EventModifier>> getUnprocessedEventModifiers<EventModifier>(String maxProcessedAtEvents) async {
     List<Map<String, Object?>> items = [];
     try {
-      await _databaseService.database!.transaction((txn) async {
-        items = await txn.rawQuery("""
+      items = await _databaseService.database!.rawQuery("""
           SELECT *
           FROM event_modifiers
           WHERE deleted_at IS NULL
@@ -24,7 +23,6 @@ class EventModifiersRepository extends DatabaseRepository {
           AND failed_at IS NULL
           ORDER BY created_at DESC
 """, [maxProcessedAtEvents]);
-      });
     } catch (e) {
       print('Error retrieving event modifiers: $e');
       return [];
