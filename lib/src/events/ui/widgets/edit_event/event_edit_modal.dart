@@ -35,6 +35,7 @@ import 'package:models/nullable.dart';
 import 'package:rrule/rrule.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:uuid/uuid.dart';
 
 class EventEditModal extends StatefulWidget {
   const EventEditModal({
@@ -74,6 +75,9 @@ class _EventEditModalState extends State<EventEditModal> {
   late bool dateChanged;
   late String choosenCalendar;
   late Calendar newCalendar;
+  late bool calendarChanged;
+  late bool newCalendarIsFromDifferentAccount;
+  late Event eventToBeDeleted;
 
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
       quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)));
@@ -87,6 +91,9 @@ class _EventEditModalState extends State<EventEditModal> {
     descriptionController = TextEditingController()..text = widget.event.description ?? '';
     choosenCalendar = widget.event.organizerId ?? '';
     newCalendar = const Calendar();
+    calendarChanged = false;
+    newCalendarIsFromDifferentAccount = false;
+    eventToBeDeleted = const Event();
 
     atendeesToAdd = List.empty(growable: true);
     atendeesToRemove = List.empty(growable: true);
@@ -843,32 +850,46 @@ class _EventEditModalState extends State<EventEditModal> {
 
   InkWell _chooseCalendarRow(BuildContext context) {
     return InkWell(
-      splashFactory: widget.createingEvent ?? false ? InkSplash.splashFactory : NoSplash.splashFactory,
       onTap: () {
-        if (widget.createingEvent ?? false) {
-          showCupertinoModalBottomSheet(
-            context: context,
-            builder: (context) => ChooseCalendarModal(
-              onChange: (Calendar calendar) {
-                setState(() {
-                  choosenCalendar = calendar.originId!;
-                  newCalendar = calendar;
-                });
-                updatedEvent = updatedEvent.copyWith(
-                  creatorId: calendar.originId,
-                  organizerId: calendar.originId,
-                  calendarId: calendar.id,
-                  originCalendarId: calendar.originId,
-                  connectorId: calendar.connectorId,
-                  akiflowAccountId: calendar.akiflowAccountId,
-                  originAccountId: calendar.originAccountId,
-                  calendarColor: calendar.color,
-                );
-              },
-              initialCalendar: choosenCalendar,
-            ),
-          );
-        }
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => ChooseCalendarModal(
+            onChange: (Calendar calendar) {
+              bool creatingEvent = widget.createingEvent ?? false;
+              setState(() {
+                choosenCalendar = calendar.originId!;
+                newCalendar = calendar;
+
+                //used for changing calendar account. part 1 of 2
+                if (!creatingEvent && updatedEvent.akiflowAccountId != calendar.akiflowAccountId) {
+                  newCalendarIsFromDifferentAccount = true;
+                  calendarChanged = true;
+                  eventToBeDeleted = updatedEvent;
+                }
+              });
+              dynamic content = updatedEvent.content;
+
+              //used when changing calendar in the same account
+              if (!creatingEvent && updatedEvent.akiflowAccountId == calendar.akiflowAccountId) {
+                content['previousOriginCalendarId'] = updatedEvent.originCalendarId;
+                calendarChanged = true;
+              }
+
+              updatedEvent = updatedEvent.copyWith(
+                creatorId: calendar.originId,
+                organizerId: calendar.originId,
+                calendarId: calendar.id,
+                originCalendarId: calendar.originId,
+                connectorId: calendar.connectorId,
+                akiflowAccountId: calendar.akiflowAccountId,
+                originAccountId: calendar.originAccountId,
+                calendarColor: calendar.color,
+                content: content,
+              );
+            },
+            initialCalendar: choosenCalendar,
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
@@ -1263,7 +1284,20 @@ class _EventEditModalState extends State<EventEditModal> {
       await context.read<EventsCubit>().addEventToDb(updatedEvent);
     }
 
-    if (updatedEvent.recurringId != null && widget.event.recurringId != null) {
+    //used for changing calendar account. part 2 of 2
+    if (newCalendarIsFromDifferentAccount) {
+      var id = const Uuid().v4();
+
+      if (updatedEvent.recurringId != null) {
+        updatedEvent = updatedEvent.copyWith(id: id, recurringId: id);
+      } else {
+        updatedEvent = updatedEvent.copyWith(id: id);
+      }
+      await context.read<EventsCubit>().addEventToDb(updatedEvent);
+      await context.read<EventsCubit>().deleteEvent(eventToBeDeleted);
+    }
+
+    if (updatedEvent.recurringId != null && widget.event.recurringId != null && !calendarChanged) {
       await showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => RecurrentEventEditModal(
