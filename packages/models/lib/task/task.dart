@@ -127,7 +127,7 @@ class Task extends Equatable implements Base {
     Nullable<String?>? originId,
     Nullable<String?>? originAccountId,
     String? akiflowAccountId,
-    String? calendarId,
+    Nullable<String?>? calendarId,
     dynamic doc,
   }) {
     return Task(
@@ -168,7 +168,7 @@ class Task extends Equatable implements Base {
       originId: originId ?? this.originId,
       originAccountId: originAccountId ?? this.originAccountId,
       akiflowAccountId: akiflowAccountId ?? this.akiflowAccountId,
-      calendarId: calendarId ?? this.calendarId,
+      calendarId: calendarId == null ? this.calendarId : calendarId.value,
       doc: doc ?? this.doc,
     );
   }

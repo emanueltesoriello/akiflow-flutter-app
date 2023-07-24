@@ -777,6 +777,14 @@ class EditTaskCubit extends Cubit<EditTaskCubitState> {
     emit(state.copyWith(updatedTask: updated));
   }
 
+  void changeCalendar(String? calendarId) {
+    Task updated = state.updatedTask.copyWith(
+      calendarId: Nullable(calendarId),
+      updatedAt: Nullable(TzUtils.toUtcStringIfNotNull(DateTime.now())),
+    );
+    emit(state.copyWith(updatedTask: updated));
+  }
+
   void linksTap() {
     emit(state.copyWith(showDuration: false, showLabelsList: false));
   }
