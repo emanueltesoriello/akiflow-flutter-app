@@ -606,7 +606,7 @@ class NotificationsService {
       final now = DateTime.now();
 
       DateTime dt = DateTime(
-          now.year, now.month, now.day, dailyOverviewNotificationTime.hour, dailyOverviewNotificationTime.minute);
+          now.year, now.month, now.day + 1, dailyOverviewNotificationTime.hour, dailyOverviewNotificationTime.minute);
       await localNotificationsPlugin.saveScheduleExt(dailyReminderTaskId,
           "Start your day right by checking your schedule!", "", tz.TZDateTime.parse(tz.local, dt.toIso8601String()),
           notificationType: NotificationType.Other, minutesBeforeToStart: 5);

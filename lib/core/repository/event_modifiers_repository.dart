@@ -1,11 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
-import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
 
 class EventModifiersRepository extends DatabaseRepository {
-  final DatabaseService _databaseService = locator<DatabaseService>();
   static const table = 'event_modifiers';
 
   EventModifiersRepository({
@@ -15,7 +13,7 @@ class EventModifiersRepository extends DatabaseRepository {
   Future<List<EventModifier>> getUnprocessedEventModifiers<EventModifier>(String maxProcessedAtEvents) async {
     List<Map<String, Object?>> items = [];
     try {
-      items = await _databaseService.database!.rawQuery("""
+      items = await DatabaseService.database!.rawQuery("""
           SELECT *
           FROM event_modifiers
           WHERE deleted_at IS NULL

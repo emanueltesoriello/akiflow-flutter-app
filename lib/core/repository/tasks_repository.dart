@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
@@ -10,8 +9,6 @@ import 'package:models/task/task.dart';
 import '../../extensions/task_extension.dart';
 
 class TasksRepository extends DatabaseRepository {
-  final DatabaseService _databaseService = locator<DatabaseService>();
-
   static const table = 'tasks';
 
   TasksRepository({
@@ -21,7 +18,7 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getInbox<Task>() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.rawQuery("""
+      items = await DatabaseService.database!.rawQuery("""
       SELECT *
       FROM tasks
       WHERE status = ?
@@ -44,7 +41,7 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getAllDocs<Task>() async {
     List<Map<String, Object?>> items = [];
     try {
-      items = await _databaseService.database!.rawQuery('''
+      items = await DatabaseService.database!.rawQuery('''
         SELECT *
         FROM tasks
         WHERE doc IS NOT NULL
@@ -72,7 +69,7 @@ class TasksRepository extends DatabaseRepository {
       if (date.toLocal().day == DateTime.now().day &&
           date.toLocal().month == DateTime.now().month &&
           date.toLocal().year == DateTime.now().year) {
-        items = await _databaseService.database!.rawQuery(
+        items = await DatabaseService.database!.rawQuery(
           """
         SELECT * FROM tasks
         WHERE deleted_at IS NULL 
@@ -98,7 +95,7 @@ class TasksRepository extends DatabaseRepository {
           ],
         );
       } else {
-        items = await _databaseService.database!.rawQuery(
+        items = await DatabaseService.database!.rawQuery(
           """
         SELECT * FROM tasks
         WHERE deleted_at IS NULL
@@ -139,7 +136,7 @@ class TasksRepository extends DatabaseRepository {
     List<Map<String, Object?>> items;
 
     try {
-      items = await _databaseService.database!.rawQuery(
+      items = await DatabaseService.database!.rawQuery(
         """
         SELECT * FROM tasks
         WHERE deleted_at IS NULL
@@ -174,7 +171,7 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getSomeday() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.rawQuery("""
+      items = await DatabaseService.database!.rawQuery("""
       SELECT *
       FROM tasks
       WHERE status = ${TaskStatusType.someday.id}
@@ -194,7 +191,7 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getByRecurringId(String recurringId) async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.rawQuery("""
+      items = await DatabaseService.database!.rawQuery("""
       SELECT *
       FROM tasks
       WHERE recurring_id = ?
@@ -214,7 +211,7 @@ class TasksRepository extends DatabaseRepository {
     String ins = ids.map((el) => '?').join(',');
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE recurring_id in ($ins) ", ids);
+      items = await DatabaseService.database!.rawQuery("SELECT * FROM $tableName WHERE recurring_id in ($ins) ", ids);
     } catch (e) {
       print('Error retrieving objects by recurring ids: $e');
       return [];
@@ -226,18 +223,16 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getTasksBetweenDates(String startDate, String endDate) async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
-          SELECT *
-          FROM tasks
-          WHERE status = '${TaskStatusType.planned.id}'
-            AND deleted_at IS NULL
-            AND trashed_at IS NULL
-            AND datetime IS NOT NULL
-            AND duration IS NOT NULL
-            AND (datetime >= ? AND datetime <= ?)
+      items = await DatabaseService.database!.rawQuery("""
+      SELECT *
+      FROM tasks
+      WHERE status = '${TaskStatusType.planned.id}'
+        AND deleted_at IS NULL
+        AND trashed_at IS NULL
+        AND datetime IS NOT NULL
+        AND duration IS NOT NULL
+        AND (datetime >= ? AND datetime <= ?)
 """, [startDate, endDate]);
-      });
     } catch (e) {
       print('Error retrieving tasks between dates: $e');
       return [];
@@ -250,17 +245,15 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getCalendarTasks() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery("""
-          SELECT *
-          FROM tasks
-          WHERE status = '${TaskStatusType.planned.id}'
-            AND deleted_at IS NULL
-            AND trashed_at IS NULL
-            AND datetime IS NOT NULL
-            AND duration IS NOT NULL
+      items = await DatabaseService.database!.rawQuery("""
+      SELECT *
+      FROM tasks
+      WHERE status = '${TaskStatusType.planned.id}'
+        AND deleted_at IS NULL
+        AND trashed_at IS NULL
+        AND datetime IS NOT NULL
+        AND duration IS NOT NULL
 """);
-      });
     } catch (e) {
       print('Error retrieving calendar tasks: $e');
       return [];
@@ -272,23 +265,21 @@ class TasksRepository extends DatabaseRepository {
 
   Future<List<Task>> getLabelTasks(Label label) async {
     String query = """
-      SELECT *
-      FROM tasks
-      WHERE list_id = ?
-      AND deleted_at IS NULL
-      AND trashed_at IS NULL
-      GROUP BY IFNULL(`recurring_id`, `id`)
-      ORDER BY
-          sorting_label is null, sorting_label,
-          done ASC,
-          status ASC;
+    SELECT *
+    FROM tasks
+    WHERE list_id = ?
+    AND deleted_at IS NULL
+    AND trashed_at IS NULL
+    GROUP BY IFNULL(`recurring_id`, `id`)
+    ORDER BY
+        sorting_label is null, sorting_label,
+        done ASC,
+        status ASC;
 """;
 
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.transaction((txn) async {
-        return await txn.rawQuery(query, [label.id!]);
-      });
+      items = await DatabaseService.database!.rawQuery(query, [label.id!]);
     } catch (e) {
       print('Error retrieving label tasks: $e');
       return [];

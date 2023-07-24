@@ -18,7 +18,6 @@ import 'package:mobile/core/repository/calendars_repository.dart';
 import 'package:mobile/core/repository/events_repository.dart';
 import 'package:mobile/core/repository/labels_repository.dart';
 import 'package:mobile/core/repository/tasks_repository.dart';
-import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/dialog_service.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sentry_service.dart';
@@ -46,16 +45,11 @@ import 'api/event_modifiers_api.dart';
 GetIt locator = GetIt.instance;
 
 // Order of the registration is important
-void setupLocator(
-    {required SharedPreferences preferences,
-    required DatabaseService databaseService,
-    String? endpoint,
-    bool initFirebaseApp = true}) {
+void setupLocator({required SharedPreferences preferences, String? endpoint, bool initFirebaseApp = true}) {
   PreferencesRepository preferencesRepository = PreferencesRepositoryImpl(preferences);
 
   /// Core
   locator.registerSingleton<HttpClient>(HttpClient(preferencesRepository));
-  locator.registerSingleton<DatabaseService>(databaseService);
   locator.registerSingleton<DialogService>(DialogService());
 
   /// Apis

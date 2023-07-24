@@ -1,12 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
-import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
 
 class EventsRepository extends DatabaseRepository {
-  final DatabaseService _databaseService = locator<DatabaseService>();
   static const table = 'events';
 
   EventsRepository({
@@ -16,7 +14,7 @@ class EventsRepository extends DatabaseRepository {
   Future<List<Event>> getEvents<Event>() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.rawQuery("""
+      items = await DatabaseService.database!.rawQuery("""
         SELECT *
         FROM events
         WHERE task_id IS NULL
@@ -37,7 +35,7 @@ class EventsRepository extends DatabaseRepository {
     String endDate = DateFormat("y-MM-dd").format(end);
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.rawQuery("""
+      items = await DatabaseService.database!.rawQuery("""
         SELECT *
         FROM events
         WHERE task_id IS NULL         
@@ -81,7 +79,7 @@ class EventsRepository extends DatabaseRepository {
   Future<List<Event>> getExceptionsByRecurringId<Event>(String recurringId) async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.rawQuery("""
+      items = await DatabaseService.database!.rawQuery("""
         SELECT *
         FROM events
         WHERE recurring_id = ?

@@ -237,10 +237,7 @@ class CalendarSettingsModal extends StatelessWidget {
       onTap: () {
         Navigator.pop(context);
         context.read<SyncCubit>().sync(entities: [Entity.tasks, Entity.eventModifiers, Entity.events]).then((value) {
-          context
-              .read<EventsCubit>()
-              .refreshAllEvents(context)
-              .then((value) => context.read<SyncCubit>().showLoadingIcon(true));
+          context.read<EventsCubit>().refreshAllEvents(context);
         });
       },
       child: Padding(

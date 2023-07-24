@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
@@ -41,19 +42,19 @@ Future initProcesses() async {
   // ***** init services *************************
   // *********************************************
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  DatabaseService databaseService = DatabaseService();
-  if (databaseService.database == null || !databaseService.database!.isOpen) {
-    await databaseService.open(skipDirectoryCreation: true);
-    print('new database opened - backgroundProcesses');
+
+  if (DatabaseService.database == null || !DatabaseService.database!.isOpen) {
+    await DatabaseService.dbProvider.open();
+    print('new database opened - initFunctions');
   } else {
-    print('database already opened - backgroundProcesses');
+    print('database already opened - initFunctions');
   }
   await Config.initialize(
     configFile: 'assets/config/prod.json',
     production: true,
   );
   try {
-    setupLocator(preferences: preferences, databaseService: databaseService, initFirebaseApp: false);
+    setupLocator(preferences: preferences, initFirebaseApp: false);
   } on ArgumentError catch (e, _) {
     if (e.message.toString().contains('type HttpClient is already registered')) {
       print('Locator already initialized!');
@@ -65,35 +66,44 @@ Future initProcesses() async {
   // *********************************************
 }
 
+List<Entity> convertInEntityModel(String arg) {
+  List stringEntities = arg.split(",");
+  List<Entity> entities = [];
+  stringEntities.asMap().forEach((key, value) {
+    Entity? entity;
+    try {
+      entity = Entity.values.firstWhere((e) => value.toString().split(".")[1].contains(e.name));
+    } catch (e) {
+      print(e);
+    }
+    if (entity != null) {
+      entities.add(entity);
+    }
+  });
+
+  return entities;
+}
+
 @pragma('vm:entry-point')
-Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) async {
+Future<bool> backgroundProcesses(Map args) async {
+  String task = args["task"];
+  List<Entity>? entities;
+  if (args["entities"] != null) {
+    entities = convertInEntityModel(args["entities"]);
+  } else {
+    entities = args["entities"];
+  }
+  print('Synching in backgroundProcesses the Entities: $entities');
+  bool fromBackground = (args.keys.length > 2) ? args["fromBackground"] : true;
   try {
     // *********************************************
     // ***** background notifications scheduling ***
     // *********************************************
     if (fromBackground) {
       await initProcesses();
-
-      final SyncControllerService syncControllerService = locator<SyncControllerService>();
-      DateTime now = DateTime.now().toUtc();
-      List<Entity> entitiesToSync = [];
-
-      for (Entity entity in Entity.values) {
-        print('Background sync check for $entity');
-        DateTime? lastSync = await syncControllerService.getLastSyncFromPreferences[entity]!();
-        if (task == backgroundSyncFromNotification ||
-            task == isolateSyncProcess ||
-            (lastSync != null && now.difference(lastSync).inMinutes.abs() > 15)) {
-          print('Start background sync for $entity');
-          entitiesToSync.add(entity);
-        }
-      }
-      if (entitiesToSync.isNotEmpty) {
-        syncControllerService.isolateSync(entitiesToSync);
-      }
-    } else {
-      locator<SyncControllerService>().isolateSync();
     }
+    await locator<SyncControllerService>().isolateSync(entities);
+
     // Show a local notification to confirm the background Sync
     if (kDebugMode) {
       NotificationsService.showNotifications("From background!", "Synched successfully");
@@ -110,7 +120,7 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
       }
     }
 
-    if (task == backgroundSyncFromNotification || task == isolateSyncProcess) {
+    if (task == backgroundSyncFromNotification || task == backgroundSyncFromNotification) {
       int counter = (locator<PreferencesRepository>().recurringNotificationsSyncCounter) + 1;
       await locator<PreferencesRepository>().setRecurringNotificationsSyncCounter(counter);
     } else {
@@ -133,6 +143,10 @@ class BackgroundService {
         isInDebugMode:
             kDebugMode // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
         );
+  }
+
+  static cancelServices() async {
+    await Workmanager().cancelAll();
   }
 
   static registerPeriodicTask(Duration? frequency) {

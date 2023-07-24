@@ -39,16 +39,16 @@ FutureOr<SentryEvent?> beforeSend(SentryEvent event, {dynamic hint}) async {
 
 Future<void> initFunctions() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  DatabaseService databaseService = DatabaseService();
+  // DatabaseService databaseService = DatabaseService.dbProvider;
 
   tz.initializeTimeZones();
-  if (databaseService.database == null || !databaseService.database!.isOpen) {
-    await databaseService.open();
+  if (DatabaseService.database == null || !DatabaseService.database!.isOpen) {
+    await DatabaseService.dbProvider.open();
     print('new database opened - initFunctions');
   } else {
     print('database already opened - initFunctions');
   }
-  setupLocator(preferences: preferences, databaseService: databaseService);
+  setupLocator(preferences: preferences);
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
   print("environment: ${Config.development ? "dev" : "prod"}");
@@ -58,6 +58,7 @@ Future<void> initFunctions() async {
   }
 
   // Init Background Service and register periodic task
+  await BackgroundService.cancelServices();
   await BackgroundService.initBackgroundService();
   if (Platform.isAndroid) {
     BackgroundService.registerPeriodicTask(const Duration(minutes: 15));

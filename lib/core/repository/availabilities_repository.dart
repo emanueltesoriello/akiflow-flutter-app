@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:models/task/availability_config.dart';
 
@@ -7,8 +6,6 @@ import '../../common/utils/converters_isolate.dart';
 import 'database_repository.dart';
 
 class AvailabilitiesRepository extends DatabaseRepository {
-  final DatabaseService _databaseService = locator<DatabaseService>();
-
   static const table = 'availabilities';
 
   AvailabilitiesRepository({
@@ -18,7 +15,7 @@ class AvailabilitiesRepository extends DatabaseRepository {
   Future<List<AvailabilityConfig>> getAvailabilities<Task>() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.rawQuery("""
+      items = await DatabaseService.database!.rawQuery("""
       SELECT *
       FROM availabilities
       WHERE deleted_at IS NULL

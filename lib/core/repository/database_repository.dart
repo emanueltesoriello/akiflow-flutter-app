@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/exceptions/database_exception.dart';
 import 'package:mobile/core/repository/base_database_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
@@ -8,8 +7,6 @@ import 'package:models/base.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class DatabaseRepository implements IBaseDatabaseRepository {
-  final DatabaseService _databaseService = locator<DatabaseService>();
-
   static const int sqlMaxVariableNumber = 999;
 
   final String tableName;
@@ -19,7 +16,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
 
   @override
   Future<List<T>> get<T>() async {
-    List<Map<String, Object?>> items = await _databaseService.database!.query(tableName);
+    List<Map<String, Object?>> items = await DatabaseService.database!.query(tableName);
 
     List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
 
@@ -29,7 +26,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   @override
   Future<T?> getById<T>(id) async {
     List<Map<String, Object?>> items =
-        await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id=? ", [id]);
+        await DatabaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id=? ", [id]);
     if (items.isEmpty) {
       return null;
     } else {
@@ -69,7 +66,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     try {
       String ins = ids.map((el) => '?').join(',');
       List<Map<String, Object?>> items =
-          await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
+          await DatabaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
       List<T> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
       return objects;
     } catch (e) {
@@ -111,14 +108,14 @@ class DatabaseRepository implements IBaseDatabaseRepository {
       String ins = ids.map((el) => '?').join(',');
       List<Map<String, Object?>> items = [];
 
-      items = await _databaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
+      items = await DatabaseService.database!.rawQuery("SELECT * FROM $tableName WHERE id in ($ins) ", ids);
 
       if (elements.length != items.length) {
         print("checking if connectorId & originAccountId matches");
 
         List<dynamic> originAccountIds = elements.map((remoteItem) => remoteItem.originAccountId).toList();
         //List<dynamic> connectorIds = elements.map((remoteItem) => remoteItem.connectorId).toList();
-        items = await _databaseService.database!
+        items = await DatabaseService.database!
             .rawQuery("SELECT * FROM $tableName WHERE origin_account_id in ($ins) ", originAccountIds);
       }
 
@@ -136,7 +133,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
     List<dynamic> result = await compute(fromObjToSqlList, items);
 
     try {
-      return await _databaseService.database!.transaction<List<Object?>>((txn) async {
+      return await DatabaseService.database!.transaction<List<Object?>>((txn) async {
         Batch batch = txn.batch();
         batch = prepareBatchInsert(BatchInsertModel(items: result, batch: batch, tableName: tableName));
         return await batch.commit();
@@ -150,7 +147,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   @override
   Future<void> removeById<T>(String? id, {required T data}) async {
     try {
-      await _databaseService.database!.transaction((txn) async {
+      await DatabaseService.database!.transaction((txn) async {
         await txn.delete(
           tableName,
           where: 'id = ?',
@@ -165,7 +162,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   @override
   Future<void> updateById<T>(String? id, {required T data}) async {
     try {
-      await _databaseService.database!.transaction((txn) async {
+      await DatabaseService.database!.transaction((txn) async {
         await txn.update(
           tableName,
           (data as Base).toSql(),
@@ -181,7 +178,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
   @override
   Future<void> setFieldByName<T>(String? id, {required String field, required T value}) async {
     try {
-      await _databaseService.database!.transaction((txn) async {
+      await DatabaseService.database!.transaction((txn) async {
         await txn.update(
           tableName,
           {field: value},
@@ -209,11 +206,11 @@ class DatabaseRepository implements IBaseDatabaseRepository {
 
     try {
       if (tableName == "tasks") {
-        items = await _databaseService.database!.query(tableName,
+        items = await DatabaseService.database!.query(tableName,
             where:
                 '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt OR $joinedConditionsListId');
       } else {
-        items = await _databaseService.database!.query(
+        items = await DatabaseService.database!.query(
           tableName,
           where:
               '$withoutRemoteUpdatedAt OR $deletedAtGreaterThanRemoteUpdatedAt OR $updatedAtGreaterThanRemoteUpdatedAt',
@@ -231,7 +228,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
 
   @override
   Future<T> byId<T>(String id) async {
-    var result = await _databaseService.database!.query(
+    var result = await DatabaseService.database!.query(
       tableName,
       where: 'id = ?',
       whereArgs: [id],
@@ -252,7 +249,7 @@ class DatabaseRepository implements IBaseDatabaseRepository {
 
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!
+      items = await DatabaseService.database!
           .rawQuery(query, [akiflowAccountId, calendarId, recurringId, originalStartDateTimeColumn]);
     } catch (e) {
       print('Error retrieving recurring by original start: $e');

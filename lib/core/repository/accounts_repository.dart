@@ -1,14 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:mobile/common/utils/converters_isolate.dart';
-import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/exceptions/database_exception.dart';
 import 'package:mobile/core/repository/database_repository.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:models/account/account.dart';
 
 class AccountsRepository extends DatabaseRepository {
-  final DatabaseService _databaseService = locator<DatabaseService>();
-
   static const table = 'accounts';
 
   AccountsRepository({
@@ -18,7 +15,7 @@ class AccountsRepository extends DatabaseRepository {
   Future<Account?> getByAccountId(String? accountId) async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.query(
+      items = await DatabaseService.database!.query(
         tableName,
         where: 'account_id = ?',
         whereArgs: [accountId],
@@ -38,7 +35,7 @@ class AccountsRepository extends DatabaseRepository {
   Future<List<Account>> getAccounts<Account>() async {
     List<Map<String, Object?>> items;
     try {
-      items = await _databaseService.database!.rawQuery("""
+      items = await DatabaseService.database!.rawQuery("""
         SELECT *
         FROM accounts
         WHERE deleted_at IS NULL

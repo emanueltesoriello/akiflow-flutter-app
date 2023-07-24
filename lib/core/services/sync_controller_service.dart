@@ -155,34 +155,25 @@ class SyncControllerService {
   isolateSync([List<Entity>? entities]) async {
     print("started sync");
 
-    // if (_isSyncing) {
-    //   print("sync already in progress");
-    //   return;
-    // }
-
-    //_isSyncing = true;
-
     User? user = _preferencesRepository.user;
 
     if (user != null) {
       AnalyticsService.track("Trigger sync now");
-
-      if (entities == null) {
-        await _syncEntity(Entity.accounts);
-        await _syncEntity(Entity.tasks);
-        await _syncEntity(Entity.labels);
-        await _syncEntity(Entity.calendars);
-        await _syncEntity(Entity.events);
-        await _syncEntity(Entity.eventModifiers);
-        await _syncEntity(Entity.contacts);
-      } else {
-        for (Entity entity in entities) {
-          await _syncEntity(entity);
-        }
-      }
-      _isSyncing = false;
-
       try {
+        if (entities == null) {
+          await _syncEntity(Entity.accounts);
+          await _syncEntity(Entity.tasks);
+          await _syncEntity(Entity.labels);
+          await _syncEntity(Entity.calendars);
+          await _syncEntity(Entity.events);
+          await _syncEntity(Entity.eventModifiers);
+          await _syncEntity(Entity.contacts);
+        } else {
+          for (Entity entity in entities) {
+            await _syncEntity(entity);
+          }
+        }
+
         postClient();
       } catch (e, s) {
         _sentryService.captureException(e, stackTrace: s);
@@ -201,22 +192,21 @@ class SyncControllerService {
       }
     }
 
-    // _isSyncing = false;
-
     return;
   }
 
   @pragma('vm:entry-point')
   sync([List<Entity>? entities]) async {
-    if (_isSyncing) {
+    /*if (_isSyncing) {
       print("sync already in progress");
       return;
-    }
+    }*/
 
     _isSyncing = true;
 
     try {
-      await FlutterIsolate.spawn(backgroundProcesses, isolateSyncProcess);
+      await FlutterIsolate.spawn(backgroundProcesses,
+          {"task": isolateSyncProcess, "entities": entities != null ? entities.toString() : entities});
     } catch (e) {
       print(e);
       _isSyncing = false;

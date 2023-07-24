@@ -15,9 +15,11 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseService {
   static const _databaseName = 'local.db';
 
-  sql.Database? database;
+  static sql.Database? database;
 
-  DatabaseService();
+  //static final DatabaseService dbProvider = DatabaseService();
+
+  static final DatabaseService dbProvider = DatabaseService();
 
   onNotificationsSystemUpdates() async {
     const lastNotificationsSystemVer = 2;

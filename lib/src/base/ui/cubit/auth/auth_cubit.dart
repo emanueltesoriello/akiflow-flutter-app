@@ -36,9 +36,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final PreferencesRepository _preferencesRepository = locator<PreferencesRepository>();
   final DialogService _dialogService = locator<DialogService>();
   final AuthApi _authApi = locator<AuthApi>();
-  final DatabaseService _databaseService = locator<DatabaseService>();
   final SentryService _sentryService = locator<SentryService>();
-  //final IntercomService _intercomService = locator<IntercomService>();
 
   final UserApi _userApi = locator<UserApi>();
 
@@ -180,7 +178,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
     final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
     localNotificationsPlugin.cancelAllExt();
 
-    await _databaseService.delete();
+    await DatabaseService.dbProvider.delete();
 
     await locator<TasksCubit>().refreshAllFromRepository();
 

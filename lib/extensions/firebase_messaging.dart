@@ -11,7 +11,7 @@ onNotificationsReceived(RemoteMessage message, FlutterLocalNotificationsPlugin f
   // If `onMessage` is triggered with a notification, construct our own
   // local notification to show to users using the created channel.
   if (notificationType == 'trigger_sync:tasks' || notificationType == 'trigger_sync:events') {
-    backgroundProcesses(backgroundSyncFromNotification, fromBackground: fromBackground);
+    backgroundProcesses({"task": backgroundSyncFromNotification, "entities": null, "fromBackground": fromBackground});
   }
   // Add support in future for other  type of notifications like the handling of the visible ones
 }
