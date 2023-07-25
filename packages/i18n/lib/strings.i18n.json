@@ -302,6 +302,13 @@
       "after": "After",
       "repeatEvery": "Repeat every",
       "times": "time(s)"
+    },
+    "visibility": {
+      "visibility": "Visibility",
+      "eventVisibility": "Event visibility",
+      "public": "Public",
+      "private": "Private",
+      "busy": "Busy"
     }
   },
   "today": {

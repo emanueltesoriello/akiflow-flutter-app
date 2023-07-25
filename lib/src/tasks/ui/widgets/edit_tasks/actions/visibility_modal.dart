@@ -41,7 +41,7 @@ class VisibilityModal extends StatelessWidget {
                 children: [
                   const SizedBox(width: Dimension.paddingS),
                   Text(
-                    'Event visibility',
+                    t.editTask.visibility.eventVisibility,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: ColorsExt.grey800(context),
                           fontWeight: FontWeight.w500,
@@ -53,7 +53,7 @@ class VisibilityModal extends StatelessWidget {
             _item(
               context,
               icon: Assets.images.icons.common.eyePublicSVG,
-              text: 'Public',
+              text: t.editTask.visibility.public,
               active: initialVisibility == VisibilityMode.public,
               click: () {
                 onChange(VisibilityMode.public);
@@ -63,7 +63,7 @@ class VisibilityModal extends StatelessWidget {
             _item(
               context,
               icon: Assets.images.icons.common.eyePrivateSVG,
-              text: 'Private',
+              text: t.editTask.visibility.private,
               active: initialVisibility == VisibilityMode.private,
               click: () {
                 onChange(VisibilityMode.private);
@@ -73,7 +73,7 @@ class VisibilityModal extends StatelessWidget {
             _item(
               context,
               icon: Assets.images.icons.common.eyeBusySVG,
-              text: 'Busy',
+              text: t.editTask.visibility.busy,
               active: initialVisibility == VisibilityMode.busy,
               click: () {
                 onChange(VisibilityMode.busy);

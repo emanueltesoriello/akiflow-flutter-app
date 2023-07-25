@@ -8,6 +8,7 @@ import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
 import 'package:mobile/src/base/ui/widgets/calendar/calendar_color_circle.dart';
 import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
@@ -192,7 +193,7 @@ class _ChooseCalendarModalState extends State<ChooseCalendarModal> {
                             showCupertinoModalBottomSheet(
                               context: context,
                               builder: (context) => VisibilityModal(
-                                initialVisibility: widget.taskVisibility ?? VisibilityMode.busy,
+                                initialVisibility: visibilityForTask,
                                 onChange: (String newVisibility) {
                                   setState(() {
                                     visibilityForTask = newVisibility;
@@ -216,10 +217,10 @@ class _ChooseCalendarModalState extends State<ChooseCalendarModal> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('Visilibity',
+                                      Text(t.editTask.visibility.visibility,
                                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                               fontWeight: FontWeight.w500, color: ColorsExt.grey800(context))),
-                                      Text(visibilityForTask,
+                                      Text(visibilityForTask.capitalizeFirstCharacter(),
                                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                               fontWeight: FontWeight.w500, color: ColorsExt.grey600(context))),
                                     ],
