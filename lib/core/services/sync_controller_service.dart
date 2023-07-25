@@ -139,8 +139,6 @@ class SyncControllerService {
   final StreamController syncCompletedController = StreamController.broadcast();
   Stream get syncCompletedStream => syncCompletedController.stream;
 
-  Timer? debounce;
-
   scheduleNotifications() {
     EventExt.eventNotifications(_eventsRepository, _calendarCubit.state.calendars).then(
       (eventNotifications) async {
@@ -195,18 +193,25 @@ class SyncControllerService {
     return;
   }
 
+  static Timer? debounce;
+
   @pragma('vm:entry-point')
   sync([List<Entity>? entities]) async {
-    /*if (_isSyncing) {
+    if (_isSyncing) {
       print("sync already in progress");
       return;
-    }*/
+    }
 
     _isSyncing = true;
 
     try {
       await FlutterIsolate.spawn(backgroundProcesses,
           {"task": isolateSyncProcess, "entities": entities != null ? entities.toString() : entities});
+      if (debounce != null) debounce!.cancel();
+      debounce = Timer(const Duration(seconds: 5), () async {
+        print('Killing all the isolates!');
+        await FlutterIsolate.killAll();
+      });
     } catch (e) {
       print(e);
       _isSyncing = false;

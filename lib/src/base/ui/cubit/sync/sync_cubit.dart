@@ -7,6 +7,7 @@ import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
 import 'package:models/user.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
 
 part 'sync_state.dart';
 
