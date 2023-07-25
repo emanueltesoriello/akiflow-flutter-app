@@ -196,7 +196,7 @@ class SyncControllerService {
   static Timer? debounce;
 
   @pragma('vm:entry-point')
-  sync([List<Entity>? entities]) async {
+  sync([List<Entity>? entities, bool isFirstLogin = false]) async {
     if (_isSyncing) {
       print("sync already in progress");
       return;
@@ -205,15 +205,22 @@ class SyncControllerService {
     _isSyncing = true;
 
     try {
+      if (debounce != null) debounce!.cancel();
+      await backgroundProcesses(
+          {"task": isolateSyncProcess, "entities": entities != null ? entities.toString() : entities});
       await FlutterIsolate.spawn(backgroundProcesses,
           {"task": isolateSyncProcess, "entities": entities != null ? entities.toString() : entities});
-      if (debounce != null) debounce!.cancel();
-      debounce = Timer(const Duration(seconds: 20), () async {
-        print('Killing all the isolates!');
-        await FlutterIsolate.killAll();
-        _isSyncing = false;
-        syncCompletedController.add(0);
-      });
+      if (!isFirstLogin) {
+        debounce = Timer(const Duration(seconds: 25), () async {
+          print('Killing all the isolates!');
+          await FlutterIsolate.killAll();
+          _isSyncing = false;
+          syncCompletedController.add(0);
+          return;
+        });
+      } else {
+        debounce!.cancel();
+      }
     } catch (e) {
       print(e);
       _isSyncing = false;

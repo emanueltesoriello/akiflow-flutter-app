@@ -130,7 +130,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
           }
 
           try {
-            _syncCubit.sync();
+            _syncCubit.sync(isFirstLogin: true);
           } catch (e) {
             print(e);
           }

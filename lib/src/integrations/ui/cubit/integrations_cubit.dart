@@ -208,10 +208,6 @@ class IntegrationsCubit extends Cubit<IntegrationsCubitState> {
     await _syncCubit.syncIntegration([IntegrationEntity.gmail]);
   }
 
-  void syncGmail() {
-    _syncCubit.syncIntegration([IntegrationEntity.gmail]);
-  }
-
   /*Future<void> launchIntercom() async {
     await Intercom.instance.displayMessenger();
   }*/

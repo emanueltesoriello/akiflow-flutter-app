@@ -17,7 +17,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
 
   SyncCubit() : super(const SyncCubitState(loading: true));
 
-  Future sync({List<Entity>? entities, bool loading = true}) async {
+  Future sync({List<Entity>? entities, bool loading = true, bool isFirstLogin = false}) async {
     print("start sync $entities");
 
     try {
@@ -29,7 +29,7 @@ class SyncCubit extends Cubit<SyncCubitState> {
       User? user = _preferencesRepository.user;
 
       if (user != null) {
-        await _syncControllerService.sync(entities);
+        await _syncControllerService.sync(entities, isFirstLogin);
         print("sync completed");
       }
 
