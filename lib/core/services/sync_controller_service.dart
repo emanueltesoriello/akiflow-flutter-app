@@ -211,10 +211,13 @@ class SyncControllerService {
       debounce = Timer(const Duration(seconds: 20), () async {
         print('Killing all the isolates!');
         await FlutterIsolate.killAll();
+        _isSyncing = false;
+        syncCompletedController.add(0);
       });
     } catch (e) {
       print(e);
       _isSyncing = false;
+      syncCompletedController.add(0);
     }
     _isSyncing = false;
     syncCompletedController.add(0);
