@@ -33,6 +33,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
     quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)),
   );
   late QuillEditorController quillEditorController;
+  bool showQuillToolbar = false;
 
   WebViewController? wController;
   StreamSubscription? streamSubscription;
@@ -75,6 +76,13 @@ class _EditTaskModalState extends State<EditTaskModal> {
         Future.delayed(const Duration(milliseconds: 0), () {
           cubit.setHasFocusOnTitleOrDescription(true);
         });
+        setState(() {
+          showQuillToolbar = false;
+        });
+      } else {
+        setState(() {
+          showQuillToolbar = false;
+        });
       }
     });
     _descriptionFocusNode.addListener(() {
@@ -82,6 +90,13 @@ class _EditTaskModalState extends State<EditTaskModal> {
       if (_descriptionFocusNode.hasFocus) {
         Future.delayed(const Duration(milliseconds: 0), () {
           cubit.setHasFocusOnTitleOrDescription(true);
+        });
+        setState(() {
+          showQuillToolbar = true;
+        });
+      } else {
+        setState(() {
+          showQuillToolbar = false;
         });
       }
     });
@@ -283,52 +298,121 @@ class _EditTaskModalState extends State<EditTaskModal> {
     );
   }
 
-  Widget body(EditTaskCubitState state) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: Dimension.padding),
-        _buildAnimatedChild(
-          !state.hasFocusOnTitleOrDescription,
-          const ScrollChip(),
-        ),
-        _buildAnimatedChild(
-          !state.hasFocusOnTitleOrDescription,
-          const SizedBox(height: Dimension.padding),
-        ),
-        _buildAnimatedChild(
-          !state.hasFocusOnTitleOrDescription,
-          BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-            builder: (context, state) {
-              return Visibility(
-                visible: state.showDuration,
-                replacement: const SizedBox(),
-                child: Column(
-                  children: const [
-                    Separator(),
-                    CreateTaskDurationItem(),
-                  ],
-                ),
-              );
-            },
+  Widget quillToolBar(quill.QuillController value) {
+    const quillToolBarIconSize = 20.0;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 600),
+      child: Material(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + Dimension.paddingXS, top: Dimension.paddingXS),
+          child: quill.QuillToolbar(
+            toolbarSectionSpacing: 0,
+            children: [
+              quill.ToggleStyleButton(
+                attribute: quill.Attribute.bold,
+                icon: Icons.format_bold,
+                iconSize: quillToolBarIconSize,
+                controller: value,
+              ),
+              quill.ToggleStyleButton(
+                attribute: quill.Attribute.italic,
+                icon: Icons.format_italic,
+                iconSize: quillToolBarIconSize,
+                controller: value,
+              ),
+              quill.ToggleStyleButton(
+                attribute: quill.Attribute.underline,
+                icon: Icons.format_underline,
+                iconSize: quillToolBarIconSize,
+                controller: value,
+              ),
+              quill.ClearFormatButton(
+                icon: Icons.format_clear,
+                iconSize: quillToolBarIconSize,
+                controller: value,
+              ),
+              const SizedBox(width: Dimension.padding),
+              quill.SelectHeaderStyleButton(
+                controller: value,
+                iconSize: quillToolBarIconSize,
+                attributes: const [
+                  quill.Attribute.h1,
+                  quill.Attribute.h2,
+                ],
+              ),
+              quill.ToggleStyleButton(
+                attribute: quill.Attribute.ul,
+                controller: value,
+                icon: Icons.format_list_bulleted,
+                iconSize: quillToolBarIconSize,
+              ),
+              quill.ToggleStyleButton(
+                attribute: quill.Attribute.ol,
+                controller: value,
+                icon: Icons.format_list_numbered,
+                iconSize: quillToolBarIconSize,
+              ),
+              const SizedBox(width: Dimension.paddingXS),
+            ],
           ),
         ),
-        _buildAnimatedChild(
-          !state.hasFocusOnTitleOrDescription,
-          const EditTaskTopActions(),
-        ),
-        _buildAnimatedChild(
-          !state.hasFocusOnTitleOrDescription,
-          const SizedBox(height: Dimension.padding),
-        ),
-        _buildAnimatedChild(
-          state.hasFocusOnTitleOrDescription,
-          _buildActionsForFocusNodes(state),
-        ),
-        if (state.hasFocusOnTitleOrDescription) const SizedBox(height: Dimension.padding),
-        if (state.hasFocusOnTitleOrDescription) const Separator(),
-        Flexible(
-          child: _buildContent(state),
+      ),
+    );
+  }
+
+  Widget body(EditTaskCubitState state) {
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: Dimension.padding),
+            _buildAnimatedChild(
+              !state.hasFocusOnTitleOrDescription,
+              const ScrollChip(),
+            ),
+            _buildAnimatedChild(
+              !state.hasFocusOnTitleOrDescription,
+              const SizedBox(height: Dimension.padding),
+            ),
+            _buildAnimatedChild(
+              !state.hasFocusOnTitleOrDescription,
+              BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+                builder: (context, state) {
+                  return Visibility(
+                    visible: state.showDuration,
+                    replacement: const SizedBox(),
+                    child: const Column(
+                      children: [
+                        Separator(),
+                        CreateTaskDurationItem(),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            _buildAnimatedChild(
+              !state.hasFocusOnTitleOrDescription,
+              const EditTaskTopActions(),
+            ),
+            _buildAnimatedChild(
+              !state.hasFocusOnTitleOrDescription,
+              const SizedBox(height: Dimension.padding),
+            ),
+            _buildAnimatedChild(
+              state.hasFocusOnTitleOrDescription,
+              _buildActionsForFocusNodes(state),
+            ),
+            if (state.hasFocusOnTitleOrDescription) const SizedBox(height: Dimension.padding),
+            if (state.hasFocusOnTitleOrDescription) const Separator(),
+            Flexible(
+              child: _buildContent(state),
+            ),
+          ],
         ),
       ],
     );
@@ -345,32 +429,38 @@ class _EditTaskModalState extends State<EditTaskModal> {
               topLeft: Radius.circular(Dimension.radius),
               topRight: Radius.circular(Dimension.radius),
             ),
-            child: Material(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: 0,
-                  maxHeight: MediaQuery.of(context).size.height - kToolbarHeight * 2,
-                ),
-                child: AnimatedSize(
-                  curve: Curves.linear,
-                  duration: const Duration(milliseconds: 200),
-                  reverseDuration: const Duration(milliseconds: 200),
-                  child: SizedBox(
-                    height: state.hasFocusOnTitleOrDescription
-                        ? MediaQuery.of(context).size.height -
-                            (kToolbarHeight * 2) +
-                            MediaQuery.of(context).viewInsets.bottom
-                        : null,
-                    child: state.hasFocusOnTitleOrDescription
-                        ? Scaffold(
-                            backgroundColor: Colors.transparent.withOpacity(0),
-                            resizeToAvoidBottomInset: true,
-                            body: body(state),
-                          )
-                        : body(state),
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Material(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: 0,
+                      maxHeight: MediaQuery.of(context).size.height - kToolbarHeight * 2,
+                    ),
+                    child: AnimatedSize(
+                      curve: Curves.linear,
+                      duration: const Duration(milliseconds: 200),
+                      reverseDuration: const Duration(milliseconds: 200),
+                      child: SizedBox(
+                        height: state.hasFocusOnTitleOrDescription
+                            ? MediaQuery.of(context).size.height -
+                                (kToolbarHeight * 2) +
+                                MediaQuery.of(context).viewInsets.bottom
+                            : null,
+                        child: state.hasFocusOnTitleOrDescription
+                            ? Scaffold(
+                                backgroundColor: Colors.transparent.withOpacity(0),
+                                resizeToAvoidBottomInset: true,
+                                body: body(state),
+                              )
+                            : body(state),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                if (showQuillToolbar) quillToolBar(quillController.value)
+              ],
             ),
           ),
         );

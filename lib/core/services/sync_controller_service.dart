@@ -208,7 +208,7 @@ class SyncControllerService {
       await FlutterIsolate.spawn(backgroundProcesses,
           {"task": isolateSyncProcess, "entities": entities != null ? entities.toString() : entities});
       if (debounce != null) debounce!.cancel();
-      debounce = Timer(const Duration(seconds: 5), () async {
+      debounce = Timer(const Duration(seconds: 20), () async {
         print('Killing all the isolates!');
         await FlutterIsolate.killAll();
       });

@@ -88,53 +88,54 @@ class _EditTaskRowState extends State<EditTaskRow> {
     );
   }
 
+  // Workaround to have both htmlEditor and flutterQUill library enabled.
+  // We use the quillHtmlEditor conversions from Html to delta and pass everything to flutter quill library
+  // this cause quill library seems better at the moment, but don't have a way to convert Htlm in delta and reverse
+  _quillHtmlEditor() {
+    return Opacity(
+      opacity: 0,
+      child: Container(
+        width: 0,
+        height: 0,
+        child: QuillHtmlEditor(
+          backgroundColor: Colors.white,
+          // hintTextStyle: TextStyle(fontSize: 18, color: Colors.black12, fontWeight: FontWeight.normal),
+          // text: "<h1>Hello</h1>This is a quill html editor example 😊",
+          // hintText: 'Hint text goes here',
+          hintText: null,
+          controller: widget.quillEditorController,
+          isEnabled: true,
+          ensureVisible: false,
+          minHeight: 0,
+          textStyle:
+              const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.normal, fontFamily: 'Roboto'),
+          //  hintTextStyle: _hintTextStyle,
+          hintTextAlign: TextAlign.start,
+          padding: const EdgeInsets.only(left: 10, top: 10),
+          hintTextPadding: const EdgeInsets.only(left: 20),
+          // backgroundColor: _backgroundColor,
+          loadingBuilder: (context) {
+            return const Center(
+                child: CircularProgressIndicator(
+              strokeWidth: 0.4,
+            ));
+          },
+          onFocusChanged: (focus) {
+            debugPrint('has focus $focus');
+          },
+
+          onEditorCreated: () {
+            debugPrint('Editor has been loaded');
+          },
+        ),
+      ),
+    );
+  }
+
   Widget _description(BuildContext context) {
     return Stack(
       children: [
-        Opacity(
-          opacity: 0,
-          child: Container(
-            width: 0,
-            height: 0,
-            child: QuillHtmlEditor(
-              backgroundColor: Colors.white,
-              // hintTextStyle: TextStyle(fontSize: 18, color: Colors.black12, fontWeight: FontWeight.normal),
-              // text: "<h1>Hello</h1>This is a quill html editor example 😊",
-              // hintText: 'Hint text goes here',
-              hintText: null,
-              controller: widget.quillEditorController,
-              isEnabled: true,
-              ensureVisible: false,
-              minHeight: 0,
-              textStyle: const TextStyle(
-                  fontSize: 18, color: Colors.black, fontWeight: FontWeight.normal, fontFamily: 'Roboto'),
-              //  hintTextStyle: _hintTextStyle,
-              hintTextAlign: TextAlign.start,
-              padding: const EdgeInsets.only(left: 10, top: 10),
-              hintTextPadding: const EdgeInsets.only(left: 20),
-              // backgroundColor: _backgroundColor,
-              loadingBuilder: (context) {
-                return const Center(
-                    child: CircularProgressIndicator(
-                  strokeWidth: 0.4,
-                ));
-              },
-              onFocusChanged: (focus) {
-                debugPrint('has focus $focus');
-                /* setState(() {
-                      _hasFocus = focus; 
-                    });*/
-              },
-
-              onEditorCreated: () {
-                debugPrint('Editor has been loaded');
-                //setHtmlText('Testing text on load');
-              },
-              //onEditorResized: (height) => debugPrint('Editor resized $height'),
-              //onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
-            ),
-          ),
-        ),
+        _quillHtmlEditor(),
         ValueListenableBuilder<QuillController>(
           valueListenable: widget.controller,
           builder: (context, value, child) => Theme(
@@ -158,56 +159,6 @@ class _EditTaskRowState extends State<EditTaskRow> {
                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Column(
                   children: [
-                    QuillToolbar(
-                      toolbarSectionSpacing: 0,
-                      children: [
-                        ToggleStyleButton(
-                          attribute: Attribute.bold,
-                          icon: Icons.format_bold,
-                          iconSize: 18,
-                          controller: value,
-                        ),
-                        ToggleStyleButton(
-                          attribute: Attribute.italic,
-                          icon: Icons.format_italic,
-                          iconSize: 18,
-                          controller: value,
-                        ),
-                        ToggleStyleButton(
-                          attribute: Attribute.underline,
-                          icon: Icons.format_underline,
-                          iconSize: 18,
-                          controller: value,
-                        ),
-                        ClearFormatButton(
-                          icon: Icons.format_clear,
-                          iconSize: 18,
-                          controller: value,
-                        ),
-                        const SizedBox(width: Dimension.paddingXS),
-                        SelectHeaderStyleButton(
-                          controller: value,
-                          iconSize: 18,
-                          attributes: const [
-                            Attribute.h1,
-                            Attribute.h2,
-                          ],
-                        ),
-                        ToggleStyleButton(
-                          attribute: Attribute.ul,
-                          controller: value,
-                          icon: Icons.format_list_bulleted,
-                          iconSize: 18,
-                        ),
-                        ToggleStyleButton(
-                          attribute: Attribute.ol,
-                          controller: value,
-                          icon: Icons.format_list_numbered,
-                          iconSize: 18,
-                        ),
-                        const SizedBox(width: Dimension.paddingXS),
-                      ],
-                    ),
                     QuillEditor(
                       controller: value,
                       readOnly: false,
@@ -244,178 +195,6 @@ class _EditTaskRowState extends State<EditTaskRow> {
         ),
       ],
     );
-    /*return QuillHtmlEditor(
-      backgroundColor: Colors.white,
-      // hintTextStyle: TextStyle(fontSize: 18, color: Colors.black12, fontWeight: FontWeight.normal),
-      // text: "<h1>Hello</h1>This is a quill html editor example 😊",
-      // hintText: 'Hint text goes here',
-      hintText: null,
-      controller: widget.controller,
-      isEnabled: true,
-      ensureVisible: false,
-      minHeight: 50,
-      textStyle:
-          const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.normal, fontFamily: 'Roboto'),
-      //  hintTextStyle: _hintTextStyle,
-      hintTextAlign: TextAlign.start,
-      padding: const EdgeInsets.only(left: 10, top: 10),
-      hintTextPadding: const EdgeInsets.only(left: 20),
-      // backgroundColor: _backgroundColor,
-      loadingBuilder: (context) {
-        return const Center(
-            child: CircularProgressIndicator(
-          strokeWidth: 0.4,
-        ));
-      },
-      onFocusChanged: (focus) {
-        debugPrint('has focus $focus');
-        /* setState(() {
-                  _hasFocus = focus; 
-                });*/
-      },
-
-      onEditorCreated: () {
-        debugPrint('Editor has been loaded');
-        //setHtmlText('Testing text on load');
-      },
-      //onEditorResized: (height) => debugPrint('Editor resized $height'),
-      //onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
-    );*/
-    /* return ValueListenableBuilder<QuillController>(
-      valueListenable: widget.quillController,
-      builder: (context, value, child) => Theme(
-        data: Theme.of(context).copyWith(
-          textSelectionTheme: TextSelectionThemeData(
-            selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
-          ),
-        ),
-        child: GestureDetector(
-          onTap: () async {
-            if (!widget.descriptionFocusNode.hasFocus && !widget.titleFocusNode.hasFocus) {
-              widget.descriptionFocusNode.unfocus();
-              context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
-              await Future.delayed(const Duration(milliseconds: 500));
-              FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
-            } else {
-              FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
-            }
-          },
-          child: Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              children: [
-                /*QuillToolbar.basic(
-                  controller: value,
-                  showAlignmentButtons: false,
-                  showBackgroundColorButton: false,
-                  showCenterAlignment: false,
-                  showCodeBlock: false,
-                  showUndo: false,
-                  showFontFamily: false,
-                  showFontSize: false,
-                  showRedo: false,
-                  showSearchButton: false,
-                  showSuperscript: false,
-                  showSmallButton: false,
-                  showColorButton: false,
-                  showIndent: false,
-                  showLink: false,
-                  showInlineCode: false,
-                  showQuote: false,
-                  showListCheck: false,
-                  showSubscript: false,
-                  showStrikeThrough: true, 
-                ),*/
-                const SizedBox(height: 20),
-                QuillToolbar(
-                  toolbarSectionSpacing: 0,
-                  children: [
-                    ToggleStyleButton(
-                      attribute: Attribute.bold,
-                      icon: Icons.format_bold,
-                      iconSize: 18,
-                      controller: value,
-                    ),
-                    ToggleStyleButton(
-                      attribute: Attribute.italic,
-                      icon: Icons.format_italic,
-                      iconSize: 18,
-                      controller: value,
-                    ),
-                    ToggleStyleButton(
-                      attribute: Attribute.underline,
-                      icon: Icons.format_underline,
-                      iconSize: 18,
-                      controller: value,
-                    ),
-                    ClearFormatButton(
-                      icon: Icons.format_clear,
-                      iconSize: 18,
-                      controller: value,
-                    ),
-                    const SizedBox(width: Dimension.paddingXS),
-                    SelectHeaderStyleButton(
-                      controller: value,
-                      iconSize: 18,
-                      attributes: const [
-                        Attribute.h1,
-                        Attribute.h2,
-                      ],
-                    ),
-                    ToggleStyleButton(
-                      attribute: Attribute.ul,
-                      controller: value,
-                      icon: Icons.format_list_bulleted,
-                      iconSize: 18,
-                    ),
-                    ToggleStyleButton(
-                      attribute: Attribute.ol,
-                      controller: value,
-                      icon: Icons.format_list_numbered,
-                      iconSize: 18,
-                    ),
-                    const SizedBox(width: Dimension.paddingXS),
-                    ClearFormatButton(
-                      icon: Icons.format_clear,
-                      iconSize: 18,
-                      controller: value,
-                    ),
-                  ],
-                ),
-                QuillEditor(
-                  controller: value,
-                  readOnly: false,
-                  enableSelectionToolbar: true,
-                  scrollController: ScrollController(),
-                  scrollable: true,
-                  focusNode: widget.descriptionFocusNode,
-                  autoFocus: false,
-                  expands: false,
-                  padding: EdgeInsets.zero,
-                  keyboardAppearance: Brightness.light,
-                  placeholder: t.task.description,
-                  linkActionPickerDelegate: (BuildContext context, String link, node) async {
-                    launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
-                    return LinkMenuAction.none;
-                  },
-                  customStyles: DefaultStyles(
-                    placeHolder: DefaultTextBlockStyle(
-                      const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 18,
-                      ),
-                      const VerticalSpacing(0, 0),
-                      const VerticalSpacing(0, 0),
-                      null,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );*/
   }
 
   Widget _thirdLine(BuildContext context) {
