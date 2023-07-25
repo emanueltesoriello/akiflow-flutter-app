@@ -150,6 +150,9 @@ class _AssetsImagesIconsCommon {
   final exclamationmark2SVG = 'assets/images/icons/_common/exclamationmark_2.svg';
   final exclamationmark3SVG = 'assets/images/icons/_common/exclamationmark_3.svg';
   final exclamationmarkTriangleFillSVG = 'assets/images/icons/_common/exclamationmark_triangle_fill.svg';
+  final eyeBusySVG = 'assets/images/icons/_common/eye_busy.svg';
+  final eyePrivateSVG = 'assets/images/icons/_common/eye_private.svg';
+  final eyePublicSVG = 'assets/images/icons/_common/eye_public.svg';
   final flagsSVG = 'assets/images/icons/_common/flags.svg';
   final flagSVG = 'assets/images/icons/_common/flag.svg';
   final folderSVG = 'assets/images/icons/_common/folder.svg';
