@@ -27,6 +27,8 @@ import 'package:mobile/src/events/ui/widgets/edit_event/choose_conference_modal.
 import 'package:mobile/src/events/ui/widgets/edit_event/edit_time_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
 import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event_edit_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/transparency_modal.dart';
+import 'package:mobile/src/events/ui/widgets/edit_event/visibility_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/event/event.dart';
@@ -73,6 +75,8 @@ class _EventEditModalState extends State<EventEditModal> {
   late bool removingMeeting;
   late bool timeChanged;
   late bool dateChanged;
+  late String transparency;
+  late String visibility;
   late String choosenCalendar;
   late Calendar newCalendar;
   late bool calendarChanged;
@@ -90,6 +94,8 @@ class _EventEditModalState extends State<EventEditModal> {
     locationController = TextEditingController()..text = widget.event.content?['location'] ?? '';
     descriptionController = TextEditingController()..text = widget.event.description ?? '';
     choosenCalendar = widget.event.organizerId ?? '';
+    transparency = widget.event.content['transparency'] ?? EventExt.transparencyOpaque;
+    visibility = widget.event.content['visibility'] ?? EventExt.visibilityDefault;
     newCalendar = const Calendar();
     calendarChanged = false;
     newCalendarIsFromDifferentAccount = false;
@@ -173,7 +179,9 @@ class _EventEditModalState extends State<EventEditModal> {
                           const Separator(),
                           _chooseCalendarRow(context),
                           const Separator(),
-                          _busyRow(context),
+                          _transparencyRow(context),
+                          const Separator(),
+                          _visibilityRow(context),
                           const Separator(),
                           _guestsRow(context),
                           if (updatedEvent.attendees != null) _attendeesList(),
@@ -910,25 +918,78 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
-  Padding _busyRow(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
-      child: Row(
-        children: [
-          SizedBox(
-            width: Dimension.defaultIconSize,
-            height: Dimension.defaultIconSize,
-            child: SvgPicture.asset(
-              Assets.images.icons.common.briefcaseSVG,
-            ),
+  InkWell _transparencyRow(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => TransparencyModal(
+            initialTransparency: transparency,
+            onChange: (String newTransparency) {
+              setState(() {
+                transparency = newTransparency;
+              });
+            },
           ),
-          const SizedBox(width: Dimension.padding),
-          Text(t.event.busy,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
-        ],
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+        child: Row(
+          children: [
+            SizedBox(
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.briefcaseSVG,
+              ),
+            ),
+            const SizedBox(width: Dimension.padding),
+            Text(EventExt.getTransparencyMode(transparency),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
+          ],
+        ),
+      ),
+    );
+  }
+
+  InkWell _visibilityRow(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => VisibilityModal(
+            initialVisibility: visibility,
+            onChange: (String newVisibility) {
+              setState(() {
+                visibility = newVisibility;
+              });
+            },
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
+        child: Row(
+          children: [
+            SizedBox(
+              width: Dimension.defaultIconSize,
+              height: Dimension.defaultIconSize,
+              child: SvgPicture.asset(
+                Assets.images.icons.common.lockSVG,
+              ),
+            ),
+            const SizedBox(width: Dimension.padding),
+            Text(EventExt.getVisibilityMode(visibility),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w400, color: ColorsExt.grey800(context))),
+          ],
+        ),
       ),
     );
   }
@@ -1273,6 +1334,8 @@ class _EventEditModalState extends State<EventEditModal> {
   _onSaveTap() async {
     dynamic content = updatedEvent.content;
     content['location'] = locationController.text;
+    content['transparency'] = transparency;
+    content['visibility'] = visibility;
 
     updatedEvent = updatedEvent.copyWith(
         title: Nullable(titleController.text),
