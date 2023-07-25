@@ -22,7 +22,7 @@ import 'package:mobile/src/events/ui/widgets/change_color_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/add_guests_modal.dart';
 import 'package:mobile/src/events/ui/widgets/bottom_button.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/add_location_modal.dart';
-import 'package:mobile/src/events/ui/widgets/edit_event/choose_calendar_modal.dart';
+import 'package:mobile/src/base/ui/widgets/base/choose_calendar_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/choose_conference_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/edit_time_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';

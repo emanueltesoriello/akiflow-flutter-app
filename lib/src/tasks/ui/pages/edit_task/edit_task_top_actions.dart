@@ -5,7 +5,7 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:mobile/src/base/ui/widgets/task/plan_for_action.dart';
-import 'package:mobile/src/events/ui/widgets/edit_event/choose_calendar_modal.dart';
+import 'package:mobile/src/base/ui/widgets/base/choose_calendar_modal.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_cupertino_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/plan_modal.dart';
@@ -172,8 +172,12 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                         onChange: (Calendar calendar) {
                           cubit.changeCalendar(calendar.id);
                         },
+                        onTaskVisibilityChange: (String visibility) {
+                          cubit.changeVisibility(visibility);
+                        },
                         initialCalendar: updatedTask.calendarId,
                         forTask: true,
+                        taskVisibility: updatedTask.content?['eventLockInCalendar'],
                       ),
                     );
                   },
