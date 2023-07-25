@@ -168,6 +168,7 @@ class _AssetsImagesIconsCommon {
   final lineHorizontal3DecreaseSVG = 'assets/images/icons/_common/line_horizontal_3_decrease.svg';
   final linkSVG = 'assets/images/icons/_common/link.svg';
   final lockSVG = 'assets/images/icons/_common/lock.svg';
+  final lockOpenSVG = 'assets/images/icons/_common/lock_open.svg';
   final lockShieldSVG = 'assets/images/icons/_common/lock_shield.svg';
   final mapSVG = 'assets/images/icons/_common/map.svg';
   final menuSVG = 'assets/images/icons/_common/menu.svg';

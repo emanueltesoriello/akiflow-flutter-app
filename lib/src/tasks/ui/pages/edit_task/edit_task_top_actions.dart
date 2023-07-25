@@ -157,7 +157,7 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                 bool enabled = updatedTask.calendarId != null;
 
                 return TagBox(
-                  icon: Assets.images.icons.common.lockSVG,
+                  icon: enabled ? Assets.images.icons.common.lockSVG : Assets.images.icons.common.lockOpenSVG,
                   foregroundColor: enabled ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
                   backgroundColor: enabled ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
                   active: enabled,
