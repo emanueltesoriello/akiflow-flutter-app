@@ -36,8 +36,10 @@ class HomeBody extends StatelessWidget {
             bool anyInboxSelected = state.inboxTasks.any((t) => t.selected ?? false);
             bool anyTodaySelected = state.selectedDayTasks.any((t) => t.selected ?? false);
             bool anyLabelsSelected = state.labelTasks.any((t) => t.selected ?? false);
+            bool anyAllTaskSelected = state.allTasks.any((t) => t.selected ?? false);
+            bool anySomedaySelected = state.somedayTasks.any((t) => t.selected ?? false);
 
-            if (anyInboxSelected || anyTodaySelected || anyLabelsSelected) {
+            if (anyInboxSelected || anyTodaySelected || anyLabelsSelected || anyAllTaskSelected || anySomedaySelected) {
               return const Align(
                 alignment: Alignment.bottomCenter,
                 child: BottomTaskActions(),

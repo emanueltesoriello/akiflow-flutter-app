@@ -738,7 +738,19 @@ extension TaskExt on Task {
     List<Task> labelTasks = state.labelTasks.where((element) => element.selected ?? false).toList();
     int selectedLabelCount = labelTasks.where((element) => !state.inboxTasks.contains(element)).toList().length;
 
-    return selectedInbox + selectedDayCount + selectedLabelCount;
+    List<Task> selectedAllTasks = state.allTasks.where((element) => element.selected ?? false).toList();
+    int selectedAllTasksCount = selectedAllTasks
+        .where((element) =>
+            !state.inboxTasks.contains(element) &&
+            !state.labelTasks.contains(element) &&
+            !state.selectedDayTasks.contains(element) &&
+            !state.somedayTasks.contains(element))
+        .toList()
+        .length;
+
+    int selectedSomedayCount = state.somedayTasks.where((element) => element.selected ?? false).toList().length;
+
+    return selectedInbox + selectedDayCount + selectedLabelCount + selectedAllTasksCount + selectedSomedayCount;
   }
 
   static bool isSelectMode(TasksCubitState state) {
