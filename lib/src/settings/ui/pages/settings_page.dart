@@ -13,6 +13,7 @@ import 'package:mobile/src/integrations/ui/pages/integrations_page.dart';
 import 'package:mobile/src/settings/ui/cubit/settings_cubit.dart';
 import 'package:mobile/src/settings/ui/pages/about_page.dart';
 import 'package:mobile/src/settings/ui/pages/calendar_settings_page.dart';
+import 'package:mobile/src/settings/ui/pages/general_settings_page.dart';
 import 'package:mobile/src/settings/ui/pages/my_account_page.dart';
 import 'package:mobile/src/settings/ui/pages/notifications_page.dart';
 import 'package:mobile/src/base/ui/widgets/base/settings_header_text.dart';
@@ -36,6 +37,15 @@ class SettingsPage extends StatelessWidget {
             FutureBuilder(
                 future: FirebaseMessaging.instance.getToken(),
                 builder: ((context, snapshot) => SelectableText("FCM TOken: ${snapshot.data}"))),
+          ButtonList(
+            title: t.settings.general,
+            position: ButtonListPosition.top,
+            leading: Assets.images.icons.common.gearAltSVG,
+            enabled: true,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const GeneralSettingsPage()));
+            },
+          ),
           ButtonList(
             title: t.settings.myAccount.title,
             position: ButtonListPosition.top,
@@ -96,13 +106,6 @@ class SettingsPage extends StatelessWidget {
           ),
           const SizedBox(height: Dimension.padding),
           SettingHeaderText(text: t.comingSoon),
-          ButtonList(
-            title: t.settings.general,
-            position: ButtonListPosition.top,
-            leading: Assets.images.icons.common.gearAltSVG,
-            enabled: false,
-            onPressed: () {},
-          ),
           ButtonList(
             title: t.settings.tasks,
             position: ButtonListPosition.mid,

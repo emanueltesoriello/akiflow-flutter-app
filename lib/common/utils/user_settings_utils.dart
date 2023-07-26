@@ -13,6 +13,8 @@ class UserSettingsUtils {
   static String notificationsSection = 'notifications';
   static List<String> sections = [generalSection, calendarSection, tasksSection, notificationsSection];
 
+  static String theme = 'theme_mobile';
+
   static String view = 'view_mobile';
   static String threeCustom = '3-custom';
   static String hideWeekends = 'hideWeekends_mobile';
