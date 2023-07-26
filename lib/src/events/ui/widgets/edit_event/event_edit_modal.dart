@@ -1190,7 +1190,7 @@ class _EventEditModalState extends State<EventEditModal> {
   Container _bottomActionButtonsRow(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: ColorsExt.background(context),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),

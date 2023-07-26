@@ -104,7 +104,7 @@ class _TodayViewState extends State<TodayView> {
         lazy: false,
         create: (BuildContext context) => ViewedMonthCubit(),
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: ColorsExt.background(context),
           appBar: const TodayAppBar(
               preferredSizeHeight: Dimension.toolbarHeight, calendarTopMargin: Dimension.toolbarHeight),
           body: LayoutBuilder(builder: (context, constraints) {
@@ -119,7 +119,7 @@ class _TodayViewState extends State<TodayView> {
                 valueListenable: calendarOffsetNotifier,
                 builder: (context, value, child) {
                   return Container(
-                    color: Colors.white,
+                    color: ColorsExt.background(context),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
@@ -137,7 +137,7 @@ class _TodayViewState extends State<TodayView> {
                 context.read<TodayCubit>().panelOpened();
               },
               collapsed: Material(
-                color: Colors.white,
+                color: ColorsExt.background(context),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [

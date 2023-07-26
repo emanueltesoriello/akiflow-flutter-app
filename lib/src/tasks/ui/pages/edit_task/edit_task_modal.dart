@@ -115,8 +115,8 @@ class _EditTaskModalState extends State<EditTaskModal> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  surfaceTintColor: Colors.white,
-                  backgroundColor: Colors.white,
+                  surfaceTintColor: ColorsExt.background(context),
+                  backgroundColor: ColorsExt.background(context),
                   shape:
                       const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimension.radiusM))),
                   content: Column(

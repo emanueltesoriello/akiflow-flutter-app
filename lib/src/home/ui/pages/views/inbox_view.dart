@@ -75,7 +75,7 @@ class _ViewState extends State<_View> {
     return BlocBuilder<TasksCubit, TasksCubitState>(
       builder: (context, tasksState) {
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: ColorsExt.background(context),
           appBar: AppBarComp(
             title: t.bottomBar.inbox,
             leading: SvgPicture.asset(
