@@ -33,7 +33,6 @@ import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mobile/core/preferences.dart';
 import 'package:audio_session/audio_session.dart';
 
 enum TaskStatusType {
@@ -860,9 +859,7 @@ extension TaskExt on Task {
     try {
       if (doc is SlackDoc && doc.localUrl != null) {
         opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } /*else {
-        opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-      }*/
+      }
     } catch (e) {
       print(e);
     }
@@ -870,6 +867,7 @@ extension TaskExt on Task {
     if (opened == false) {
       launchUrl(Uri.parse(doc?.url ?? ''), mode: LaunchMode.externalApplication).catchError((e) {
         print(e);
+        return false;
       });
     }
   }
@@ -889,10 +887,6 @@ extension TaskExt on Task {
         );
         await audioPlayer.setAudioSource(AudioSource.asset(Assets.sounds.taskCompletedMP3));
         AudioSession.instance.then((session) async => {
-              //  await session
-              //     .configure(const AudioSessionConfiguration(avAudioSessionMode: AVAudioSessionMode.voiceChat)),
-              //  session.interruptionEventStream
-              //      .listen(((event) => {print('interruptionEventStream' + event.toString())})),
               await session.configure(const AudioSessionConfiguration(
                 avAudioSessionCategory: AVAudioSessionCategory.playback,
                 avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.duckOthers,

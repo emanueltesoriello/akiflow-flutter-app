@@ -41,6 +41,7 @@ class _DeadlineModalState extends State<DeadlineModal> {
         ),
         child: ListView(
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             const SizedBox(height: Dimension.padding),
             const ScrollChip(),

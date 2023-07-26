@@ -48,6 +48,7 @@ class PriorityModal extends StatelessWidget {
         ),
         child: ListView(
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             const SizedBox(height: Dimension.padding),
             const ScrollChip(),

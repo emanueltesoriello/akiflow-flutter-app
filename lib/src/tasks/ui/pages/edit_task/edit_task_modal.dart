@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:mobile/src/tasks/ui/pages/edit_task/quill_toolbar.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
@@ -19,7 +18,6 @@ import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_links.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_row.dart';
 import 'package:mobile/src/tasks/ui/pages/edit_task/edit_task_top_actions.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
-import 'package:flutter_quill/src/models/documents/document.dart';
 
 class EditTaskModal extends StatefulWidget {
   const EditTaskModal({Key? key}) : super(key: key);
@@ -66,7 +64,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
     }
 
     initFocusNodeListener();
-    // await initDescription(isFirstInit: isFirstInit);
   }
 
   void initFocusNodeListener() {
@@ -102,33 +99,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
       }
     });
   }
-
-  /*Future<void> initDescription({bool isFirstInit = false}) async {
-    /*EditTaskCubit cubit = context.read<EditTaskCubit>();
-        cubit.updateDescription(htmlText);
-
-    quillEditorController.onEditorLoaded(() async {
-      debugPrint('Editor Loaded :)');
-      String html;
-      if (isFirstInit) {
-        html = cubit.state.updatedTask.description ?? '';
-      } else {
-        html = cubit.state.originalTask.description ?? '';
-      }
-      await quillEditorController.insertText(html, index: 0);
-      var delta = await quillEditorController.getDelta();
-      quill.Document document = Document.fromJson(delta["ops"]);
-
-      quillController.value =
-          quill.QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
-      quillController.value.changes.listen((change) async {
-        quillEditorController.setDelta({"ops": quillController.value.document.toDelta().toJson()});
-        var htmlText = await quillEditorController.getText();
-        cubit.updateDescription(htmlText);
-      });
-      quillController.value.moveCursorToEnd();
-    });*/
-  }*/
 
   Future<bool> onBack(EditTaskCubitState state) async {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
