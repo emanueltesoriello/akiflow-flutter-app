@@ -5,11 +5,13 @@ import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/tagbox.dart';
 import 'package:mobile/src/base/ui/widgets/task/plan_for_action.dart';
+import 'package:mobile/src/base/ui/widgets/base/choose_calendar_modal.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
 import 'package:mobile/src/tasks/ui/widgets/create_tasks/duration_cupertino_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/plan_modal.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/recurrence/recurrence_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:models/calendar/calendar.dart';
 import 'package:models/task/task.dart';
 import 'package:rrule/rrule.dart';
 
@@ -142,6 +144,40 @@ class _EditTaskTopActionsState extends State<EditTaskTopActions> {
                         taskDatetime: updatedTask.datetime != null
                             ? DateTime.parse(updatedTask.datetime!)
                             : DateTime.parse(updatedTask.date!),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          const SizedBox(width: 8),
+          if (updatedTask.statusType == TaskStatusType.planned)
+            Builder(
+              builder: (context) {
+                bool enabled = updatedTask.calendarId != null;
+
+                return TagBox(
+                  icon: enabled ? Assets.images.icons.common.lockSVG : Assets.images.icons.common.lockOpenSVG,
+                  foregroundColor: enabled ? ColorsExt.grey800(context) : ColorsExt.grey600(context),
+                  backgroundColor: enabled ? ColorsExt.grey100(context) : ColorsExt.grey50(context),
+                  active: enabled,
+                  isBig: true,
+                  isSquare: true,
+                  onPressed: () {
+                    var cubit = context.read<EditTaskCubit>();
+
+                    showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (context) => ChooseCalendarModal(
+                        onChange: (Calendar calendar) {
+                          cubit.changeCalendar(calendar.id);
+                        },
+                        onTaskVisibilityChange: (String visibility) {
+                          cubit.changeVisibility(visibility);
+                        },
+                        initialCalendar: updatedTask.calendarId,
+                        forTask: true,
+                        taskVisibility: updatedTask.content?['eventLockInCalendar'],
                       ),
                     );
                   },
