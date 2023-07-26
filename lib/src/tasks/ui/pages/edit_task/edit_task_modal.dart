@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:mobile/src/tasks/ui/pages/edit_task/quill_toolbar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:mobile/common/style/colors.dart';
@@ -29,17 +30,16 @@ class EditTaskModal extends StatefulWidget {
 
 class _EditTaskModalState extends State<EditTaskModal> {
   final TextEditingController _titleController = TextEditingController();
+
+  bool showQuillToolbar = false;
+
   ValueNotifier<quill.QuillController> quillController = ValueNotifier<quill.QuillController>(
     quill.QuillController(document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)),
   );
-  late QuillEditorController quillEditorController;
-  bool showQuillToolbar = false;
+  QuillEditorController quillEditorController = QuillEditorController();
 
-  WebViewController? wController;
-  StreamSubscription? streamSubscription;
-
-  FocusNode _descriptionFocusNode = FocusNode();
-  FocusNode _titleFocusNode = FocusNode();
+  final FocusNode _descriptionFocusNode = FocusNode();
+  final FocusNode _titleFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -49,9 +49,10 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
   @override
   void dispose() {
-    streamSubscription?.cancel();
     _titleFocusNode.dispose();
     _descriptionFocusNode.dispose();
+    quillController.dispose();
+    quillEditorController.dispose();
     super.dispose();
   }
 
@@ -65,7 +66,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
     }
 
     initFocusNodeListener();
-    await initDescription(isFirstInit: isFirstInit);
+    // await initDescription(isFirstInit: isFirstInit);
   }
 
   void initFocusNodeListener() {
@@ -102,9 +103,9 @@ class _EditTaskModalState extends State<EditTaskModal> {
     });
   }
 
-  Future<void> initDescription({bool isFirstInit = false}) async {
-    EditTaskCubit cubit = context.read<EditTaskCubit>();
-    quillEditorController = QuillEditorController();
+  /*Future<void> initDescription({bool isFirstInit = false}) async {
+    /*EditTaskCubit cubit = context.read<EditTaskCubit>();
+        cubit.updateDescription(htmlText);
 
     quillEditorController.onEditorLoaded(() async {
       debugPrint('Editor Loaded :)');
@@ -126,8 +127,8 @@ class _EditTaskModalState extends State<EditTaskModal> {
         cubit.updateDescription(htmlText);
       });
       quillController.value.moveCursorToEnd();
-    });
-  }
+    });*/
+  }*/
 
   Future<bool> onBack(EditTaskCubitState state) async {
     EditTaskCubit cubit = context.read<EditTaskCubit>();
@@ -189,7 +190,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
                                 .style
                                 ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey200(context))),
                             onPressed: () async {
-                              streamSubscription?.cancel();
                               /* quillController = ValueNotifier<quill.QuillController>(
                                 quill.QuillController(
                                     document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)),
@@ -298,70 +298,6 @@ class _EditTaskModalState extends State<EditTaskModal> {
     );
   }
 
-  Widget quillToolBar(quill.QuillController value) {
-    const quillToolBarIconSize = 20.0;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 600),
-      child: Material(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom + Dimension.paddingXS, top: Dimension.paddingXS),
-          child: quill.QuillToolbar(
-            toolbarSectionSpacing: 0,
-            children: [
-              quill.ToggleStyleButton(
-                attribute: quill.Attribute.bold,
-                icon: Icons.format_bold,
-                iconSize: quillToolBarIconSize,
-                controller: value,
-              ),
-              quill.ToggleStyleButton(
-                attribute: quill.Attribute.italic,
-                icon: Icons.format_italic,
-                iconSize: quillToolBarIconSize,
-                controller: value,
-              ),
-              quill.ToggleStyleButton(
-                attribute: quill.Attribute.underline,
-                icon: Icons.format_underline,
-                iconSize: quillToolBarIconSize,
-                controller: value,
-              ),
-              quill.ClearFormatButton(
-                icon: Icons.format_clear,
-                iconSize: quillToolBarIconSize,
-                controller: value,
-              ),
-              const SizedBox(width: Dimension.padding),
-              quill.SelectHeaderStyleButton(
-                controller: value,
-                iconSize: quillToolBarIconSize,
-                attributes: const [
-                  quill.Attribute.h1,
-                  quill.Attribute.h2,
-                ],
-              ),
-              quill.ToggleStyleButton(
-                attribute: quill.Attribute.ul,
-                controller: value,
-                icon: Icons.format_list_bulleted,
-                iconSize: quillToolBarIconSize,
-              ),
-              quill.ToggleStyleButton(
-                attribute: quill.Attribute.ol,
-                controller: value,
-                icon: Icons.format_list_numbered,
-                iconSize: quillToolBarIconSize,
-              ),
-              const SizedBox(width: Dimension.paddingXS),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget body(EditTaskCubitState state) {
     return Stack(
       alignment: Alignment.bottomCenter,
@@ -459,7 +395,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                     ),
                   ),
                 ),
-                if (showQuillToolbar) quillToolBar(quillController.value)
+                if (showQuillToolbar) QuillToolbar(controller: quillController.value)
               ],
             ),
           ),

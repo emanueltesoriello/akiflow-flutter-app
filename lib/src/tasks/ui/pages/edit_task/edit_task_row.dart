@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:i18n/strings.g.dart';
@@ -14,10 +13,10 @@ import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/extensions/task_extension.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
+import 'package:mobile/src/tasks/ui/pages/edit_task/quill_description.dart';
 import 'package:mobile/src/tasks/ui/widgets/edit_tasks/actions/labels_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/label/label.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 
 class EditTaskRow extends StatefulWidget {
@@ -42,21 +41,10 @@ class EditTaskRow extends StatefulWidget {
 }
 
 class _EditTaskRowState extends State<EditTaskRow> {
-  final customToolBarList = [
-    ToolBarStyle.bold,
-    ToolBarStyle.italic,
-    ToolBarStyle.align,
-    ToolBarStyle.color,
-    ToolBarStyle.background,
-    ToolBarStyle.listBullet,
-    ToolBarStyle.listOrdered,
-    ToolBarStyle.clean,
-    ToolBarStyle.addTable,
-    ToolBarStyle.editTable,
-  ];
-
   @override
   Widget build(BuildContext context) {
+    EditTaskCubit cubit = context.read<EditTaskCubit>();
+
     return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
       builder: (context, state) {
         return Container(
@@ -75,7 +63,24 @@ class _EditTaskRowState extends State<EditTaskRow> {
                   children: [
                     _firstLine(context),
                     const SizedBox(height: Dimension.paddingS),
-                    _description(context),
+                    QuillDescription(
+                      descriptionFocusNode: widget.descriptionFocusNode,
+                      quillEditorController: widget.quillEditorController,
+                      quillController: widget.controller,
+                      initialText: cubit.state.updatedTask.description ?? '',
+                      onChange: (htmlText) => cubit.updateDescription(htmlText),
+                      onTap: () async {
+                        if (!widget.descriptionFocusNode.hasFocus && !widget.titleFocusNode.hasFocus) {
+                          widget.descriptionFocusNode.unfocus();
+                          context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
+                          await Future.delayed(const Duration(milliseconds: 500));
+                          FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
+                        } else {
+                          FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
+                        }
+                      },
+                    ),
+                    // _description(context),
                     const SizedBox(height: Dimension.paddingM),
                     if (!state.hasFocusOnTitleOrDescription) _thirdLine(context),
                   ],
@@ -85,115 +90,6 @@ class _EditTaskRowState extends State<EditTaskRow> {
           ),
         );
       },
-    );
-  }
-
-  // Workaround to have both htmlEditor and flutterQUill library enabled.
-  // We use the quillHtmlEditor conversions from Html to delta and pass everything to flutter quill library
-  // this cause quill library seems better at the moment, but don't have a way to convert Htlm in delta and reverse
-  _quillHtmlEditor() {
-    return Opacity(
-      opacity: 0,
-      child: Container(
-        width: 0,
-        height: 0,
-        child: QuillHtmlEditor(
-          backgroundColor: Colors.white,
-          // hintTextStyle: TextStyle(fontSize: 18, color: Colors.black12, fontWeight: FontWeight.normal),
-          // text: "<h1>Hello</h1>This is a quill html editor example 😊",
-          // hintText: 'Hint text goes here',
-          hintText: null,
-          controller: widget.quillEditorController,
-          isEnabled: true,
-          ensureVisible: false,
-          minHeight: 0,
-          textStyle:
-              const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.normal, fontFamily: 'Roboto'),
-          //  hintTextStyle: _hintTextStyle,
-          hintTextAlign: TextAlign.start,
-          padding: const EdgeInsets.only(left: 10, top: 10),
-          hintTextPadding: const EdgeInsets.only(left: 20),
-          // backgroundColor: _backgroundColor,
-          loadingBuilder: (context) {
-            return const Center(
-                child: CircularProgressIndicator(
-              strokeWidth: 0.4,
-            ));
-          },
-          onFocusChanged: (focus) {
-            debugPrint('has focus $focus');
-          },
-
-          onEditorCreated: () {
-            debugPrint('Editor has been loaded');
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _description(BuildContext context) {
-    return Stack(
-      children: [
-        _quillHtmlEditor(),
-        ValueListenableBuilder<QuillController>(
-          valueListenable: widget.controller,
-          builder: (context, value, child) => Theme(
-            data: Theme.of(context).copyWith(
-              textSelectionTheme: TextSelectionThemeData(
-                selectionColor: ColorsExt.akiflow500(context)!.withOpacity(0.1),
-              ),
-            ),
-            child: GestureDetector(
-              onTap: () async {
-                if (!widget.descriptionFocusNode.hasFocus && !widget.titleFocusNode.hasFocus) {
-                  widget.descriptionFocusNode.unfocus();
-                  context.read<EditTaskCubit>().setHasFocusOnTitleOrDescription(true);
-                  await Future.delayed(const Duration(milliseconds: 500));
-                  FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
-                } else {
-                  FocusScope.of(context).requestFocus(widget.descriptionFocusNode);
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: Column(
-                  children: [
-                    QuillEditor(
-                      controller: value,
-                      readOnly: false,
-                      enableSelectionToolbar: true,
-                      scrollController: ScrollController(),
-                      scrollable: true,
-                      focusNode: widget.descriptionFocusNode,
-                      autoFocus: false,
-                      expands: false,
-                      padding: EdgeInsets.zero,
-                      keyboardAppearance: Brightness.light,
-                      placeholder: t.task.description,
-                      linkActionPickerDelegate: (BuildContext context, String link, node) async {
-                        launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
-                        return LinkMenuAction.none;
-                      },
-                      customStyles: DefaultStyles(
-                        placeHolder: DefaultTextBlockStyle(
-                          const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 18,
-                          ),
-                          const VerticalSpacing(0, 0),
-                          const VerticalSpacing(0, 0),
-                          null,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
