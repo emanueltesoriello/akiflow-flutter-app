@@ -66,22 +66,18 @@ class AppBarComp extends StatelessWidget implements PreferredSizeWidget {
             scrolledUnderElevation: 0,
             backgroundColor: ColorsExt.background(context),
             surfaceTintColor: ColorsExt.background(context),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.dark,
-              statusBarBrightness: Brightness.light,
-            ),
             bottom: (showSyncButton == false || state.loading == false)
                 ? PreferredSize(
                     preferredSize: Size.zero,
                     child: Container(height: Dimension.progressIndicatorSize / 2),
                   )
                 : showLinearProgress
-                    ? const PreferredSize(
-                        preferredSize: Size.fromHeight(Dimension.progressIndicatorSize),
+                    ? PreferredSize(
+                        preferredSize: const Size.fromHeight(Dimension.progressIndicatorSize),
                         child: LinearProgressIndicator(
                           value: null,
                           minHeight: Dimension.progressIndicatorSize / 2,
+                          backgroundColor: ColorsExt.background(context),
                         ),
                       )
                     : PreferredSize(

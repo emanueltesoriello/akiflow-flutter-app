@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 
@@ -9,6 +10,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   primaryColorLight: ColorsLight.purple100,
   scaffoldBackgroundColor: ColorsLight.grey50,
   appBarTheme: const AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle.dark,
     backgroundColor: ColorsLight.white,
     iconTheme: IconThemeData(color: ColorsLight.grey800, size: 30),
     actionsIconTheme: IconThemeData(color: ColorsLight.grey800),
@@ -107,6 +109,7 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
   primaryColorLight: ColorsDark.purple100,
   scaffoldBackgroundColor: ColorsDark.grey50,
   appBarTheme: const AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle.light,
     backgroundColor: ColorsDark.white,
     iconTheme: IconThemeData(color: ColorsDark.grey800, size: 30),
     actionsIconTheme: IconThemeData(color: ColorsDark.grey800),
