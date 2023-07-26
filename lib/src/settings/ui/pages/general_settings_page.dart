@@ -21,13 +21,13 @@ class ThemeOptions {
   static String themeOptionToText(String theme) {
     switch (theme) {
       case ThemeOptions.system:
-        return 'Auto (use system setting)';
+        return t.settings.general.auto;
       case ThemeOptions.light:
-        return 'Light';
+        return t.settings.general.light;
       case ThemeOptions.dark:
-        return 'Dark';
+        return t.settings.general.dark;
       default:
-        return 'Auto (use system setting)';
+        return t.settings.general.auto;
     }
   }
 }
@@ -59,7 +59,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComp(
-        title: t.settings.general,
+        title: t.settings.general.general,
         showBack: true,
       ),
       body: Padding(
@@ -68,9 +68,9 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(left: Dimension.paddingS),
-              child: SettingHeaderText(text: 'style'),
+            Padding(
+              padding: const EdgeInsets.only(left: Dimension.paddingS),
+              child: SettingHeaderText(text: t.settings.general.style),
             ),
             InkWell(
               borderRadius: const BorderRadius.all(Radius.circular(Dimension.radius)),
@@ -104,7 +104,7 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Theme',
+                            Text(t.settings.general.theme,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium

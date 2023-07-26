@@ -38,7 +38,7 @@ class SettingsPage extends StatelessWidget {
                 future: FirebaseMessaging.instance.getToken(),
                 builder: ((context, snapshot) => SelectableText("FCM TOken: ${snapshot.data}"))),
           ButtonList(
-            title: t.settings.general,
+            title: t.settings.general.general,
             position: ButtonListPosition.top,
             leading: Assets.images.icons.common.gearAltSVG,
             enabled: true,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -33,7 +34,7 @@ class ChooseThemeModal extends StatelessWidget {
                 children: [
                   const SizedBox(width: Dimension.paddingS),
                   Text(
-                    'Appearance',
+                    t.settings.general.appearance,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: ColorsExt.grey800(context),
                           fontWeight: FontWeight.w500,
