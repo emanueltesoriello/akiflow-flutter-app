@@ -7,6 +7,7 @@ import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
+import 'package:mobile/main_com.dart';
 import 'package:mobile/src/base/ui/cubit/auth/auth_cubit.dart';
 import 'package:mobile/src/base/ui/widgets/base/app_bar.dart';
 import 'package:mobile/src/base/ui/widgets/base/settings_header_text.dart';
@@ -28,6 +29,19 @@ class ThemeOptions {
         return t.settings.general.dark;
       default:
         return t.settings.general.auto;
+    }
+  }
+
+  static ThemeMode themeOptionToThemeMode(String theme) {
+    switch (theme) {
+      case ThemeOptions.system:
+        return ThemeMode.system;
+      case ThemeOptions.light:
+        return ThemeMode.light;
+      case ThemeOptions.dark:
+        return ThemeMode.dark;
+      default:
+        return ThemeMode.system;
     }
   }
 }
@@ -83,6 +97,8 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
                       setState(() {
                         theme = newTheme;
                       });
+
+                      Application.of(context).changeTheme(theme);
 
                       _saveNewSetting(
                           sectionName: UserSettingsUtils.generalSection, key: UserSettingsUtils.theme, value: theme);

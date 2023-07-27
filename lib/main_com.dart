@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/common/utils/user_settings_utils.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
 import 'package:mobile/core/preferences.dart';
@@ -21,6 +22,7 @@ import 'package:mobile/common/style/theme.dart';
 import 'package:mobile/src/base/di/base_providers.dart';
 import 'package:mobile/src/base/ui/cubit/main/main_cubit.dart';
 import 'package:mobile/src/base/ui/navigator/base_navigator.dart';
+import 'package:mobile/src/settings/ui/pages/general_settings_page.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -91,10 +93,35 @@ Future<void> mainCom({kDebugMode = false}) async {
           ));
 }
 
-class Application extends StatelessWidget {
+class Application extends StatefulWidget {
   const Application({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<Application> createState() => ApplicationState();
+
+  static ApplicationState of(BuildContext context) => context.findAncestorStateOfType<ApplicationState>()!;
+}
+
+class ApplicationState extends State<Application> {
+  String theme = ThemeOptions.system;
+
+  @override
+  void initState() {
+    theme = UserSettingsUtils.getSettingBySectionAndKey(
+            preferencesRepository: locator<PreferencesRepository>(),
+            sectionName: UserSettingsUtils.generalSection,
+            key: UserSettingsUtils.theme) ??
+        ThemeOptions.system;
+    super.initState();
+  }
+
+  void changeTheme(String themeMode) {
+    setState(() {
+      theme = themeMode;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +130,10 @@ class Application extends StatelessWidget {
     ]);
 
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.black,
-      systemNavigationBarIconBrightness: Brightness.light,
-    ));
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarColor: Colors.transparent
+        ));
 
     return MultiBlocProvider(
         providers: baseProviders,
@@ -133,6 +161,8 @@ class Application extends StatelessWidget {
                   debugShowCheckedModeBanner: Config.development,
                   navigatorObservers: [routeObserver],
                   theme: lightTheme,
+                  darkTheme: darkTheme,
+                  themeMode: ThemeOptions.themeOptionToThemeMode(theme),
                   home: FutureBuilder(
                       future: NotificationsService.handlerForNotificationsClickForTerminatedApp(),
                       builder: (context, _) {
