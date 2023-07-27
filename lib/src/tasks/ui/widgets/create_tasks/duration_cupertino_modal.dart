@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:i18n/strings.g.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
 import 'package:mobile/src/tasks/ui/cubit/edit_task_cubit.dart';
@@ -59,17 +60,18 @@ class _DurationCupertinoModalState extends State<DurationCupertinoModal> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(top: Dimension.paddingM, left: Dimension.padding),
-                    child: Text('Select Duration',
+                    child: Text(t.timeModal.selectDuration,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(color: ColorsExt.grey800(context))),
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    const SizedBox(width: Dimension.padding),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Hours',
+                        Text(t.timeModal.hours,
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey800(context))),
                         const SizedBox(height: Dimension.padding),
                         SizedBox(
@@ -108,7 +110,7 @@ class _DurationCupertinoModalState extends State<DurationCupertinoModal> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Minutes',
+                        Text(t.timeModal.minutes,
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: ColorsExt.grey800(context))),
                         const SizedBox(height: Dimension.padding),
                         SizedBox(
@@ -138,6 +140,7 @@ class _DurationCupertinoModalState extends State<DurationCupertinoModal> {
                         ),
                       ],
                     ),
+                    const SizedBox(width: Dimension.padding),
                   ],
                 ),
                 Container(
@@ -155,7 +158,10 @@ class _DurationCupertinoModalState extends State<DurationCupertinoModal> {
                         side: MaterialStateProperty.all(BorderSide(color: ColorsExt.akiflow500(context))),
                         backgroundColor: MaterialStateProperty.all((ColorsExt.akiflow100(context))),
                         minimumSize: MaterialStateProperty.all(const Size(double.infinity, Dimension.buttonHeight))),
-                    child: const Text('Confirm'),
+                    child: Text(
+                      t.confirm,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: ColorsExt.akiflow500(context)),
+                    ),
                   ),
                 )
               ],

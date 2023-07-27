@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 354 
+ * Strings: 358 
  *
- * Built on 2023-07-25 at 13:20 UTC
+ * Built on 2023-07-27 at 14:08 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -332,6 +332,7 @@ class _StringsEn {
 	String get view => 'View';
 	late final _StringsIntegrationsEn integrations = _StringsIntegrationsEn._(_root);
 	late final _StringsFabEn fab = _StringsFabEn._(_root);
+	late final _StringsTimeModalEn timeModal = _StringsTimeModalEn._(_root);
 }
 
 // Path: onboarding
@@ -710,6 +711,19 @@ class _StringsFabEn {
 	String get event => 'Event';
 	String get taskToday => 'Task - Today';
 	String get taskInbox => 'Task - Inbox';
+}
+
+// Path: timeModal
+class _StringsTimeModalEn {
+	_StringsTimeModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get selectTime => 'Select Time';
+	String get selectDuration => 'Select Duration';
+	String get hours => 'Hours';
+	String get minutes => 'Minutes';
 }
 
 // Path: onboarding.termsAndPrivacy
@@ -1477,6 +1491,10 @@ extension on _StringsEn {
 			'fab.event': 'Event',
 			'fab.taskToday': 'Task - Today',
 			'fab.taskInbox': 'Task - Inbox',
+			'timeModal.selectTime': 'Select Time',
+			'timeModal.selectDuration': 'Select Duration',
+			'timeModal.hours': 'Hours',
+			'timeModal.minutes': 'Minutes',
 		};
 	}
 }
