@@ -61,7 +61,7 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
                       ? DateTime.parse(editTaskCubit.state.updatedTask.date!)
                       : DateTime.now(),
                   initialDatetime: editTaskCubit.state.updatedTask.datetime != null
-                      ? DateTime.parse(editTaskCubit.state.updatedTask.datetime!)
+                      ? DateTime.parse(editTaskCubit.state.updatedTask.datetime!).toLocal()
                       : null,
                   taskStatusType: editTaskCubit.state.updatedTask.statusType ?? TaskStatusType.inbox,
                   onSelectDate: (
