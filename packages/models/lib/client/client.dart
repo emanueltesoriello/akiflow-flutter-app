@@ -71,7 +71,7 @@ class Client extends Equatable implements Base {
   @override
   Map<String, dynamic> toMap() => {
         'id': id,
-        'user_id': userId,
+        //'user_id': userId,
         'last_accounts_sync_started_at': lastAccountsSyncStartedAt,
         'last_labels_sync_started_at': lastLabelsSyncStartedAt,
         'last_settings_sync_started_at': lastSettingsSyncStartedAt,
