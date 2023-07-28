@@ -205,7 +205,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
     emit(state.copyWith(user: Nullable(null)));
 
-    AnalyticsService.logout();
+    //AnalyticsService.logout();
   }
 
   Future<void> updateUserSettings(Map<String, dynamic> settings) async {

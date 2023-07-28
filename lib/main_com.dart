@@ -52,7 +52,7 @@ Future<void> initFunctions() async {
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
   print("environment: ${Config.development ? "dev" : "prod"}");
-  await AnalyticsService.config();
+  //await AnalyticsService.config();
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
   }

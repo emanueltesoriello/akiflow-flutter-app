@@ -17,7 +17,7 @@ dependencies:
     sdk: flutter 
   flutter_quill: ^7.1.16
   flutter_rounded_date_picker: ^3.0.2
-  flutter_segment: ^3.9.0
+  #flutter_segment: ^3.9.0
   flutter_slidable: ^3.0.0
   flutter_svg: ^2.0.7
   flutter_switch: ^0.3.2

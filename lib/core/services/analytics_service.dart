@@ -1,24 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
-
-import 'package:flutter_segment/flutter_segment.dart';
-import 'package:mobile/core/config.dart';
+import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 import 'package:models/user.dart';
+import 'package:mobile/core/config.dart';
 
 class AnalyticsService {
   const AnalyticsService._();
-
-  static Future<void> config() async {
-    print("*** AnalyticsService config ***");
-
-    await Segment.config(
-      options: SegmentConfig(
-        writeKey: Config.segmentApiKey,
-        trackApplicationLifecycleEvents: true,
-        amplitudeIntegrationEnabled: false,
-        debug: Config.development,
-      ),
-    );
-  }
+  static const baseUrl = "https://t.akiflow.com/v3/t";
 
   static Future<void> identify({required User user, required String version, required String buildNumber}) async {
     print("*** AnalyticsService identify: ${user.email} ***");
@@ -36,34 +25,57 @@ class AnalyticsService {
       traits["debug"] = "true";
     }
 
-    Segment.identify(userId: user.email, traits: traits);
+    final body = {
+      "id": user.email,
+      "email": user.email,
+      "properties": {"platform": "mobile"},
+      "traits": traits,
+    };
+
+    await http.post(
+      Uri.parse('$baseUrl/identify'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(body),
+    );
   }
 
   static Future<void> alias(User user) async {
-    String? anonymousId = await Segment.getAnonymousId;
+    print("*** AnalyticsService alias: ${user.email} ***");
 
-    print("*** AnalyticsService alias: ${user.email}: anonymousId: $anonymousId ***");
+    final body = {
+      "from": "anonymousId",
+      "to": user.email,
+    };
 
-    if (anonymousId != null) {
-      await Segment.alias(alias: user.email!);
-    }
+    await http.post(
+      Uri.parse('$baseUrl/alias'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(body),
+    );
   }
 
-  static void logout() {
-    print("*** AnalyticsService logout ***");
+  static Future<void> track(String event, {Map<String, dynamic>? properties = const {"platform": "mobile"}}) async {
+    print("*** AnalyticsService track: $event ***");
 
-    Segment.reset();
-  }
+    const uuid = Uuid();
+    final timestamp = DateTime.now().toIso8601String();
 
-  static void track(String event, {Map<String, dynamic>? properties = const {"mobile": true}}) {
-    try {
-      if (Config.development) {
-        print("*** AnalyticsService track: $event ***");
-      }
-    } catch (e) {
-      print(e);
-    }
+    final body = {
+      "data": [
+        {
+          "id": uuid.v4(),
+          "user_id": "email OR anonymousId", //TODO -> read email from shared preferences
+          "event": event,
+          "properties": properties,
+          "timestamp": timestamp
+        }
+      ]
+    };
 
-    Segment.track(eventName: event, properties: properties);
+    await http.post(
+      Uri.parse('$baseUrl/track'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(body),
+    );
   }
 }

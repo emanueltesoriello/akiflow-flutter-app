@@ -1,8 +1,4 @@
 PODS:
-  - Amplitude (8.17.1):
-    - AnalyticsConnector (~> 1.0.0)
-  - Analytics (4.1.6)
-  - AnalyticsConnector (1.0.1)
   - app_links (0.0.1):
     - Flutter
   - AppAuth (1.6.2):
@@ -11,9 +7,6 @@ PODS:
   - AppAuth/Core (1.6.2)
   - AppAuth/ExternalUserAgent (1.6.2):
     - AppAuth/Core
-  - AppsFlyerFramework (6.9.1):
-    - AppsFlyerFramework/Main (= 6.9.1)
-  - AppsFlyerFramework/Main (6.9.1)
   - audio_session (0.0.1):
     - Flutter
   - device_info (0.0.1):
@@ -102,11 +95,6 @@ PODS:
     - Flutter
   - flutter_native_timezone (0.0.1):
     - Flutter
-  - flutter_segment (3.12.1):
-    - Analytics (= 4.1.6)
-    - Flutter
-    - Segment-Amplitude (= 3.3.2)
-    - segment-appsflyer-ios (= 6.9.1)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -158,15 +146,6 @@ PODS:
   - SDWebImage (5.17.0):
     - SDWebImage/Core (= 5.17.0)
   - SDWebImage/Core (5.17.0)
-  - Segment-Amplitude (3.3.2):
-    - Amplitude (~> 8.3)
-    - Analytics
-  - segment-appsflyer-ios (6.9.1):
-    - Analytics
-    - segment-appsflyer-ios/Main (= 6.9.1)
-  - segment-appsflyer-ios/Main (6.9.1):
-    - Analytics
-    - AppsFlyerFramework (= 6.9.1)
   - Sentry/HybridSDK (8.8.0):
     - SentryPrivate (= 8.8.0)
   - sentry_flutter (0.0.1):
@@ -213,7 +192,6 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_native_timezone (from `.symlinks/plugins/flutter_native_timezone/ios`)
-  - flutter_segment (from `.symlinks/plugins/flutter_segment/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - pasteboard (from `.symlinks/plugins/pasteboard/ios`)
@@ -231,11 +209,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Amplitude
-    - Analytics
-    - AnalyticsConnector
     - AppAuth
-    - AppsFlyerFramework
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -251,8 +225,6 @@ SPEC REPOS:
     - PromisesObjC
     - PusherSwift
     - SDWebImage
-    - Segment-Amplitude
-    - segment-appsflyer-ios
     - Sentry
     - SentryPrivate
     - SwiftyGif
@@ -289,8 +261,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
   flutter_native_timezone:
     :path: ".symlinks/plugins/flutter_native_timezone/ios"
-  flutter_segment:
-    :path: ".symlinks/plugins/flutter_segment/ios"
   just_audio:
     :path: ".symlinks/plugins/just_audio/ios"
   package_info_plus:
@@ -321,12 +291,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/workmanager/ios"
 
 SPEC CHECKSUMS:
-  Amplitude: a43a03b98ce379b1fd7a08b5733d199ff5d9130f
-  Analytics: eefe524436f904b8bb3f8c8c3425280e43b34efc
-  AnalyticsConnector: eccd7e1cd3dd18e6bd09ac2506e37d4ed43ba3f4
   app_links: 5ef33d0d295a89d9d16bb81b0e3b0d5f70d6c875
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
-  AppsFlyerFramework: dc9aa675faa8e1a2ed40fb295d3c5408ee2b972a
   audio_session: 4f3e461722055d21515cf3261b64c973c062f345
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   device_info_plus: 7545d84d8d1b896cb16a4ff98c19f07ec4b298ea
@@ -348,7 +314,6 @@ SPEC CHECKSUMS:
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   flutter_native_timezone: 5f05b2de06c9776b4cc70e1839f03de178394d22
-  flutter_segment: 8ee2a7ab438ea47f6b5eddcadd6c2c91159dffa5
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
   GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
@@ -363,8 +328,6 @@ SPEC CHECKSUMS:
   pusher_channels_flutter: bf646336659d2cc058c62346b4b9e8b82e37b71b
   PusherSwift: 9083be278b87d2325c0fd8c4bdad0f54ffa8931a
   SDWebImage: 750adf017a315a280c60fde706ab1e552a3ae4e9
-  Segment-Amplitude: 6c1e59c8c278a21029ba7a6a788fcb31b9233a2c
-  segment-appsflyer-ios: ddaa1da2fb63480a4766a68032f0011f4fd771a1
   Sentry: 927dfb29d18a14d924229a59cc2ad149f43349f2
   sentry_flutter: cf7da03b65520b631330ecb498deb592aa7640be
   SentryPrivate: 4350d865f898224ab9fa02b37d6ee7fbb623f47e
