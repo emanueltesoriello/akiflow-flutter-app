@@ -143,7 +143,7 @@ class FloatingButton extends StatelessWidget {
           : Nullable(date.toIso8601String()),
       datetime: homeViewType == HomeViewType.calendar ? Nullable(startTimeRounded) : Nullable(null),
       duration: homeViewType == HomeViewType.calendar ? Nullable(duration) : Nullable(null),
-      listId: Nullable(label?.id),
+      listId: homeViewType == HomeViewType.label ? Nullable(label?.id) : Nullable(null),
     );
 
     editTaskCubit.attachTask(task);
