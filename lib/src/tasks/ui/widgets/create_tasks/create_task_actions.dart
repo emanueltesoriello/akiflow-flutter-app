@@ -177,9 +177,9 @@ class _CreateTaskActionsState extends State<CreateTaskActions> {
           const SizedBox(width: Dimension.paddingS),
           Builder(
             builder: (context) {
-              final editTaskCubit = context.read<EditTaskCubit>();
-              final task = editTaskCubit.state.updatedTask;
-              final labels = context.read<LabelsCubit>().state.labels;
+              EditTaskCubit editTaskCubit = context.read<EditTaskCubit>();
+              Task task = editTaskCubit.state.updatedTask;
+              List<Label> labels = context.read<LabelsCubit>().state.labels;
               Color? background;
               final label = task.listId != null
                   ? labels.firstWhereOrNull(
