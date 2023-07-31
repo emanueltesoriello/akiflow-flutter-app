@@ -8,6 +8,9 @@ import 'package:mobile/src/calendar/ui/pages/calendar_view.dart';
 import 'package:mobile/src/home/ui/pages/views/inbox_view.dart';
 import 'package:mobile/src/home/ui/pages/views/today_view.dart';
 import 'package:mobile/src/label/ui/pages/label_view.dart';
+import 'package:mobile/src/settings/ui/pages/all_tasks_page.dart';
+import 'package:mobile/src/settings/ui/pages/someday_page.dart';
+import 'package:mobile/src/tasks/ui/cubit/tasks_cubit.dart';
 
 class HomePageNavigator extends StatefulWidget {
   const HomePageNavigator({
@@ -50,6 +53,17 @@ class _HomePageNavigatorState extends State<HomePageNavigator> {
   Widget build(BuildContext context) {
     HomeViewType homeViewType = context.watch<MainCubit>().state.homeViewType;
 
+    if (homeViewType != HomeViewType.allTasks) {
+      context.read<TasksCubit>().clearAllTasksList();
+      if (homeViewType != HomeViewType.someday) {
+        context.read<TasksCubit>().clearSomedayTasksList();
+      }
+    }
+
+    if (homeViewType != HomeViewType.someday) {
+      context.read<TasksCubit>().clearSomedayTasksList();
+    }
+
     if (homeViewType == HomeViewType.inbox) {
       return container ??
           AnimatedOpacity(
@@ -88,6 +102,22 @@ class _HomePageNavigatorState extends State<HomePageNavigator> {
         opacity: visible ? 1 : 0,
         duration: const Duration(milliseconds: 100),
         child: const LabelView(),
+      );
+    }
+    if (homeViewType == HomeViewType.allTasks) {
+      return AnimatedOpacity(
+        key: const Key('AllTasksPage'),
+        opacity: visible ? 1 : 0,
+        duration: const Duration(milliseconds: 100),
+        child: const AllTasksPage(),
+      );
+    }
+    if (homeViewType == HomeViewType.someday) {
+      return AnimatedOpacity(
+        key: const Key('SomedayPage'),
+        opacity: visible ? 1 : 0,
+        duration: const Duration(milliseconds: 100),
+        child: const SomedayPage(),
       );
     }
     return Container();

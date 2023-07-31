@@ -64,6 +64,12 @@ extension EventExt on Event {
   static String akiflowSignature = 'Scheduled with Akiflow';
   static String eventStatusCancelled = 'cancelled';
 
+  static const String transparencyOpaque = 'opaque';
+  static const String transparencyTransparent = 'transparent';
+  static const String visibilityPrivate = 'private';
+  static const String visibilityPublic = 'public';
+  static const String visibilityDefault = 'default';
+
   bool canModify() {
     return !(readOnly ?? false) &&
         (creatorId == originCalendarId ||
@@ -313,14 +319,20 @@ extension EventExt on Event {
 
   ///returns rrule on first position and exdate on second
   List<String> computeRuleForThisAndFuture() {
-    List<String> parts = recurrence!;
+    List<String> parts = recurrence!.first.split(";");
     parts.removeWhere((part) => part.startsWith('WKST'));
 
-    List<String> goodRule = parts.where((part) => !part.startsWith('EXDATE') && !part.startsWith('TZID')).toList();
+    List<String> goodRule = parts;
+    goodRule.removeWhere((part) => part.startsWith('EXDATE'));
+    goodRule.removeWhere((part) => part.startsWith('TZID'));
 
     parts.removeWhere((part) => goodRule.contains(part));
 
-    return [goodRule.join(";"), parts.join(";")];
+    if (parts.isEmpty) {
+      return [goodRule.join(";")];
+    } else {
+      return [goodRule.join(";"), parts.join(";")];
+    }
   }
 
   static Map<String, Event> calculateEvents(List args) {
@@ -531,5 +543,29 @@ extension EventExt on Event {
       }
     }
     return false;
+  }
+
+  static String getTransparencyMode(String transparency) {
+    switch (transparency) {
+      case transparencyOpaque:
+        return 'Busy';
+      case transparencyTransparent:
+        return 'Free';
+      default:
+        return 'Busy';
+    }
+  }
+
+  static String getVisibilityMode(String visibility) {
+    switch (visibility) {
+      case visibilityDefault:
+        return 'Default (Google Calendar)';
+      case visibilityPrivate:
+        return 'Private';
+      case visibilityPublic:
+        return 'Public';
+      default:
+        return 'Default (Google Calendar)';
+    }
   }
 }

@@ -178,6 +178,8 @@ class TasksRepository extends DatabaseRepository {
         AND done = 0
         AND deleted_at IS NULL
         AND trashed_at IS NULL
+        ORDER BY
+            updated_at DESC
 """);
     } catch (e) {
       print('Error retrieving someday tasks: $e');
@@ -282,6 +284,33 @@ class TasksRepository extends DatabaseRepository {
       items = await DatabaseService.database!.rawQuery(query, [label.id!]);
     } catch (e) {
       print('Error retrieving label tasks: $e');
+      return [];
+    }
+
+    List<Task> objects = await compute(convertToObjList, RawListConvert(items: items, converter: fromSql));
+    return objects;
+  }
+
+  Future<List<Task>> getAllTasks<Task>(int limit, int offset) async {
+    List<Map<String, Object?>> items = [];
+    try {
+      await _databaseService.database!.transaction((txn) async {
+        items = await txn.rawQuery("""
+          SELECT *
+          FROM tasks
+          WHERE deleted_at IS NULL
+            AND trashed_at IS NULL
+            AND (status = '${TaskStatusType.inbox.id}' OR status = '${TaskStatusType.planned.id}'
+                  OR status = '${TaskStatusType.snoozed.id}' OR status = '${TaskStatusType.someday.id}')
+          GROUP BY IFNULL(`recurring_id`, `id`)
+          ORDER BY
+            updated_at DESC
+          LIMIT ?, ?  
+
+""", [offset, limit]);
+      });
+    } catch (e) {
+      print('Error retrieving all tasks: $e');
       return [];
     }
 

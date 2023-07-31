@@ -23,7 +23,7 @@ class DeleteLabelDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Dimension.radiusS),
+        borderRadius: BorderRadius.circular(Dimension.radius),
       ),
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -36,8 +36,8 @@ class DeleteLabelDialog extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(Dimension.radiusS),
+                  color: ColorsExt.background(context),
+                  borderRadius: BorderRadius.circular(Dimension.radius),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

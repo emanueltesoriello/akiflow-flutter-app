@@ -215,7 +215,7 @@ class TaskInfo extends StatelessWidget {
 
     return TagBox(
       text: label.title,
-      backgroundColor: active ? ColorsExt.getLightColorFromName(label.color!) : null,
+      backgroundColor: active ? ColorsExt.getBgColorFromName(context, label.color!) : null,
       iconColor: active ? ColorsExt.getFromName(label.color!) : ColorsExt.grey600(context),
       onPressed: () {
         context.read<LabelsCubit>().selectLabel(label);

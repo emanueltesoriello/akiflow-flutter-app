@@ -81,7 +81,7 @@ class Account extends Equatable implements Base {
   @override
   Map<String, dynamic> toMap() => {
         'id': id,
-        'user_id': userId,
+        //'user_id': userId,
         'connector_id': connectorId,
         'account_id': accountId,
         'origin_account_id': originAccountId,

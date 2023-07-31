@@ -91,7 +91,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               blurRadius: 1,
             ),
           ],
-          color: Colors.white),
+          color: ColorsExt.background(context),),
       child: ListView(
         shrinkWrap: true,
         children: [
@@ -352,7 +352,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           blurRadius: 1,
                         ),
                       ],
-                      color: Colors.white),
+                      color:ColorsExt.background(context),),
                   padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: Center(
                     child: Row(

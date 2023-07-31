@@ -52,7 +52,6 @@
   "settings": {
     "title": "Settings",
     "upgradeToPro": "Upgrade to pro",
-    "general": "General",
     "tasks": "Tasks",
     "notifications": "Notifications",
     "calendar": "Calendar",
@@ -67,6 +66,15 @@
     "changeLog": "Change log",
     "chatWithUs": "Chat with us",
     "sendUsAnEmail": "Send us an Email",
+    "general": {
+      "general": "General",
+      "style": "Style",
+      "theme": "Theme",
+      "auto": "Auto (use system setting)",
+      "light": "Light",
+      "dark": "Dark",
+      "appearance": "Appearance"
+    },
     "myAccount": {
       "title": "My account",
       "connectedAs": "Connected as",
@@ -302,6 +310,13 @@
       "after": "After",
       "repeatEvery": "Repeat every",
       "times": "time(s)"
+    },
+    "visibility": {
+      "visibility": "Visibility",
+      "eventVisibility": "Event visibility",
+      "public": "Public",
+      "private": "Private",
+      "busy": "Busy"
     }
   },
   "today": {
@@ -437,5 +452,11 @@
     "event": "Event",
     "taskToday": "Task - Today",
     "taskInbox": "Task - Inbox"
+  },
+  "timeModal": {
+    "selectTime": "Select Time",
+    "selectDuration": "Select Duration",
+    "hours": "Hours",
+    "minutes": "Minutes"
   }
 }

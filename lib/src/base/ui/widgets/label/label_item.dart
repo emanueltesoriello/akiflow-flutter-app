@@ -25,7 +25,7 @@ class LabelItem extends StatelessWidget {
     Color iconForeground;
 
     if (label.color != null) {
-      iconBackground = ColorsExt.getLightColorFromName(label.color!);
+      iconBackground = ColorsExt.getBgColorFromName(context, label.color!);
       iconForeground = ColorsExt.getFromName(label.color!);
     } else {
       iconBackground = ColorsExt.grey100(context);

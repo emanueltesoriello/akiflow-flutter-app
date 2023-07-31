@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:models/user.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 Uri refreshTokenUrl = Uri.parse('https://web.akiflow.com/oauth/refreshToken');
 
@@ -15,12 +17,16 @@ class HttpClient extends BaseClient {
   @override
   Future<StreamedResponse> send(BaseRequest request) async {
     User? user = _preferences.user;
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String platform = Platform.isAndroid ? "android" : "ios";
 
     if (user != null) {
       request.headers['Authorization'] = "Bearer ${user.accessToken ?? ''}";
     }
 
     request.headers['Content-Type'] = "application/json";
+    request.headers['Akiflow-Version'] = packageInfo.version;
+    request.headers['Akiflow-Platform'] = platform;
 
     StreamedResponse response = await _inner.send(request);
 

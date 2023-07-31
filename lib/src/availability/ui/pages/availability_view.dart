@@ -14,7 +14,7 @@ class AvailabilityView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorsExt.background(context),
         appBar: AppBarComp(
           title: t.availability.shareAvailabilities,
           showLinearProgress: true,

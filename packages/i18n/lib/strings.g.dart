@@ -3,9 +3,9 @@
  * Generated file. Do not edit.
  *
  * Locales: 1
- * Strings: 349 
+ * Strings: 358 
  *
- * Built on 2023-07-13 at 09:22 UTC
+ * Built on 2023-07-27 at 14:08 UTC
  */
 
 import 'package:flutter/widgets.dart';
@@ -332,6 +332,7 @@ class _StringsEn {
 	String get view => 'View';
 	late final _StringsIntegrationsEn integrations = _StringsIntegrationsEn._(_root);
 	late final _StringsFabEn fab = _StringsFabEn._(_root);
+	late final _StringsTimeModalEn timeModal = _StringsTimeModalEn._(_root);
 }
 
 // Path: onboarding
@@ -407,7 +408,6 @@ class _StringsSettingsEn {
 	// Translations
 	String get title => 'Settings';
 	String get upgradeToPro => 'Upgrade to pro';
-	String get general => 'General';
 	String get tasks => 'Tasks';
 	String get notifications => 'Notifications';
 	String get calendar => 'Calendar';
@@ -422,6 +422,7 @@ class _StringsSettingsEn {
 	String get changeLog => 'Change log';
 	String get chatWithUs => 'Chat with us';
 	String get sendUsAnEmail => 'Send us an Email';
+	late final _StringsSettingsGeneralEn general = _StringsSettingsGeneralEn._(_root);
 	late final _StringsSettingsMyAccountEn myAccount = _StringsSettingsMyAccountEn._(_root);
 	late final _StringsSettingsAboutEn about = _StringsSettingsAboutEn._(_root);
 	late final _StringsSettingsLearnAkiflowEn learnAkiflow = _StringsSettingsLearnAkiflowEn._(_root);
@@ -585,6 +586,7 @@ class _StringsEditTaskEn {
 	String get comingSoon => 'Coming soon';
 	late final _StringsEditTaskRepeatingEditDialogEn repeatingEditDialog = _StringsEditTaskRepeatingEditDialogEn._(_root);
 	late final _StringsEditTaskRecurrenceEn recurrence = _StringsEditTaskRecurrenceEn._(_root);
+	late final _StringsEditTaskVisibilityEn visibility = _StringsEditTaskVisibilityEn._(_root);
 }
 
 // Path: today
@@ -711,6 +713,19 @@ class _StringsFabEn {
 	String get taskInbox => 'Task - Inbox';
 }
 
+// Path: timeModal
+class _StringsTimeModalEn {
+	_StringsTimeModalEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get selectTime => 'Select Time';
+	String get selectDuration => 'Select Duration';
+	String get hours => 'Hours';
+	String get minutes => 'Minutes';
+}
+
 // Path: onboarding.termsAndPrivacy
 class _StringsOnboardingTermsAndPrivacyEn {
 	_StringsOnboardingTermsAndPrivacyEn._(this._root);
@@ -734,6 +749,22 @@ class _StringsOnboardingGmailEn {
 	// Translations
 	String get skipForNow => 'Skip for now';
 	String get reconnectGmailAccount => 'Reconnect Gmail account';
+}
+
+// Path: settings.general
+class _StringsSettingsGeneralEn {
+	_StringsSettingsGeneralEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get general => 'General';
+	String get style => 'Style';
+	String get theme => 'Theme';
+	String get auto => 'Auto (use system setting)';
+	String get light => 'Light';
+	String get dark => 'Dark';
+	String get appearance => 'Appearance';
 }
 
 // Path: settings.myAccount
@@ -897,6 +928,20 @@ class _StringsEditTaskRecurrenceEn {
 	String get after => 'After';
 	String get repeatEvery => 'Repeat every';
 	String get times => 'time(s)';
+}
+
+// Path: editTask.visibility
+class _StringsEditTaskVisibilityEn {
+	_StringsEditTaskVisibilityEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get visibility => 'Visibility';
+	String get eventVisibility => 'Event visibility';
+	String get public => 'Public';
+	String get private => 'Private';
+	String get busy => 'Busy';
 }
 
 // Path: label.deleteDialog
@@ -1148,7 +1193,6 @@ extension on _StringsEn {
 			'expiry.alternate': 'and delete all data.',
 			'settings.title': 'Settings',
 			'settings.upgradeToPro': 'Upgrade to pro',
-			'settings.general': 'General',
 			'settings.tasks': 'Tasks',
 			'settings.notifications': 'Notifications',
 			'settings.calendar': 'Calendar',
@@ -1163,6 +1207,13 @@ extension on _StringsEn {
 			'settings.changeLog': 'Change log',
 			'settings.chatWithUs': 'Chat with us',
 			'settings.sendUsAnEmail': 'Send us an Email',
+			'settings.general.general': 'General',
+			'settings.general.style': 'Style',
+			'settings.general.theme': 'Theme',
+			'settings.general.auto': 'Auto (use system setting)',
+			'settings.general.light': 'Light',
+			'settings.general.dark': 'Dark',
+			'settings.general.appearance': 'Appearance',
 			'settings.myAccount.title': 'My account',
 			'settings.myAccount.connectedAs': 'Connected as',
 			'settings.myAccount.manageAccount': 'Manage account',
@@ -1353,6 +1404,11 @@ extension on _StringsEn {
 			'editTask.recurrence.after': 'After',
 			'editTask.recurrence.repeatEvery': 'Repeat every',
 			'editTask.recurrence.times': 'time(s)',
+			'editTask.visibility.visibility': 'Visibility',
+			'editTask.visibility.eventVisibility': 'Event visibility',
+			'editTask.visibility.public': 'Public',
+			'editTask.visibility.private': 'Private',
+			'editTask.visibility.busy': 'Busy',
 			'today.title': 'Today',
 			'today.toDos': 'To-dos',
 			'today.pinnedInCalendar': 'Scheduled on calendar',
@@ -1457,6 +1513,10 @@ extension on _StringsEn {
 			'fab.event': 'Event',
 			'fab.taskToday': 'Task - Today',
 			'fab.taskInbox': 'Task - Inbox',
+			'timeModal.selectTime': 'Select Time',
+			'timeModal.selectDuration': 'Select Duration',
+			'timeModal.hours': 'Hours',
+			'timeModal.minutes': 'Minutes',
 		};
 	}
 }

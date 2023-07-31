@@ -57,7 +57,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
-        begin: Theme.of(context).colorScheme.background,
+        begin: ColorsExt.background(context),
         end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
@@ -107,7 +107,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                             ),
                           ],
                           borderRadius: borderRadius(context),
-                          color: _animation!.value,
+                          color: ColorsExt.background(context),
                         ),
                         child: Row(
                           children: [

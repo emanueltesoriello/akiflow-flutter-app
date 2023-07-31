@@ -154,7 +154,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
             ? fetchLabelTasks(_labelsCubit!.state.selectedLabel!).then((_) => print('fetched label tasks'))
             : Future.value(),
         fetchTasksBetweenDates(startDateCalendarTasks, endDateCalendarTasks)
-            .then((value) => print('fetched calendar tasks'))
+            .then((value) => print('fetched calendar tasks')),
+        if (state.allTasks.isNotEmpty)
+          reFetchAllTasks(limit: state.allTasks.length).then((value) => print('fetched all tasks')),
+        if (state.somedayTasks.isNotEmpty) fetchSomedayTasks().then((value) => print('fetched someday tasks'))
       ]);
     } catch (e) {
       print(e);
@@ -255,6 +258,44 @@ class TasksCubit extends Cubit<TasksCubitState> {
     }
   }
 
+  Future<void> fetchAllTasks({required int limit, required int offset}) async {
+    try {
+      List<Task> tasks = await _tasksRepository.getAllTasks(limit, offset);
+      List<Task> allStateTasks = List.from(state.allTasks)..addAll(tasks);
+      emit(state.copyWith(allTasks: allStateTasks));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
+  }
+
+  ///used to re-fetch all shown tasks, with offset 0
+  Future<void> reFetchAllTasks({required int limit}) async {
+    try {
+      int stateTasksLength = state.allTasks.isEmpty ? 30 : state.allTasks.length;
+      List<Task> tasks = await _tasksRepository.getAllTasks(stateTasksLength, 0);
+      emit(state.copyWith(allTasks: tasks));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
+  }
+
+  Future<void> clearAllTasksList() async {
+    emit(state.copyWith(allTasks: []));
+  }
+
+  Future<void> fetchSomedayTasks() async {
+    try {
+      List<Task> tasks = await _tasksRepository.getSomeday();
+      emit(state.copyWith(somedayTasks: tasks));
+    } catch (e, s) {
+      _sentryService.captureException(e, stackTrace: s);
+    }
+  }
+
+  Future<void> clearSomedayTasksList() async {
+    emit(state.copyWith(somedayTasks: []));
+  }
+
   resetTasks() {
     emit(state.copyWith(calendarTasks: []));
   }
@@ -288,6 +329,18 @@ class TasksCubit extends Cubit<TasksCubitState> {
           }
           return t;
         }).toList(),
+        allTasks: state.allTasks.map((t) {
+          if (t.id == task.id) {
+            return task.copyWith(selected: !(task.selected ?? false));
+          }
+          return t;
+        }).toList(),
+        somedayTasks: state.somedayTasks.map((t) {
+          if (t.id == task.id) {
+            return task.copyWith(selected: !(task.selected ?? false));
+          }
+          return t;
+        }).toList(),
       ),
     );
   }
@@ -298,8 +351,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
+    List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+    List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected];
 
     addToUndoQueue(all, UndoType.markDone);
 
@@ -356,8 +410,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
+    List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+    List<Task> all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected];
     all = all.toSet().toList();
 
     for (Task task in all) {
@@ -387,8 +442,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
+    List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected];
 
     addToUndoQueue(allSelected, UndoType.delete);
 
@@ -426,8 +482,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
+    List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected];
 
     bool hasRecurringDataChanges = false;
 
@@ -460,8 +517,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
+    List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected];
 
     bool hasRecurringDataChanges = false;
 
@@ -544,8 +602,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
+    List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected];
 
     DateTime now = DateTime.now();
 
@@ -580,6 +639,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
         inboxTasks: state.inboxTasks.map((e) => e.copyWith(selected: false)).toList(),
         selectedDayTasks: state.selectedDayTasks.map((e) => e.copyWith(selected: false)).toList(),
         labelTasks: state.labelTasks.map((e) => e.copyWith(selected: false)).toList(),
+        allTasks: state.allTasks.map((e) => e.copyWith(selected: false)).toList(),
+        somedayTasks: state.somedayTasks.map((e) => e.copyWith(selected: false)).toList(),
       ),
     );
   }
@@ -654,8 +715,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
+    List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
 
-    addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected], UndoType.moveToInbox);
+    addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected],
+        UndoType.moveToInbox);
     planFor(null, dateTime: null, statusType: TaskStatusType.inbox);
   }
 
@@ -663,8 +726,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
+    List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
 
-    addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected], UndoType.moveToInbox);
+    addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected],
+        UndoType.moveToInbox);
     planFor(DateTime.now(), dateTime: null, statusType: TaskStatusType.planned);
   }
 
@@ -672,9 +737,10 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
+    List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
 
     UndoType undoType = statusType == TaskStatusType.planned ? UndoType.moveToInbox : UndoType.snooze;
-    addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected], undoType);
+    addToUndoQueue([...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected], undoType);
     planFor(date, dateTime: dateTime, statusType: statusType);
   }
 
@@ -682,8 +748,9 @@ class TasksCubit extends Cubit<TasksCubitState> {
     List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
     List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
     List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
+    List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
 
-    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+    List<Task> allSelected = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected];
 
     addToUndoQueue(allSelected, statusType == TaskStatusType.planned ? UndoType.plan : UndoType.snooze);
 
@@ -846,7 +913,8 @@ class TasksCubit extends Cubit<TasksCubitState> {
       List<Task> inboxSelected = state.inboxTasks.where((t) => t.selected ?? false).toList();
       List<Task> todayTasksSelected = state.selectedDayTasks.where((t) => t.selected ?? false).toList();
       List<Task> labelTasksSelected = state.labelTasks.where((t) => t.selected ?? false).toList();
-      all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected];
+      List<Task> somedayTasksSelected = state.somedayTasks.where((t) => t.selected ?? false).toList();
+      all = [...inboxSelected, ...todayTasksSelected, ...labelTasksSelected, ...somedayTasksSelected];
     }
 
     List<Task> gmailTasks = [];

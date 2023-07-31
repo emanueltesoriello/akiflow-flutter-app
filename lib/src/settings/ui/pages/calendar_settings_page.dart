@@ -68,7 +68,7 @@ class _CalendarSettingsPageState extends State<CalendarSettingsPage> {
                           blurRadius: 1,
                         ),
                       ],
-                      color: Colors.white),
+                      color: ColorsExt.background(context),),
                   padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: Center(
                     child: Row(

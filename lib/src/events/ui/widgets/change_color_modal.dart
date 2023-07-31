@@ -193,7 +193,7 @@ class ChangeColorModal extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: ColorsExt.getCalendarBackgroundColor(ColorsExt.fromHex(EventExt.eventColor[color]!)),
+                  color: ColorsExt.getCalendarBackgroundColor(context, ColorsExt.fromHex(EventExt.eventColor[color]!)),
                   border: Border.all(color: ColorsExt.fromHex(EventExt.eventColor[color]!), width: 2),
                   shape: BoxShape.circle,
                 ),

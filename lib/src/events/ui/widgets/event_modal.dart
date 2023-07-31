@@ -46,6 +46,7 @@ class _EventModalState extends State<EventModal> {
   late Event selectedEvent;
   late String? originalStartTime;
   late String? location;
+  late String transparency;
   late FocusNode descriptionFocusNode;
   late TextEditingController descriptionController;
   StreamSubscription? streamSubscription;
@@ -62,6 +63,7 @@ class _EventModalState extends State<EventModal> {
     context.read<EventsCubit>().fetchUnprocessedEventModifiers();
     selectedEvent = context.read<EventsCubit>().patchEventWithEventModifier(widget.event);
     location = selectedEvent.content?["location"] ?? '';
+    transparency = selectedEvent.content['transparency'] ?? EventExt.transparencyOpaque;
 
     if (selectedEvent.attendees != null) {
       selectedEvent.attendees!.sort((a, b) => b.organizer ?? false ? 1 : -1);
@@ -137,7 +139,7 @@ class _EventModalState extends State<EventModal> {
                         _datetimeRow(context),
                         if (selectedEvent.meetingUrl != null) _conferenceRow(context),
                         const Separator(),
-                        _busyRow(context),
+                        _transparencyRow(context),
                         if (location != null && location!.isNotEmpty) _locationRow(context),
                         if (selectedEvent.attendees != null) _attendeesRow(context),
                         if (descriptionController.text.isNotEmpty &&
@@ -338,7 +340,7 @@ class _EventModalState extends State<EventModal> {
     );
   }
 
-  Padding _busyRow(BuildContext context) {
+  Padding _transparencyRow(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Dimension.padding),
       child: Row(
@@ -351,7 +353,7 @@ class _EventModalState extends State<EventModal> {
             ),
           ),
           const SizedBox(width: Dimension.padding),
-          Text(t.event.busy,
+          Text(EventExt.getTransparencyMode(transparency),
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -555,7 +557,7 @@ class _EventModalState extends State<EventModal> {
   Container _bottomButtonsRow(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: ColorsExt.background(context),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),
