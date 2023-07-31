@@ -294,21 +294,19 @@ class TasksRepository extends DatabaseRepository {
   Future<List<Task>> getAllTasks<Task>(int limit, int offset) async {
     List<Map<String, Object?>> items = [];
     try {
-      await _databaseService.database!.transaction((txn) async {
-        items = await txn.rawQuery("""
-          SELECT *
-          FROM tasks
-          WHERE deleted_at IS NULL
-            AND trashed_at IS NULL
-            AND (status = '${TaskStatusType.inbox.id}' OR status = '${TaskStatusType.planned.id}'
-                  OR status = '${TaskStatusType.snoozed.id}' OR status = '${TaskStatusType.someday.id}')
-          GROUP BY IFNULL(`recurring_id`, `id`)
-          ORDER BY
-            updated_at DESC
-          LIMIT ?, ?  
+      items = await DatabaseService.database!.rawQuery("""
+      SELECT *
+      FROM tasks
+      WHERE deleted_at IS NULL
+        AND trashed_at IS NULL
+        AND (status = '${TaskStatusType.inbox.id}' OR status = '${TaskStatusType.planned.id}'
+              OR status = '${TaskStatusType.snoozed.id}' OR status = '${TaskStatusType.someday.id}')
+      GROUP BY IFNULL(`recurring_id`, `id`)
+      ORDER BY
+        updated_at DESC 
+      LIMIT ?, ?  
 
 """, [offset, limit]);
-      });
     } catch (e) {
       print('Error retrieving all tasks: $e');
       return [];
