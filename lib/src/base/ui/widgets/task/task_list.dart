@@ -228,7 +228,7 @@ class _TaskListState extends State<TaskList> {
                       showLabel: widget.showLabel,
                       showPlanInfo: widget.showPlanInfo,
                       selectTask: () {
-                        HapticFeedback.selectionClick();
+                        HapticFeedback.heavyImpact();
                         context.read<TasksCubit>().select(task);
                       },
                       selectMode: tasks.any((element) => element.selected ?? false),
