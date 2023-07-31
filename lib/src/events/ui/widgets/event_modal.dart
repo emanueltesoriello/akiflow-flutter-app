@@ -557,7 +557,7 @@ class _EventModalState extends State<EventModal> {
   Container _bottomButtonsRow(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: ColorsExt.background(context),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),

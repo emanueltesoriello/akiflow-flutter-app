@@ -42,7 +42,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _animation = ColorTween(
-        begin: Theme.of(context).colorScheme.background,
+        begin: ColorsExt.background(context),
         end: ColorsExt.grey200(context),
       ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
       _colorContextReady.value = true;
@@ -86,7 +86,7 @@ class _ButtonSelectableState extends State<ButtonSelectable> with SingleTickerPr
                 builder: (_, child) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Dimension.paddingS),
                   child: Material(
-                    color: _animation!.value,
+                    color: ColorsExt.background(context),
                     child: Material(
                       color: widget.selected ? ColorsExt.grey200(context) : ColorsExt.background(context),
                       child: Row(

@@ -65,68 +65,67 @@ class _TodayAppBarCalendarState extends State<TodayAppBarCalendar> {
         const SizedBox(height: Dimension.paddingS),
         BlocBuilder<TodayCubit, TodayCubitState>(
           builder: (context, state) {
-            return Column(
-              children: [
-                TableCalendar(
-                  startingDayOfWeek: CalendarUtils.computeFirstDayOfWeekForAppbar(firstDayOfWeek, context),
-                  onPageChanged: (page) {
-                    BlocProvider.of<ViewedMonthCubit>(context).updateViewedMonth(page.month);
-                  },
-                  rowHeight: Dimension.todayCalendarMinHeight,
-                  availableGestures: AvailableGestures.horizontalSwipe,
-                  calendarFormat: widget.calendarFormat != null
-                      ? (widget.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month)
-                      : (state.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month),
-                  sixWeekMonthsEnforced: true,
-                  focusedDay: state.selectedDate,
-                  firstDay: now.subtract(const Duration(days: 365)),
-                  lastDay: now.add(const Duration(days: 365)),
-                  selectedDayPredicate: (day) {
-                    return isSameDay(state.selectedDate, day);
-                  },
-                  onDaySelected: (selectedDay, focusedDay) {
-                    context.read<TodayCubit>().onDateSelected(selectedDay);
-                  },
-                  headerVisible: false,
-                  daysOfWeekStyle: DaysOfWeekStyle(
-                      dowTextFormatter: (date, locale) {
-                        return DateFormat("E").format(date).substring(0, 1);
-                      },
-                      weekdayStyle: textStyle,
-                      weekendStyle: textStyle),
-                  calendarBuilders: CalendarBuilders(
-                    defaultBuilder: (context, day, focusedDay) {
-                      return SizedBox(
-                        height: size,
-                        child: Center(
-                          child: Text(
-                            DateFormat("d").format(day),
-                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                  color: ColorsExt.grey800(context),
-                                  fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                          ),
+            return Container(
+              color: ColorsExt.background(context),
+              child: TableCalendar(
+                startingDayOfWeek: CalendarUtils.computeFirstDayOfWeekForAppbar(firstDayOfWeek, context),
+                onPageChanged: (page) {
+                  BlocProvider.of<ViewedMonthCubit>(context).updateViewedMonth(page.month);
+                },
+                rowHeight: Dimension.todayCalendarMinHeight,
+                availableGestures: AvailableGestures.horizontalSwipe,
+                calendarFormat: widget.calendarFormat != null
+                    ? (widget.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month)
+                    : (state.calendarFormat == CalendarFormatState.week ? CalendarFormat.week : CalendarFormat.month),
+                sixWeekMonthsEnforced: true,
+                focusedDay: state.selectedDate,
+                firstDay: now.subtract(const Duration(days: 365)),
+                lastDay: now.add(const Duration(days: 365)),
+                selectedDayPredicate: (day) {
+                  return isSameDay(state.selectedDate, day);
+                },
+                onDaySelected: (selectedDay, focusedDay) {
+                  context.read<TodayCubit>().onDateSelected(selectedDay);
+                },
+                headerVisible: false,
+                daysOfWeekStyle: DaysOfWeekStyle(
+                    dowTextFormatter: (date, locale) {
+                      return DateFormat("E").format(date).substring(0, 1);
+                    },
+                    weekdayStyle: textStyle,
+                    weekendStyle: textStyle),
+                calendarBuilders: CalendarBuilders(
+                  defaultBuilder: (context, day, focusedDay) {
+                    return SizedBox(
+                      height: size,
+                      child: Center(
+                        child: Text(
+                          DateFormat("d").format(day),
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                color: ColorsExt.grey800(context),
+                                fontWeight: FontWeight.w500,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                         ),
-                      );
-                    },
-                    selectedBuilder: (context, day, focusedDay) {
-                      return SizedBox(height: size, child: CalendarSelectedDay(day));
-                    },
-                    todayBuilder: (context, day, focusedDay) {
-                      return SizedBox(height: size, child: CalendarToday(day));
-                    },
-                    outsideBuilder: (context, day, focused) {
-                      return SizedBox(
-                        height: size,
-                        child: Center(
-                          child: Text(DateFormat("d").format(day), style: textStyle),
-                        ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
+                  selectedBuilder: (context, day, focusedDay) {
+                    return SizedBox(height: size, child: CalendarSelectedDay(day));
+                  },
+                  todayBuilder: (context, day, focusedDay) {
+                    return SizedBox(height: size, child: CalendarToday(day));
+                  },
+                  outsideBuilder: (context, day, focused) {
+                    return SizedBox(
+                      height: size,
+                      child: Center(
+                        child: Text(DateFormat("d").format(day), style: textStyle),
+                      ),
+                    );
+                  },
                 ),
-              ],
+              ),
             );
           },
         ),

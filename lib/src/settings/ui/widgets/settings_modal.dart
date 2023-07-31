@@ -270,7 +270,7 @@ class SettingsModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: ColorsExt.background(context),
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(Dimension.padding),
         topRight: Radius.circular(Dimension.padding),

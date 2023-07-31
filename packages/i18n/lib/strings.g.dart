@@ -408,7 +408,6 @@ class _StringsSettingsEn {
 	// Translations
 	String get title => 'Settings';
 	String get upgradeToPro => 'Upgrade to pro';
-	String get general => 'General';
 	String get tasks => 'Tasks';
 	String get notifications => 'Notifications';
 	String get calendar => 'Calendar';
@@ -423,6 +422,7 @@ class _StringsSettingsEn {
 	String get changeLog => 'Change log';
 	String get chatWithUs => 'Chat with us';
 	String get sendUsAnEmail => 'Send us an Email';
+	late final _StringsSettingsGeneralEn general = _StringsSettingsGeneralEn._(_root);
 	late final _StringsSettingsMyAccountEn myAccount = _StringsSettingsMyAccountEn._(_root);
 	late final _StringsSettingsAboutEn about = _StringsSettingsAboutEn._(_root);
 	late final _StringsSettingsLearnAkiflowEn learnAkiflow = _StringsSettingsLearnAkiflowEn._(_root);
@@ -749,6 +749,22 @@ class _StringsOnboardingGmailEn {
 	// Translations
 	String get skipForNow => 'Skip for now';
 	String get reconnectGmailAccount => 'Reconnect Gmail account';
+}
+
+// Path: settings.general
+class _StringsSettingsGeneralEn {
+	_StringsSettingsGeneralEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get general => 'General';
+	String get style => 'Style';
+	String get theme => 'Theme';
+	String get auto => 'Auto (use system setting)';
+	String get light => 'Light';
+	String get dark => 'Dark';
+	String get appearance => 'Appearance';
 }
 
 // Path: settings.myAccount
@@ -1177,7 +1193,6 @@ extension on _StringsEn {
 			'expiry.alternate': 'and delete all data.',
 			'settings.title': 'Settings',
 			'settings.upgradeToPro': 'Upgrade to pro',
-			'settings.general': 'General',
 			'settings.tasks': 'Tasks',
 			'settings.notifications': 'Notifications',
 			'settings.calendar': 'Calendar',
@@ -1192,6 +1207,13 @@ extension on _StringsEn {
 			'settings.changeLog': 'Change log',
 			'settings.chatWithUs': 'Chat with us',
 			'settings.sendUsAnEmail': 'Send us an Email',
+			'settings.general.general': 'General',
+			'settings.general.style': 'Style',
+			'settings.general.theme': 'Theme',
+			'settings.general.auto': 'Auto (use system setting)',
+			'settings.general.light': 'Light',
+			'settings.general.dark': 'Dark',
+			'settings.general.appearance': 'Appearance',
 			'settings.myAccount.title': 'My account',
 			'settings.myAccount.connectedAs': 'Connected as',
 			'settings.myAccount.manageAccount': 'Manage account',

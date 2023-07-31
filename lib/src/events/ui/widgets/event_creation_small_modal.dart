@@ -26,7 +26,7 @@ class EventCreationSmallModal extends StatelessWidget {
     return BlocBuilder<EventsCubit, EventsCubitState>(
       builder: (context, state) {
         return Material(
-          color: Colors.white,
+          color: ColorsExt.background(context),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(Dimension.padding),
             topRight: Radius.circular(Dimension.padding),

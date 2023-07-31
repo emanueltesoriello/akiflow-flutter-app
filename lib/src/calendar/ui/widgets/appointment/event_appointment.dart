@@ -125,7 +125,7 @@ class EventAppointment extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       color: responseStatus == AtendeeResponseStatus.declined
                           ? ColorsExt.grey700(context)
-                          : ColorsExt.getCalendarEventTitleColor(appointment.color),
+                          : ColorsExt.getCalendarEventTitleColor(context, appointment.color),
                       decoration: responseStatus == AtendeeResponseStatus.declined ? TextDecoration.lineThrough : null,
                     ),
                   ),
@@ -158,7 +158,7 @@ class EventAppointment extends StatelessWidget {
     switch (responseStatus) {
       case AtendeeResponseStatus.declined:
         return BoxDecoration(
-            color: ColorsExt.getCalendarBackgroundColorLight(appointment.color),
+            color: ColorsExt.getCalendarBackgroundColorLight(context, appointment.color),
             borderRadius: BorderRadius.all(
               Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
             ));
@@ -169,10 +169,10 @@ class EventAppointment extends StatelessWidget {
               transform: const GradientRotation(3.14 / 4),
               stops: const [0.0, 0.5, 0.5, 1],
               colors: [
-                ColorsExt.getCalendarBackgroundColor(appointment.color),
-                ColorsExt.getCalendarBackgroundColor(appointment.color),
-                ColorsExt.getCalendarBackgroundColorDark(appointment.color),
-                ColorsExt.getCalendarBackgroundColorDark(appointment.color),
+                ColorsExt.getCalendarBackgroundColor(context, appointment.color),
+                ColorsExt.getCalendarBackgroundColor(context, appointment.color),
+                ColorsExt.getCalendarBackgroundColorDark(context, appointment.color),
+                ColorsExt.getCalendarBackgroundColorDark(context, appointment.color),
               ],
               tileMode: TileMode.repeated,
             ),
@@ -182,19 +182,19 @@ class EventAppointment extends StatelessWidget {
       case AtendeeResponseStatus.needsAction:
         if (event.attendees != null) {
           return BoxDecoration(
-              color: Colors.white,
+              color: ColorsExt.background(context),
               borderRadius: BorderRadius.all(
                 Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
               ));
         }
         return BoxDecoration(
-            color: ColorsExt.getCalendarBackgroundColor(appointment.color),
+            color: ColorsExt.getCalendarBackgroundColor(context, appointment.color),
             borderRadius: BorderRadius.all(
               Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
             ));
       default:
         return BoxDecoration(
-            color: ColorsExt.getCalendarBackgroundColor(appointment.color),
+            color: ColorsExt.getCalendarBackgroundColor(context, appointment.color),
             borderRadius: BorderRadius.all(
               Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
             ));
