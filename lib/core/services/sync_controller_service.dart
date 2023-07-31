@@ -330,6 +330,9 @@ class SyncControllerService {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       BaseDeviceInfo deviceInfo = await DeviceInfoPlugin().deviceInfo;
       String? deviceId = deviceInfo.toMap()['id'];
+      if (deviceId == null) {
+        deviceId = deviceInfo.toMap()["identifierForVendor"];
+      }
       final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
 
       Client client = Client(
