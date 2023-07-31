@@ -58,7 +58,7 @@ class Label extends Equatable implements Base {
   @override
   Map<String, dynamic> toMap() => {
         'id': id,
-        'user_id': userId,
+        //'user_id': userId,
         'title': title,
         'icon': icon,
         'color': color,
