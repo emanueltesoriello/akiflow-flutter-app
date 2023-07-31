@@ -31,6 +31,8 @@ class UserSettingsUtils {
   static String dailyOverviewNotificationsTime = 'dailyOverviewNotificationsTime_mobile';
   static String taskCompletedSoundEnabled = 'taskCompletedSoundEnabled_mobile';
 
+  static String lockInCalendar = 'lockInCalendar';
+
   static Map<String, dynamic>? compareRemoteWithLocal({
     required Map<String, dynamic>? remoteSettings,
     required Map<String, dynamic>? localSettings,

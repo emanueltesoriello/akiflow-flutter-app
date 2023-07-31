@@ -585,6 +585,7 @@ class _StringsEditTaskEn {
 	String get comingSoon => 'Coming soon';
 	late final _StringsEditTaskRepeatingEditDialogEn repeatingEditDialog = _StringsEditTaskRepeatingEditDialogEn._(_root);
 	late final _StringsEditTaskRecurrenceEn recurrence = _StringsEditTaskRecurrenceEn._(_root);
+	late final _StringsEditTaskVisibilityEn visibility = _StringsEditTaskVisibilityEn._(_root);
 }
 
 // Path: today
@@ -913,6 +914,20 @@ class _StringsEditTaskRecurrenceEn {
 	String get after => 'After';
 	String get repeatEvery => 'Repeat every';
 	String get times => 'time(s)';
+}
+
+// Path: editTask.visibility
+class _StringsEditTaskVisibilityEn {
+	_StringsEditTaskVisibilityEn._(this._root);
+
+	final _StringsEn _root; // ignore: unused_field
+
+	// Translations
+	String get visibility => 'Visibility';
+	String get eventVisibility => 'Event visibility';
+	String get public => 'Public';
+	String get private => 'Private';
+	String get busy => 'Busy';
 }
 
 // Path: label.deleteDialog
@@ -1375,6 +1390,11 @@ extension on _StringsEn {
 			'editTask.recurrence.after': 'After',
 			'editTask.recurrence.repeatEvery': 'Repeat every',
 			'editTask.recurrence.times': 'time(s)',
+			'editTask.visibility.visibility': 'Visibility',
+			'editTask.visibility.eventVisibility': 'Event visibility',
+			'editTask.visibility.public': 'Public',
+			'editTask.visibility.private': 'Private',
+			'editTask.visibility.busy': 'Busy',
 			'today.title': 'Today',
 			'today.toDos': 'To-dos',
 			'today.pinnedInCalendar': 'Scheduled on calendar',

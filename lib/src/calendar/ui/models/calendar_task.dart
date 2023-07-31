@@ -1,7 +1,11 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:i18n/strings.g.dart';
+import 'package:mobile/common/style/colors.dart';
+import 'package:mobile/extensions/event_extension.dart';
+import 'package:mobile/src/calendar/ui/cubit/calendar_cubit.dart';
 import 'package:mobile/src/label/ui/cubit/labels_cubit.dart';
+import 'package:models/calendar/calendar.dart';
 import 'package:models/label/label.dart';
 import 'package:models/task/task.dart';
 import 'package:syncfusion_calendar/calendar.dart';
@@ -53,7 +57,8 @@ class CalendarTask extends Appointment {
         done: task.done!,
         id: task.id,
         listId: task.listId,
-        label: _getLabel(context, task));
+        label: _getLabel(context, task),
+        color: _getCalendarColor(context, task) ?? Colors.lightBlue);
   }
 
   static Label? _getLabel(BuildContext context, Task task) {
@@ -72,5 +77,23 @@ class CalendarTask extends Appointment {
     }
 
     return label;
+  }
+
+  static Color? _getCalendarColor(BuildContext context, Task task) {
+    if (task.calendarId == null) {
+      return null;
+    }
+    List<Calendar> calendars = context.read<CalendarCubit>().state.calendars;
+
+    Calendar? calendar = calendars.firstWhereOrNull((calendar) => task.calendarId!.contains(calendar.id!));
+
+    if (calendar == null || calendar.deletedAt != null) {
+      return null;
+    }
+
+    String calendarColor = calendar.color!;
+    Color color = ColorsExt.fromHex(EventExt.calendarColor[calendarColor] ?? calendarColor);
+
+    return color;
   }
 }
