@@ -319,14 +319,20 @@ extension EventExt on Event {
 
   ///returns rrule on first position and exdate on second
   List<String> computeRuleForThisAndFuture() {
-    List<String> parts = recurrence!;
+    List<String> parts = recurrence!.first.split(";");
     parts.removeWhere((part) => part.startsWith('WKST'));
 
-    List<String> goodRule = parts.where((part) => !part.startsWith('EXDATE') && !part.startsWith('TZID')).toList();
+    List<String> goodRule = parts;
+    goodRule.removeWhere((part) => part.startsWith('EXDATE'));
+    goodRule.removeWhere((part) => part.startsWith('TZID'));
 
     parts.removeWhere((part) => goodRule.contains(part));
 
-    return [goodRule.join(";"), parts.join(";")];
+    if (parts.isEmpty) {
+      return [goodRule.join(";")];
+    } else {
+      return [goodRule.join(";"), parts.join(";")];
+    }
   }
 
   static Map<String, Event> calculateEvents(List args) {

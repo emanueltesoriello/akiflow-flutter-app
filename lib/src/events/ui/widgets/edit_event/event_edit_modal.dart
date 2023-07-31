@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:mobile/assets.dart';
 import 'package:mobile/common/style/colors.dart';
 import 'package:mobile/common/style/sizes.dart';
-import 'package:mobile/common/utils/time_picker_utils.dart';
 import 'package:mobile/extensions/event_extension.dart';
 import 'package:mobile/extensions/string_extension.dart';
 import 'package:mobile/src/base/ui/widgets/base/scroll_chip.dart';
@@ -29,6 +28,7 @@ import 'package:mobile/src/events/ui/widgets/edit_event/recurrence_modal.dart';
 import 'package:mobile/src/events/ui/widgets/confirmation_modals/recurrent_event_edit_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/transparency_modal.dart';
 import 'package:mobile/src/events/ui/widgets/edit_event/visibility_modal.dart';
+import 'package:mobile/src/tasks/ui/widgets/time_cupertino_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/calendar/calendar.dart';
 import 'package:models/event/event.dart';
@@ -290,6 +290,13 @@ class _EventEditModalState extends State<EventEditModal> {
     );
   }
 
+  TimeOfDay _secondsToTimeOfDay(int seconds) {
+    final minutes = (seconds / 60).floor();
+    final hours = (minutes / 60).floor();
+
+    return TimeOfDay(hour: hours % 24, minute: minutes % 60);
+  }
+
   InkWell _startDateAllDay(BuildContext context) {
     return InkWell(
       onTap: () {
@@ -396,27 +403,27 @@ class _EventEditModalState extends State<EventEditModal> {
 
         TimeOfDay initialTime = TimeOfDay(hour: eventStartTime.hour, minute: eventStartTime.minute);
 
-        TimePickerUtils.pick(
-          context,
-          initialTime: initialTime,
-          onTimeSelected: (selected) {
-            if (selected != null) {
-              DateTime selectedStartTime = DateTime(eventStartTime.year, eventStartTime.month, eventStartTime.day,
-                      selected.hour, selected.minute, eventStartTime.second, eventStartTime.millisecond)
-                  .toUtc();
+        showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => TimeCupertinoModal(
+                  time: initialTime,
+                  onConfirm: (selected) {
+                    TimeOfDay selectedTime = _secondsToTimeOfDay(selected);
+                    DateTime selectedStartTime = DateTime(eventStartTime.year, eventStartTime.month, eventStartTime.day,
+                            selectedTime.hour, selectedTime.minute, eventStartTime.second, eventStartTime.millisecond)
+                        .toUtc();
 
-              DateTime eventEndTime = selectedStartTime.add(duration);
+                    DateTime eventEndTime = selectedStartTime.add(duration);
 
-              setState(() {
-                timeChanged = true;
-                updatedEvent = updatedEvent.copyWith(
-                  startTime: Nullable(selectedStartTime.toUtc().toIso8601String()),
-                  endTime: Nullable(eventEndTime.toUtc().toIso8601String()),
-                );
-              });
-            }
-          },
-        );
+                    setState(() {
+                      timeChanged = true;
+                      updatedEvent = updatedEvent.copyWith(
+                        startTime: Nullable(selectedStartTime.toUtc().toIso8601String()),
+                        endTime: Nullable(eventEndTime.toUtc().toIso8601String()),
+                      );
+                    });
+                  },
+                ));
       },
       child: Text(
           DateFormat(widget.use24hFormat ? "HH:mm" : "h:mm a")
@@ -531,26 +538,26 @@ class _EventEditModalState extends State<EventEditModal> {
 
         TimeOfDay initialTime = TimeOfDay(hour: eventEndTime.hour, minute: eventEndTime.minute);
 
-        TimePickerUtils.pick(
-          context,
-          initialTime: initialTime,
-          onTimeSelected: (selected) {
-            if (selected != null) {
-              DateTime selectedEndTime = DateTime(eventEndTime.year, eventEndTime.month, eventEndTime.day,
-                      selected.hour, selected.minute, eventEndTime.second, eventEndTime.millisecond)
-                  .toUtc();
+        showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => TimeCupertinoModal(
+                  time: initialTime,
+                  onConfirm: (selected) {
+                    TimeOfDay selectedTime = _secondsToTimeOfDay(selected);
+                    DateTime selectedEndTime = DateTime(eventEndTime.year, eventEndTime.month, eventEndTime.day,
+                            selectedTime.hour, selectedTime.minute, eventEndTime.second, eventEndTime.millisecond)
+                        .toUtc();
 
-              if (eventStartTime.isBefore(selectedEndTime)) {
-                setState(() {
-                  timeChanged = true;
-                  updatedEvent = updatedEvent.copyWith(
-                    endTime: Nullable(selectedEndTime.toUtc().toIso8601String()),
-                  );
-                });
-              }
-            }
-          },
-        );
+                    if (eventStartTime.isBefore(selectedEndTime)) {
+                      setState(() {
+                        timeChanged = true;
+                        updatedEvent = updatedEvent.copyWith(
+                          endTime: Nullable(selectedEndTime.toUtc().toIso8601String()),
+                        );
+                      });
+                    }
+                  },
+                ));
       },
       child: Text(
           DateFormat(widget.use24hFormat ? "HH:mm" : "h:mm a").format(DateTime.parse(updatedEvent.endTime!).toLocal()),

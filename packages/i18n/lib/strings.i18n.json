@@ -444,5 +444,11 @@
     "event": "Event",
     "taskToday": "Task - Today",
     "taskInbox": "Task - Inbox"
+  },
+  "timeModal": {
+    "selectTime": "Select Time",
+    "selectDuration": "Select Duration",
+    "hours": "Hours",
+    "minutes": "Minutes"
   }
 }

@@ -15,7 +15,7 @@ class Dimension {
   static const progressIndicatorSize = 10.0;
 
   /// Styles
-  static const outlineBorderRadius = 4.0;
+  static const outlineBorderRadius = 8.0;
   static const cardRadius = 10.0;
   static const cardElevation = 0.0;
   static const titleFontSize = 34.0;
