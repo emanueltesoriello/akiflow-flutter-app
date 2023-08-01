@@ -23,6 +23,7 @@ class EditTaskRow extends StatefulWidget {
   final TextEditingController titleController;
   final ValueNotifier<QuillController> controller;
   final QuillEditorController quillEditorController;
+  final Function(Map<dynamic, dynamic> delta) setInitialDelta;
 
   final FocusNode descriptionFocusNode;
   final FocusNode titleFocusNode;
@@ -33,7 +34,8 @@ class EditTaskRow extends StatefulWidget {
       required this.controller,
       required this.descriptionFocusNode,
       required this.titleFocusNode,
-      required this.quillEditorController})
+      required this.quillEditorController,
+      required this.setInitialDelta})
       : super(key: key);
 
   @override
@@ -69,6 +71,7 @@ class _EditTaskRowState extends State<EditTaskRow> {
                       quillController: widget.controller,
                       initialText: cubit.state.updatedTask.description ?? '',
                       onChange: (htmlText) => cubit.updateDescription(htmlText),
+                      setInitialDelta: (delta) => widget.setInitialDelta(delta),
                       onTap: () async {
                         if (!widget.descriptionFocusNode.hasFocus && !widget.titleFocusNode.hasFocus) {
                           widget.descriptionFocusNode.unfocus();

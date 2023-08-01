@@ -12,6 +12,7 @@ class QuillDescription extends StatefulWidget {
   final Function(String) onChange;
   final Function()? onTap;
   final FocusNode descriptionFocusNode;
+  final Function(Map<dynamic, dynamic> delta) setInitialDelta;
 
   const QuillDescription(
       {super.key,
@@ -20,7 +21,8 @@ class QuillDescription extends StatefulWidget {
       required this.initialText,
       this.onTap,
       required this.descriptionFocusNode,
-      required this.onChange});
+      required this.onChange,
+      required this.setInitialDelta});
 
   @override
   State<QuillDescription> createState() => _QuillDescriptionState();
@@ -34,7 +36,10 @@ class _QuillDescriptionState extends State<QuillDescription> {
       await widget.quillEditorController.insertText(widget.initialText, index: 0);
       var delta = await widget.quillEditorController.getDelta();
       quill.Document document = quill.Document.fromJson(delta["ops"]);
+      //quill.Document doc = quill.Document();
+      // doc = document;
 
+      widget.setInitialDelta(delta);
       widget.quillController.value =
           quill.QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
       widget.quillController.value.changes.listen((change) async {

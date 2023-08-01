@@ -38,6 +38,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
   final FocusNode _descriptionFocusNode = FocusNode();
   final FocusNode _titleFocusNode = FocusNode();
+  late Map<dynamic, dynamic> initialDelta;
 
   @override
   void initState() {
@@ -64,6 +65,18 @@ class _EditTaskModalState extends State<EditTaskModal> {
     }
 
     initFocusNodeListener();
+  }
+
+  reInitQuillController() async {
+    EditTaskCubit cubit = context.read<EditTaskCubit>();
+
+    quillController.value = quill.QuillController(
+        document: quill.Document.fromJson(initialDelta["ops"]), selection: const TextSelection.collapsed(offset: 0));
+    quillController.value.changes.listen((change) async {
+      quillEditorController.setDelta({"ops": quillController.value.document.toDelta().toJson()});
+      var htmlText = await quillEditorController.getText();
+      cubit.updateDescription(htmlText);
+    });
   }
 
   void initFocusNodeListener() {
@@ -160,11 +173,12 @@ class _EditTaskModalState extends State<EditTaskModal> {
                                 .style
                                 ?.copyWith(overlayColor: MaterialStateProperty.all(ColorsExt.grey200(context))),
                             onPressed: () async {
-                              /* quillController = ValueNotifier<quill.QuillController>(
+                              /*quillController = ValueNotifier<quill.QuillController>(
                                 quill.QuillController(
                                     document: quill.Document(), selection: const TextSelection.collapsed(offset: 0)),
                               );*/
-                              await _init();
+                              await _init(isFirstInit: true);
+                              await reInitQuillController();
                               cubit.undoChanges();
                               cubit.setHasFocusOnTitleOrDescription(false);
                               FocusScope.of(context).unfocus();
@@ -254,6 +268,9 @@ class _EditTaskModalState extends State<EditTaskModal> {
                 titleController: _titleController,
                 descriptionFocusNode: _descriptionFocusNode,
                 titleFocusNode: _titleFocusNode,
+                setInitialDelta: (delta) {
+                  initialDelta = delta;
+                },
               ),
               if (!state.hasFocusOnTitleOrDescription) const SizedBox(height: Dimension.padding),
               if (!state.hasFocusOnTitleOrDescription) const Separator(),
@@ -326,51 +343,54 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EditTaskCubit, EditTaskCubitState>(
-      builder: (context, state) {
-        return WillPopScope(
-          onWillPop: () => onBack(state),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(Dimension.radius),
-              topRight: Radius.circular(Dimension.radius),
-            ),
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                Material(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: 0,
-                      maxHeight: MediaQuery.of(context).size.height - kToolbarHeight * 2,
-                    ),
-                    child: AnimatedSize(
-                      curve: Curves.linear,
-                      duration: const Duration(milliseconds: 200),
-                      reverseDuration: const Duration(milliseconds: 200),
-                      child: SizedBox(
-                        height: state.hasFocusOnTitleOrDescription
-                            ? MediaQuery.of(context).size.height -
-                                (kToolbarHeight * 2) +
-                                MediaQuery.of(context).viewInsets.bottom
-                            : null,
-                        child: state.hasFocusOnTitleOrDescription
-                            ? Scaffold(
-                                backgroundColor: Colors.transparent.withOpacity(0),
-                                resizeToAvoidBottomInset: true,
-                                body: body(state),
-                              )
-                            : body(state),
+    return SafeArea(
+      child: BlocBuilder<EditTaskCubit, EditTaskCubitState>(
+        builder: (context, state) {
+          return WillPopScope(
+            onWillPop: () => onBack(state),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(Dimension.radius),
+                topRight: Radius.circular(Dimension.radius),
+              ),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Material(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: 0,
+                        maxHeight: MediaQuery.of(context).size.height - kToolbarHeight * 2,
+                      ),
+                      child: AnimatedSize(
+                        curve: Curves.linear,
+                        duration: const Duration(milliseconds: 200),
+                        reverseDuration: const Duration(milliseconds: 200),
+                        child: SizedBox(
+                          height: state.hasFocusOnTitleOrDescription
+                              ? MediaQuery.of(context).size.height -
+                                  (kToolbarHeight * 2) +
+                                  MediaQuery.of(context).viewInsets.bottom +
+                                  100
+                              : null,
+                          child: state.hasFocusOnTitleOrDescription
+                              ? Scaffold(
+                                  backgroundColor: Colors.transparent.withOpacity(0),
+                                  resizeToAvoidBottomInset: true,
+                                  body: body(state),
+                                )
+                              : body(state),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                if (showQuillToolbar) QuillToolbar(controller: quillController.value)
-              ],
+                  if (showQuillToolbar) QuillToolbar(controller: quillController.value)
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
