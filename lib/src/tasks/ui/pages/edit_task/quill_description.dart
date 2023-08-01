@@ -36,8 +36,6 @@ class _QuillDescriptionState extends State<QuillDescription> {
       await widget.quillEditorController.insertText(widget.initialText, index: 0);
       var delta = await widget.quillEditorController.getDelta();
       quill.Document document = quill.Document.fromJson(delta["ops"]);
-      //quill.Document doc = quill.Document();
-      // doc = document;
 
       widget.setInitialDelta(delta);
       widget.quillController.value =
