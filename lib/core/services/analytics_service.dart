@@ -4,12 +4,15 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:models/user.dart';
-import 'package:mobile/core/config.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:async';
 
 class AnalyticsService {
   const AnalyticsService._();
   static const baseUrl = "https://t.akiflow.com/v3/t";
+  static final List<Map<String, dynamic>> _eventsBatch = [];
+  static Timer? _batchTimer;
+  static const batchInterval = Duration(seconds: 5);
 
   static Future<void> identify({required User user, required String version, required String buildNumber}) async {
     print("*** AnalyticsService identify: ${user.email} ***");
@@ -114,22 +117,29 @@ class AnalyticsService {
       print(e);
     }
 
-    final body = {
-      "data": [
-        {
-          "id": uuid.v4(),
-          "user_id": userOrAnonymousId,
-          "event": event,
-          "properties": properties,
-          "timestamp": timestamp
-        }
-      ]
-    };
+    _eventsBatch.add({
+      "id": uuid.v4(),
+      "user_id": userOrAnonymousId,
+      "event": event,
+      "properties": properties,
+      "timestamp": timestamp,
+    });
 
-    await http.post(
-      Uri.parse('$baseUrl/track'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(body),
-    );
+    _batchTimer ??= Timer(batchInterval, _sendBatch);
+  }
+
+  static Future<void> _sendBatch() async {
+    if (_eventsBatch.isNotEmpty) {
+      final body = {"data": _eventsBatch};
+      print('Sending batch of events..');
+      await http.post(
+        Uri.parse('$baseUrl/track'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(body),
+      );
+
+      _eventsBatch.clear();
+    }
+    _batchTimer = null; // Reset timer
   }
 }
