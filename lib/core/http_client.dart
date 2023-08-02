@@ -46,10 +46,13 @@ class HttpClient extends BaseClient {
       StreamedResponse response = await _inner.send(request);
 
       if (response.statusCode >= 500 && response.statusCode < 600) {
-        // Exponential backoff with jitter
+        // Exponential backoff with jitter.
+        // The delay grows exponentially with each attempt
+        // but includes a random jitter to avoid synchronized retries.
         int delay = (100 * math.pow(2, retryCount) * (math.Random().nextDouble() * 0.2 + 0.9)).toInt();
         await Future.delayed(Duration(milliseconds: delay));
         retryCount++;
+        print('Retry on send() method. Attempt n°: $retryCount');
         continue; // Retry the request
       } else if (response.statusCode == 401 || response.statusCode == 403) {
         bool result = await refreshToken(user);
