@@ -30,10 +30,6 @@ class AnalyticsService {
       "device_id": deviceId,
     };
 
-    if (Config.development) {
-      traits["debug"] = "true";
-    }
-
     final body = {
       "id": user.email,
       "email": user.email,
