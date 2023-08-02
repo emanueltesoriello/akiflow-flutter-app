@@ -27,7 +27,7 @@ class AnalyticsService {
       "release_mobile": version,
       "mobile_user": true,
       "releaseNumber_mobile": buildNumber,
-      "platform": Platform.isAndroid ? "android" : "ios",
+      "platform": Platform.isAndroid ? "android" : "ios", // for the superProperties
       "email": user.email,
       "name": user.name,
       "device_id": deviceId,
@@ -36,7 +36,7 @@ class AnalyticsService {
     final body = {
       "id": user.email,
       "email": user.email,
-      "properties": {"platform": "mobile"},
+      "platform": Platform.isAndroid ? "android" : "ios",
       "traits": traits,
     };
 
@@ -105,8 +105,17 @@ class AnalyticsService {
     return user ?? anonymousId;
   }
 
-  static Future<void> track(String event, {Map<String, dynamic>? properties = const {"platform": "mobile"}}) async {
+  static Future<void> track(String event, {Map<String, dynamic>? properties}) async {
     print("*** AnalyticsService track: $event ***");
+    try {
+      if (properties != null) {
+        properties.addAll({"platform": Platform.isAndroid ? "android" : "ios"});
+      } else {
+        properties = {"platform": Platform.isAndroid ? "android" : "ios"}; // for the superProperties
+      }
+    } catch (e) {
+      print(e);
+    }
 
     const uuid = Uuid();
     final timestamp = DateTime.now().toIso8601String();
