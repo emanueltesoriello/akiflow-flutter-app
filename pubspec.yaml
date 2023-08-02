@@ -2,7 +2,7 @@ name: mobile
 description: Akiflow Mobile
 publish_to: "none"
 
-version: 2.37.04+402
+version: 2.38.06+424
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -17,7 +17,6 @@ dependencies:
     sdk: flutter 
   flutter_quill: ^7.1.16
   flutter_rounded_date_picker: ^3.0.2
-  flutter_segment: ^3.9.0
   flutter_slidable: ^3.0.0
   flutter_svg: ^1.1.1+1
   flutter_switch: ^0.3.2
