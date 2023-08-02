@@ -5,6 +5,7 @@ import 'package:mobile/core/config.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 Uri refreshTokenUrl = Uri.parse('https://web.akiflow.com/oauth/refreshToken');
 
@@ -27,6 +28,17 @@ class HttpClient extends BaseClient {
     request.headers['Content-Type'] = "application/json";
     request.headers['Akiflow-Version'] = packageInfo.version;
     request.headers['Akiflow-Platform'] = platform;
+
+    try {
+      BaseDeviceInfo deviceInfo = await DeviceInfoPlugin().deviceInfo;
+      String? deviceId = deviceInfo.toMap()['id'];
+      if (deviceId == null) {
+        deviceId = deviceInfo.toMap()["identifierForVendor"];
+      }
+      request.headers['Akiflow-ClientId'] = deviceId ?? '';
+    } catch (e) {
+      print(e);
+    }
 
     StreamedResponse response = await _inner.send(request);
 
