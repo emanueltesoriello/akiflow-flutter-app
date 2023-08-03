@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart';
@@ -5,6 +6,8 @@ import 'package:mobile/core/config.dart';
 import 'package:mobile/core/preferences.dart';
 import 'package:models/user.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:math' as math;
 
 Uri refreshTokenUrl = Uri.parse('https://web.akiflow.com/oauth/refreshToken');
 
@@ -28,17 +31,52 @@ class HttpClient extends BaseClient {
     request.headers['Akiflow-Version'] = packageInfo.version;
     request.headers['Akiflow-Platform'] = platform;
 
-    StreamedResponse response = await _inner.send(request);
+    try {
+      BaseDeviceInfo deviceInfo = await DeviceInfoPlugin().deviceInfo;
+      String? deviceId = deviceInfo.toMap()['id'];
+      if (deviceId == null) {
+        deviceId = deviceInfo.toMap()["identifierForVendor"];
+      }
+      request.headers['Akiflow-ClientId'] = deviceId ?? '';
+    } catch (e) {
+      print(e);
+    }
 
-    if (response.statusCode == 401 || response.statusCode == 403) {
-      bool result = await refreshToken(user);
-      if (result) {
-        return _inner.send(request);
-      } else {
-        return StreamedResponse(Stream<List<int>>.fromIterable([]), 401);
+    int retryCount = 0;
+    while (retryCount < 20) {
+      try {
+        StreamedResponse response = await _inner.send(request);
+
+        if (response.statusCode >= 500 && response.statusCode < 600) {
+          // Exponential backoff with jitter
+          int delay = (100 * math.pow(2, retryCount) * (math.Random().nextDouble() * 0.2 + 0.9)).toInt();
+          await Future.delayed(Duration(milliseconds: delay));
+          retryCount++;
+          continue; // Retry the request
+        } else if (response.statusCode == 401 || response.statusCode == 403) {
+          bool result = await refreshToken(user);
+          if (result) {
+            return _inner.send(request);
+          } else {
+            return StreamedResponse(Stream<List<int>>.fromIterable([]), 401);
+          }
+        } else {
+          return response; // Success or a client error, so no retry
+        }
+      } on SocketException catch (_) {
+        // Retry if socket exception
+        retryCount++;
+        continue;
+      } on TimeoutException catch (_) {
+        // Retry if timeout exception
+        retryCount++;
+        continue;
       }
     }
-    return response;
+
+    // If we reached here, we failed after 20 attempts
+    print('Error after 20 retries');
+    return StreamedResponse(Stream<List<int>>.fromIterable([]), 500);
   }
 
   Future<bool> refreshToken(User? user) async {

@@ -105,16 +105,19 @@ class FloatingButton extends StatelessWidget {
       DateTime now = DateTime.now();
 
       List<DateTime> visibleDates = context.read<CalendarCubit>().state.visibleDates;
-      if (visibleDates.isNotEmpty) {
+      if (visibleDates.isNotEmpty && !visibleDates.contains(DateTime(now.year, now.month, now.day))) {
         date = visibleDates.first;
+        startTimeRounded =
+            DateTime(date.year, date.month, date.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).ceil()])
+                .toUtc()
+                .toIso8601String();
       } else {
         date = now;
+        startTimeRounded =
+            DateTime(now.year, now.month, now.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).ceil()])
+                .toUtc()
+                .toIso8601String();
       }
-
-      startTimeRounded =
-          DateTime(date.year, date.month, date.day, now.hour, [0, 15, 30, 45, 60][(now.minute / 15).ceil()])
-              .toUtc()
-              .toIso8601String();
 
       AuthCubit authCubit = context.read<AuthCubit>();
       if (authCubit.state.user?.settings?["tasks"] != null) {

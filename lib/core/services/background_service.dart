@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
@@ -101,7 +102,10 @@ Future<bool> backgroundProcesses(Map args) async {
     if (fromBackground) {
       await initProcesses();
     }
-    await locator<SyncControllerService>().isolateSync(entities);
+    if (fromBackground == true) {
+      AnalyticsService.track("[debug] Synching in background");
+    }
+    locator<SyncControllerService>().sync();
 
     // Show a local notification to confirm the background Sync
     if (kDebugMode) {

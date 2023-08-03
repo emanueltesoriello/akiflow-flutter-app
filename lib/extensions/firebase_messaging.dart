@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/background_service.dart';
 
 onNotificationsReceived(RemoteMessage message, FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
@@ -10,6 +11,8 @@ onNotificationsReceived(RemoteMessage message, FlutterLocalNotificationsPlugin f
   String notificationType = message.data["notification_type"] ?? '';
   // If `onMessage` is triggered with a notification, construct our own
   // local notification to show to users using the created channel.
+
+  AnalyticsService.track("[debug] Message from server to sync", properties: {"isInBackground": fromBackground});
   if (notificationType == 'trigger_sync:tasks' || notificationType == 'trigger_sync:events') {
     backgroundProcesses({"task": backgroundSyncFromNotification, "entities": null, "fromBackground": fromBackground});
   }

@@ -155,7 +155,7 @@ class SyncControllerService {
     User? user = _preferencesRepository.user;
 
     if (user != null) {
-      AnalyticsService.track("Trigger sync now");
+      AnalyticsService.track("[debug] Trigger sync now);
       try {
         if (entities == null) {
           await _syncEntity(Entity.accounts);
@@ -188,6 +188,7 @@ class SyncControllerService {
         _sentryService.captureException(e, stackTrace: s);
       }
     }
+    AnalyticsService.track("[debug] End trigger sync now");
 
     return;
   }
