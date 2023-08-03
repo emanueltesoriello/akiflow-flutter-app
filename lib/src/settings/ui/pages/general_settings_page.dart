@@ -86,32 +86,32 @@ class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
               padding: const EdgeInsets.only(left: Dimension.paddingS),
               child: SettingHeaderText(text: t.settings.general.style),
             ),
-            InkWell(
-              borderRadius: const BorderRadius.all(Radius.circular(Dimension.radius)),
-              onTap: () {
-                showCupertinoModalBottomSheet(
-                  context: context,
-                  builder: (context) => ChooseThemeModal(
-                    initialThemeMode: theme,
-                    onChange: (newTheme) {
-                      setState(() {
-                        theme = newTheme;
-                      });
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: ColorsExt.grey200(context)),
+                  borderRadius: const BorderRadius.all(Radius.circular(Dimension.radius))),
+              child: InkWell(
+                borderRadius: const BorderRadius.all(Radius.circular(Dimension.radius)),
+                onTap: () {
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => ChooseThemeModal(
+                      initialThemeMode: theme,
+                      onChange: (newTheme) {
+                        setState(() {
+                          theme = newTheme;
+                        });
 
-                      Application.of(context).changeTheme(theme);
+                        Application.of(context).changeTheme(theme);
 
-                      _saveNewSetting(
-                          sectionName: UserSettingsUtils.generalSection, key: UserSettingsUtils.theme, value: theme);
-                    },
-                  ),
-                );
-              },
-              child: Ink(
-                color: ColorsExt.background(context),
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: ColorsExt.grey200(context)),
-                      borderRadius: const BorderRadius.all(Radius.circular(Dimension.radius))),
+                        _saveNewSetting(
+                            sectionName: UserSettingsUtils.generalSection, key: UserSettingsUtils.theme, value: theme);
+                      },
+                    ),
+                  );
+                },
+                child: Ink(
+                  color: ColorsExt.background(context),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

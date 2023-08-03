@@ -82,6 +82,7 @@ class _ViewState extends State<_View> {
               Assets.images.icons.common.traySVG,
               width: Dimension.appBarLeadingIcon,
               height: Dimension.appBarLeadingIcon,
+              color: ColorsExt.grey800(context),
             ),
             showSyncButton: true,
           ),

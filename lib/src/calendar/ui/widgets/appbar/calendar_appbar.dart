@@ -67,6 +67,7 @@ class _CalendarAppBarState extends State<CalendarAppBar> {
         Assets.images.icons.common.calendarSVG,
         width: 26,
         height: 26,
+        color: ColorsExt.grey800(context),
       ),
       titleWidget: _buildTitle(context, now),
       actions: _buildActions(now),
