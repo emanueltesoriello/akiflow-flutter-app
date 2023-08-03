@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:mobile/core/config.dart';
 import 'package:mobile/core/locator.dart';
+import 'package:mobile/core/services/analytics_service.dart';
 import 'package:mobile/core/services/database_service.dart';
 import 'package:mobile/core/services/notifications_service.dart';
 import 'package:mobile/core/services/sync_controller_service.dart';
@@ -71,6 +72,9 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
     // *********************************************
     if (fromBackground) {
       await initProcesses();
+    }
+    if (fromBackground == true) {
+      AnalyticsService.track("Synching in background");
     }
     locator<SyncControllerService>().sync();
 

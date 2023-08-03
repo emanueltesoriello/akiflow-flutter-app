@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart';
@@ -43,26 +44,33 @@ class HttpClient extends BaseClient {
 
     int retryCount = 0;
     while (retryCount < 20) {
-      StreamedResponse response = await _inner.send(request);
+      try {
+        StreamedResponse response = await _inner.send(request);
 
-      if (response.statusCode >= 500 && response.statusCode < 600) {
-        // Exponential backoff with jitter.
-        // The delay grows exponentially with each attempt
-        // but includes a random jitter to avoid synchronized retries.
-        int delay = (100 * math.pow(2, retryCount) * (math.Random().nextDouble() * 0.2 + 0.9)).toInt();
-        await Future.delayed(Duration(milliseconds: delay));
-        retryCount++;
-        print('Retry on send() method. Attempt n°: $retryCount');
-        continue; // Retry the request
-      } else if (response.statusCode == 401 || response.statusCode == 403) {
-        bool result = await refreshToken(user);
-        if (result) {
-          return _inner.send(request);
+        if (response.statusCode >= 500 && response.statusCode < 600) {
+          // Exponential backoff with jitter
+          int delay = (100 * math.pow(2, retryCount) * (math.Random().nextDouble() * 0.2 + 0.9)).toInt();
+          await Future.delayed(Duration(milliseconds: delay));
+          retryCount++;
+          continue; // Retry the request
+        } else if (response.statusCode == 401 || response.statusCode == 403) {
+          bool result = await refreshToken(user);
+          if (result) {
+            return _inner.send(request);
+          } else {
+            return StreamedResponse(Stream<List<int>>.fromIterable([]), 401);
+          }
         } else {
-          return StreamedResponse(Stream<List<int>>.fromIterable([]), 401);
+          return response; // Success or a client error, so no retry
         }
-      } else {
-        return response; // Success or a client error, so no retry
+      } on SocketException catch (_) {
+        // Retry if socket exception
+        retryCount++;
+        continue;
+      } on TimeoutException catch (_) {
+        // Retry if timeout exception
+        retryCount++;
+        continue;
       }
     }
 

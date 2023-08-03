@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile/core/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:models/user.dart';
@@ -12,7 +14,7 @@ class AnalyticsService {
   static const baseUrl = "https://t.akiflow.com/v3/t";
   static final List<Map<String, dynamic>> _eventsBatch = [];
   static Timer? _batchTimer;
-  static const batchInterval = Duration(seconds: 5);
+  static const batchInterval = Duration(seconds: 1);
 
   static Future<void> identify({required User user, required String version, required String buildNumber}) async {
     print("*** AnalyticsService identify: ${user.email} ***");
@@ -27,17 +29,20 @@ class AnalyticsService {
       "release_mobile": version,
       "mobile_user": true,
       "releaseNumber_mobile": buildNumber,
-      "platform": Platform.isAndroid ? "android" : "ios", // for the superProperties
       "email": user.email,
       "name": user.name,
       "device_id": deviceId,
     };
 
+    if (Config.development) {
+      traits["debug"] = "true";
+    }
+
     final body = {
       "id": user.email,
       "email": user.email,
-      "platform": Platform.isAndroid ? "android" : "ios",
       "traits": traits,
+      "properties": {Platform.isAndroid ? "android" : "ios"},
     };
 
     await http.post(
@@ -129,7 +134,7 @@ class AnalyticsService {
     _eventsBatch.add({
       "id": uuid.v4(),
       "user_id": userOrAnonymousId,
-      "event": event,
+      "event": kDebugMode ? "[debug] $event" : event,
       "properties": properties,
       "timestamp": timestamp,
     });
@@ -146,7 +151,6 @@ class AnalyticsService {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(body),
       );
-
       _eventsBatch.clear();
     }
     _batchTimer = null; // Reset timer

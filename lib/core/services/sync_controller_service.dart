@@ -204,6 +204,7 @@ class SyncControllerService {
         _sentryService.captureException(e, stackTrace: s);
       }
     }
+    AnalyticsService.track("End trigger sync now");
 
     _isSyncing = false;
 
