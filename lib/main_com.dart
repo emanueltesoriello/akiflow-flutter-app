@@ -54,7 +54,6 @@ Future<void> initFunctions() async {
   bool userLogged =
       locator<PreferencesRepository>().user != null && locator<PreferencesRepository>().user!.accessToken != null;
   print("environment: ${Config.development ? "dev" : "prod"}");
-  await AnalyticsService.config();
   if (userLogged) {
     _identifyAnalytics(locator<PreferencesRepository>().user!);
   }
@@ -132,8 +131,7 @@ class ApplicationState extends State<Application> {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.black,
         systemNavigationBarIconBrightness: Brightness.light,
-        statusBarColor: Colors.transparent
-        ));
+        statusBarColor: Colors.transparent));
 
     return MultiBlocProvider(
         providers: baseProviders,
