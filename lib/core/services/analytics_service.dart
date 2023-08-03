@@ -123,7 +123,7 @@ class AnalyticsService {
     }
 
     const uuid = Uuid();
-    final timestamp = DateTime.now().toIso8601String();
+    final timestamp = DateTime.now().toUtc().toIso8601String();
     String? userOrAnonymousId = "";
     try {
       userOrAnonymousId = await getUserOrAnonymousId();
