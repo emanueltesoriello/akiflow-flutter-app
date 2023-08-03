@@ -65,7 +65,7 @@ class EventAppointment extends StatelessWidget {
                   ? const SizedBox(width: Dimension.paddingXS - 2)
                   : const SizedBox(width: Dimension.paddingXS)
               : Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
                       padding: calendarController.view == CalendarView.schedule

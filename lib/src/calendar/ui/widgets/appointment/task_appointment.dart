@@ -56,19 +56,7 @@ class TaskAppointment extends StatelessWidget {
         height: boxHeight,
         decoration: BoxDecoration(
           color: ColorsExt.grey50(context),
-          borderRadius: BorderRadius.all(
-            Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
-          ),
-          boxShadow: calendarController.view != CalendarView.schedule
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(15),
-                    spreadRadius: 1,
-                    blurRadius: 1,
-                    offset: const Offset(1, 2),
-                  ),
-                ]
-              : [],
+          borderRadius: const BorderRadius.all(Radius.circular(4.0)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,9 +67,8 @@ class TaskAppointment extends StatelessWidget {
                 height: boxHeight,
                 width: 2,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0),
-                      bottomLeft: Radius.circular(calendarController.view == CalendarView.schedule ? 6.0 : 4.0)),
+                  borderRadius:
+                      const BorderRadius.only(topLeft: Radius.circular(4.0), bottomLeft: Radius.circular(4.0)),
                   color: appointment.color,
                 ),
               ),
@@ -91,9 +78,7 @@ class TaskAppointment extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: boxHeight < 15.0 ? 1 : 2, left: 4, bottom: boxHeight < 15.0 ? 0 : 2),
                     child: Row(
-                      crossAxisAlignment: calendarController.view == CalendarView.schedule
-                          ? CrossAxisAlignment.center
-                          : CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         boxHeight > 14 &&
                                 (calendarController.view == CalendarView.day ||
