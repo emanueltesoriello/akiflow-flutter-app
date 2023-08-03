@@ -74,7 +74,7 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
       await initProcesses();
     }
     if (fromBackground == true) {
-      AnalyticsService.track("Synching in background");
+      AnalyticsService.track("[debug] Synching in background");
     }
     locator<SyncControllerService>().sync();
 

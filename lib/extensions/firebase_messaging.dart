@@ -12,7 +12,7 @@ onNotificationsReceived(RemoteMessage message, FlutterLocalNotificationsPlugin f
   // If `onMessage` is triggered with a notification, construct our own
   // local notification to show to users using the created channel.
 
-  AnalyticsService.track("Message from server to sync", properties: {"isInBackground": fromBackground});
+  AnalyticsService.track("[debug] Message from server to sync", properties: {"isInBackground": fromBackground});
   if (notificationType == 'trigger_sync:tasks' || notificationType == 'trigger_sync:events') {
     backgroundProcesses(backgroundSyncFromNotification, fromBackground: fromBackground);
   }

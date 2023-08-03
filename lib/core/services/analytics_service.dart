@@ -134,7 +134,7 @@ class AnalyticsService {
     _eventsBatch.add({
       "id": uuid.v4(),
       "user_id": userOrAnonymousId,
-      "event": kDebugMode ? "[debug] $event" : event,
+      "event": event,
       "properties": properties,
       "timestamp": timestamp,
     });
