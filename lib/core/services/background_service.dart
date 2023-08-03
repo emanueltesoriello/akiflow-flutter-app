@@ -71,26 +71,9 @@ Future<bool> backgroundProcesses(String task, {bool fromBackground = true}) asyn
     // *********************************************
     if (fromBackground) {
       await initProcesses();
-
-      final SyncControllerService syncControllerService = locator<SyncControllerService>();
-      DateTime now = DateTime.now().toUtc();
-      List<Entity> entitiesToSync = [];
-
-      for (Entity entity in Entity.values) {
-        print('Background sync check for $entity');
-        DateTime? lastSync = await syncControllerService.getLastSyncFromPreferences[entity]!();
-        if (task == backgroundSyncFromNotification ||
-            (lastSync != null && now.difference(lastSync).inMinutes.abs() > 15)) {
-          print('Start background sync for $entity');
-          entitiesToSync.add(entity);
-        }
-      }
-      if (entitiesToSync.isNotEmpty) {
-        syncControllerService.sync(entitiesToSync);
-      }
-    } else {
-      locator<SyncControllerService>().sync();
     }
+    locator<SyncControllerService>().sync();
+
     // Show a local notification to confirm the background Sync
     if (kDebugMode) {
       NotificationsService.showNotifications("From background!", "Synched successfully");
