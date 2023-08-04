@@ -42,7 +42,7 @@ class AnalyticsService {
       "id": user.email,
       "email": user.email,
       "traits": traits,
-      "properties": {Platform.isAndroid ? "android" : "ios"},
+      "properties": {"platform": Platform.isAndroid ? "android" : "ios", "mobile": true},
     };
 
     await http.post(
@@ -114,9 +114,9 @@ class AnalyticsService {
     print("*** AnalyticsService track: $event ***");
     try {
       if (properties != null) {
-        properties.addAll({"platform": Platform.isAndroid ? "android" : "ios"});
+        properties.addAll({"platform": Platform.isAndroid ? "android" : "ios", "mobile": true});
       } else {
-        properties = {"platform": Platform.isAndroid ? "android" : "ios"}; // for the superProperties
+        properties = {"platform": Platform.isAndroid ? "android" : "ios", "mobile": true}; // for the superProperties
       }
     } catch (e) {
       print(e);
