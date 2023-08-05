@@ -48,7 +48,7 @@ class SettingsPage extends StatelessWidget {
           ),
           ButtonList(
             title: t.settings.myAccount.title,
-            position: ButtonListPosition.top,
+            position: ButtonListPosition.center,
             leading: Assets.images.icons.common.personCircleSVG,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyAccountPage()));
@@ -108,7 +108,7 @@ class SettingsPage extends StatelessWidget {
           SettingHeaderText(text: t.comingSoon),
           ButtonList(
             title: t.settings.tasks,
-            position: ButtonListPosition.mid,
+            position: ButtonListPosition.single,
             leading: Assets.images.icons.common.checkDoneOutlineSVG,
             enabled: false,
             onPressed: () {},

@@ -64,7 +64,9 @@ class _ChooseCalendarModalState extends State<ChooseCalendarModal> {
           groupedCalendars.addAll({
             '${primaryCalendar.title}': state.calendars
                 .where((calendar) =>
-                    calendar.akiflowAccountId == primaryCalendar.akiflowAccountId && calendar.readOnly == false)
+                    calendar.akiflowAccountId == primaryCalendar.akiflowAccountId &&
+                    calendar.readOnly == false &&
+                    calendar.isAkiflowCalendar == false)
                 .toList()
           });
         }

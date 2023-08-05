@@ -28,7 +28,7 @@ class TitleWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                text,
+                text.replaceFirst('\n\n', ' '),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(

@@ -113,6 +113,10 @@ extension ColorsExt on Colors {
     return Theme.of(context).brightness == Brightness.light ? ColorsLight.apricot100 : ColorsDark.apricot100;
   }
 
+  static Color shadow(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light ? ColorsLight.grey200 : ColorsDark.grey50;
+  }
+
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');

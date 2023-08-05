@@ -101,7 +101,7 @@ class _ButtonListState extends State<ButtonList> with SingleTickerProviderStateM
                           //border: Border.all(color: ColorsExt.grey500(context)),
                           boxShadow: [
                             BoxShadow(
-                              color: ColorsExt.grey200(context),
+                              color: ColorsExt.shadow(context),
                               offset: const Offset(0, 2),
                               blurRadius: 1,
                             ),
